@@ -1,0 +1,292 @@
+<div [@routerTransition]>
+    <app-page-header [breadcrumb]="BREADCRUMB" [icon]="'fa-table'"></app-page-header>
+    <div class="row">  
+        <div class="col-xl-12">
+            <div class="col-xl-12 text-xs-center">
+                <fieldset class="form-group">
+                    <button type="submit" [disabled]="jobForm.invalid" class="btn btn-primary pull-right" (click)="saveJob()">Save</button>
+                </fieldset>
+            </div>
+            <ngb-tabset>
+                <!-- GEN INFO -->
+                <ngb-tab>
+                    <ng-template ngbTabTitle><b>General Info</b></ng-template>
+                    <ng-template ngbTabContent>
+                        <form role="form"  novalidat [formGroup]="jobForm" novalidat>
+                            <div class="row tab-border">
+                                <div class="col-xl-6 text-xs-center">
+                                    <fieldset class="form-group">
+                                        <label><b>Component: </b>{{selectedComponent.code}}-{{selectedComponent.description}}</label>
+                                    </fieldset>
+                                </div>
+                                <div class="text-xs-center col-xl-6">
+                                    <fieldset class="form-group">
+                                        <a (click)="selectComponent()" class="btn btn-primary pull-right" style="color: white;">Select Component</a>
+                                    </fieldset>
+                                </div>
+                                <div class="col-xl-6 text-xs-center">
+                                    <fieldset class="form-group">
+                                        <label>Job Description:</label>
+                                        <textarea class="form-control" formControlName="description"></textarea>
+                                        <div class="has-error" *ngIf="jobForm.controls.description.errors && (jobForm.controls.description.dirty 	|| jobForm.controls.description.touched)"> 
+                                                <p *ngIf="jobForm.controls.description.errors.required || jobForm.get('description').hasError('invalidvalue')">Job Description is required</p>
+                                                <p *ngIf="jobForm.controls.description.errors.maxlength">Max length exceeded</p>
+                                            </div>                                    
+                                    </fieldset>
+                                </div>
+                                <div class="col-xl-6 text-xs-center">
+                                    <fieldset class="form-group">
+                                        <label>Make:</label>
+                                        <input class="form-control" formControlName="make"/>                                    
+                                    </fieldset>
+                                </div>
+                                <div class="col-xl-6 text-xs-center">
+                                    <fieldset class="form-group">
+                                        <label>Model:</label>
+                                        <input class="form-control" formControlName="model"/>                                    
+                                    </fieldset>
+                                </div>
+                                <div class="col-xl-6 text-xs-center">
+                                    <fieldset class="form-group">
+                                        <label>Description:</label>
+                                        <textarea class="form-control" formControlName="makeModelDescription" placeholder="Make, Type, Rating, Weight, Volume, RPM, Voltage,etc."></textarea>                                    
+                                    </fieldset>
+                                </div>
+                                <div class="col-xl-6 text-xs-center">
+                                    <fieldset class="form-group">
+                                        <label>Location:</label>
+                                        <input class="form-control" formControlName="location" />                               
+                                    </fieldset>
+                                </div>
+                                <div class="col-xl-6 text-xs-center">
+                                    <fieldset class="form-group">
+                                        <label>Equipment:</label>
+                                        <input class="form-control" formControlName="equipment" />                               
+                                    </fieldset>
+                                </div>
+                                <div class="col-xl-6 text-xs-center">
+                                    <fieldset class="form-group">
+                                        <label>Date:</label>
+                                        <div class="input-group datepicker-input">
+                                            <input class="form-control" placeholder="yyyy-mm-dd "
+                                                ngbDatepicker #keelLayingDate="ngbDatepicker" [(ngModel)]="jobModel.jobdate" [ngModelOptions]="{standalone: true}">
+                                            <button class="input-group-addon" (click)="keelLayingDate.toggle()" type="button">
+                                                <span class="fa fa-calendar"></span>
+                                            </button>
+                                        </div>                                  
+                                    </fieldset>
+                                </div>
+                                <div class="col-xl-6 text-xs-center">
+                                    <fieldset class="form-group">
+                                        <label>Vessel Type:</label>
+                                        <angular2-multiselect [data]="vesselTypeList" 
+                                                            [(ngModel)]="selectedItems" 
+                                                            [settings]="dropdownSettings"                                                            
+                                                            formControlName="vesselType">
+                                        </angular2-multiselect>
+                                        <!-- <select class="form-control" formControlName="vesselType">
+                                            <option *ngFor="let vessel of vesselList" value={{vessel.id}}>
+                                                {{vessel.description}}
+                                            </option>
+                                        </select> -->
+                                    </fieldset>
+                                </div> 
+                                <div class="col-xl-6 text-xs-center">
+                                    <fieldset class="form-group">
+                                        <label>Vessel Age:</label>
+                                        <input class="form-control" formControlName="vesselAge" /> 
+                                        <div class="has-error" *ngIf="jobForm.controls.vesselAge.errors && (jobForm.controls.vesselAge.dirty || jobForm.controls.vesselAge.touched)">
+                                            <p *ngIf="jobForm.get('vesselAge').hasError('invalidVesselAge')">Please give numeric or decimal number with comma(',') separator </p>
+                                        </div>                              
+                                    </fieldset>
+                                </div> 
+                                <div class="col-xl-12 text-xs-center">
+                                    <fieldset class="form-group">
+                                        <label>Details Job Desc:</label>
+                                        <ckeditor [(ngModel)]="jobModel.detailedSpecification"
+                                            [ngModelOptions]="{standalone: true}"
+                                            [config]="options"></ckeditor>
+                                    </fieldset>
+                                </div>
+                                                                
+                                <div class="col-xl-12 text-xs-center">
+                                    <div class="card mb-3">
+                                        <div class="card-header" (click)="checkbocCollapse.isCollapsedToBeInclude = !checkbocCollapse.isCollapsedToBeInclude" [attr.aria-expanded]="!checkbocCollapse.isCollapsedToBeInclude" aria-controls="toBeInclude" style="cursor: pointer;">
+                                            <b>Services To Include: &nbsp;</b>
+                                            <span *ngIf="checkbocCollapse.isCollapsedToBeInclude">
+                                                <ng-container *ngFor="let com of checkboxList['Services to include']; let index=index; let last = last">
+                                                    <span *ngIf="com.isSelected">{{com.description}}, &nbsp;</span>
+                                                </ng-container>
+                                            </span>
+                                            <i class="fa fa-angle-right custom-arrow pull-right" aria-hidden="true" *ngIf="checkbocCollapse.isCollapsedToBeInclude"></i>
+                                            <i class="fa fa-angle-down custom-arrow pull-right" aria-hidden="true" *ngIf="!checkbocCollapse.isCollapsedToBeInclude"></i>
+                                        </div>
+                                        <div class="card-body" id="toBeInclude" [ngbCollapse]="checkbocCollapse.isCollapsedToBeInclude">  
+                                            <div class="row">
+                                                <div *ngFor="let com of checkboxList['Services to include']; let index=index" class="col-xl-2">
+                                                    <label class="container">{{com.description}}
+                                                        <input type="checkbox" [(ngModel)]="com.isSelected" [ngModelOptions]="{standalone: true}">
+                                                        <span class="checkmark"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> 
+                                <div class="col-xl-12 text-xs-center">
+                                    <div class="card mb-3">
+                                        <div class="card-header" (click)="checkbocCollapse.isCollapsedMeterials = !checkbocCollapse.isCollapsedMeterials" [attr.aria-expanded]="!checkbocCollapse.isCollapsedMeterials" aria-controls="meterials" style="cursor: pointer;">
+                                                <b>Meterials: &nbsp;</b>
+                                            <span *ngIf="checkbocCollapse.isCollapsedMeterials">
+                                                <ng-container *ngFor="let com of checkboxList['Materials']; let index=index; let last = last">
+                                                    <span *ngIf="com.isSelected">{{com.description}}, &nbsp;</span>
+                                                </ng-container>
+                                            </span>
+                                            <i class="fa fa-angle-right custom-arrow pull-right" aria-hidden="true" *ngIf="checkbocCollapse.isCollapsedMeterials"></i>
+                                            <i class="fa fa-angle-down custom-arrow pull-right" aria-hidden="true" *ngIf="!checkbocCollapse.isCollapsedMeterials"></i>
+                                        </div>
+                                        <div class="card-body" id="meterials" [ngbCollapse]="checkbocCollapse.isCollapsedMeterials">
+                                            <div class="row">
+                                                <div *ngFor="let com of checkboxList['Materials']; let index=index" class="col-xl-2">
+                                                    <label class="container">{{com.description}}
+                                                        <input type="checkbox" [(ngModel)]="com.isSelected" [ngModelOptions]="{standalone: true}">
+                                                        <span class="checkmark"></span>
+                                                    </label>
+                                                </div>
+                                            </div> 
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 text-xs-center">
+                                    <div class="card mb-3">
+                                        <div class="card-header" (click)="checkbocCollapse.isCollapsedTheWorkToBeSurvedAlsoBy = !checkbocCollapse.isCollapsedTheWorkToBeSurvedAlsoBy" [attr.aria-expanded]="!checkbocCollapse.isCollapsedTheWorkToBeSurvedAlsoBy" aria-controls="theWorkToBeSurvedAlsoBy" style="cursor: pointer;">
+                                            <b>The Work To Be Surved Also By: &nbsp;</b>
+                                            <span *ngIf="checkbocCollapse.isCollapsedTheWorkToBeSurvedAlsoBy">
+                                                <ng-container *ngFor="let com of checkboxList['The work to be surveyed also by']; let index=index; let last = last">
+                                                    <span *ngIf="com.isSelected">{{com.description}}, &nbsp;</span>
+                                                </ng-container>
+                                            </span>
+                                            <i class="fa fa-angle-right custom-arrow pull-right" aria-hidden="true" *ngIf="checkbocCollapse.isCollapsedTheWorkToBeSurvedAlsoBy"></i>
+                                            <i class="fa fa-angle-down custom-arrow pull-right" aria-hidden="true" *ngIf="!checkbocCollapse.isCollapsedTheWorkToBeSurvedAlsoBy"></i>
+                                        </div>
+                                        <div class="card-body" id="theWorkToBeSurvedAlsoBy" [ngbCollapse]="checkbocCollapse.isCollapsedTheWorkToBeSurvedAlsoBy">  
+                                            <div class="row">
+                                                <div *ngFor="let com of checkboxList['The work to be surveyed also by']; let index=index" class="col-xl-2">
+                                                    <label class="container">{{com.description}}
+                                                        <input type="checkbox" [(ngModel)]="com.isSelected" [ngModelOptions]="{standalone: true}">
+                                                        <span class="checkmark"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>                                    
+                            </div>
+                        </form>
+                    </ng-template>
+                </ngb-tab>
+                <!-- Materials Required -->
+                <ngb-tab>
+                    <ng-template ngbTabTitle><b>Materials Required</b></ng-template>
+                    <ng-template ngbTabContent>
+                        <div class="row tab-border">
+                            <div class="col-xl-12 text-xs-center">
+                                <fieldset class="form-group">
+                                    <a href="javascript:void(0)" (click)="addRowInMeterialList()" placement="top" ngbTooltip="Add Line Items" class="btn btn-primary pull-right">
+                                        Add Line Items
+                                    </a>                                       
+                                </fieldset>
+                            </div>                                             
+                            <div class="row">
+                                <div class="col col-xl-12 col-lg-12">              
+                                    <div class="card-body table-responsive table-pading">
+                                        <table class="table table-bordered table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>                        
+                                                    <th>Make</th>
+                                                    <th>Model</th>
+                                                    <th>Part Number</th>
+                                                    <th>Part Name</th>
+                                                    <th>Quantity</th>
+                                                    <th>UOM</th>
+                                                    <th>Drawing No</th>
+                                                    <th>Remark</th>
+                                                    <th style="width: 5%">Action</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <!-- <tr *ngFor="let meterial of jobModel.jobMeterialList;let  index=index"> -->
+                                                <ng-container *ngFor="let meterial of jobModel.jobMaterialDetailsList;let  index=index">
+                                                    <tr *ngIf="meterial.isactive == 1">
+                                                        <th>{{meterial.index}}</th>                        
+                                                        <td><input type="text" [(ngModel)]="meterial.make" (focus)="focusOnMeterialRow(index)" class="form-control" placeholder="Make"></td>
+                                                        <td><input type="text" [(ngModel)]="meterial.model" (focus)="focusOnMeterialRow(index)" class="form-control" placeholder="Model"></td>
+                                                        <td><input type="text" [(ngModel)]="meterial.partNo" (focus)="focusOnMeterialRow(index)" class="form-control" placeholder="Part Number"></td>
+                                                        <td><input type="text" [(ngModel)]="meterial.partName" (focus)="focusOnMeterialRow(index)" class="form-control" placeholder="Part Name"></td>
+                                                        <td><input type="number" [(ngModel)]="meterial.quantity" (focus)="focusOnMeterialRow(index)" class="form-control" placeholder="Quantity"></td>
+                                                        <td><input type="text" [(ngModel)]="meterial.uom" (focus)="focusOnMeterialRow(index)" class="form-control" placeholder="UOM"></td>
+                                                        <td><input type="text" [(ngModel)]="meterial.drawingNo" (focus)="focusOnMeterialRow(index)" class="form-control" placeholder="Drawing no"></td>
+                                                        <td><textarea type="text" rows="1" [(ngModel)]="meterial.remark" (focus)="focusOnMeterialRow(index)" class="form-control" placeholder="Remark"></textarea></td>
+                                                        <td class="text-align">                                                
+                                                            <a href="javascript:void(0)" (click)="deleteRowInMeterialList(index)" placement="top" ngbTooltip="Delete" class="btn btn-danger btn-sm action-buton-margin">
+                                                                <i class="fa fa-trash-o fa-fw"></i>
+                                                            </a>
+                                                        </td>                            
+                                                    </tr>  
+                                                </ng-container>                                
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>                            
+                            </div>
+                            <div class="col-xl-12 text-xs-center">
+                                <fieldset class="form-group">
+                                    <a href="javascript:void(0)" (click)="addRowInMeterialList()" placement="top" ngbTooltip="Add Line Items" class="btn btn-primary pull-right">
+                                        Add Line Items
+                                    </a>                                       
+                                </fieldset>
+                            </div>
+                        </div>
+                    </ng-template>
+                </ngb-tab>
+            </ngb-tabset>
+        </div>
+        <!--<div class="col-xl-4">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="list-group">                               
+                        <a href="javascript:void(0)" class="list-group-item active">Services To Include</a>
+                        <a href="javascript:void(0)" class="list-group-item list-group-item-height" *ngFor="let com of checkboxList['Services to include']; let index=index">
+                            <label class="container">{{com.description}}
+                                <input type="checkbox" [(ngModel)]="com.isSelected">
+                                <span class="checkmark"></span>
+                            </label>
+                        </a>                            
+                    </div>
+                    <br>
+                    <div class="list-group">                               
+                        <a href="javascript:void(0)" class="list-group-item active">Meterials</a>
+                        <a href="javascript:void(0)" class="list-group-item list-group-item-height" *ngFor="let com of checkboxList['Materials']; let index=index">
+                            <label class="container">{{com.description}}
+                                    <input type="checkbox" [(ngModel)]="com.isSelected">
+                                <span class="checkmark"></span>
+                            </label>
+                        </a>                            
+                    </div>
+                    <br>
+                    <div class="list-group">                               
+                        <a href="javascript:void(0)" class="list-group-item active">The Work To Be Surved Also By</a>
+                        <a href="javascript:void(0)" class="list-group-item list-group-item-height" *ngFor="let com of checkboxList['The work to be surveyed also by']; let index=index">
+                            <label class="container">{{com.description}}
+                                    <input type="checkbox" [(ngModel)]="com.isSelected">
+                                <span class="checkmark"></span>
+                            </label>
+                        </a>                            
+                    </div>
+                </div>
+            </div>
+        </div>-->
+    </div> 
+</div>
+

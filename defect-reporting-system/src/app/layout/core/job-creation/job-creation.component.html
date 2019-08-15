@@ -1,0 +1,911 @@
+<div [@routerTransition]>
+    <app-page-header [breadcrumb]="BREADCRUMB" [icon]="'fa-table'"></app-page-header>
+    <div class="col-xl-12 text-xs-center">
+        <fieldset class="form-group">            
+            <button type="button" class="btn btn-primary pull-right" (click)="saveJob()" ngbTooltip="Save All Tabs" style="margin-left: 10px;">Save</button>
+            <button type="button" class="btn btn-primary pull-right" (click)="gotoJobList()" ngbTooltip="Exit">Close</button>
+        </fieldset>
+    </div>
+    <div class="row job-common-info">
+        <div class="col-xl-12 text-xs-center" style="height: 35px;padding-top: 3px;">
+            <fieldset class="form-group">            
+                <button type="button" class="btn btn-primary pull-left" (click)="id = jobModel.previousJobId; ngOnInit()" [disabled]="jobModel.previousJobId == null"><i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp; Previous</button>
+                <button type="button" class="btn btn-primary pull-right" (click)="id = jobModel.nextJobId; ngOnInit()" [disabled]="jobModel.nextJobId == null">Next &nbsp; <i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+            </fieldset>
+        </div>
+        <div class="col-xl-6 text-xs-center" style="height: 35px;">
+            <fieldset class="form-group">
+                <label><b>Ship Name: </b>{{shipname}}</label>                                        
+            </fieldset>
+        </div>
+        <div class="col-xl-6 text-xs-center" style="height: 35px;">
+            <fieldset class="form-group">
+                <label><b>Make: </b>{{jobModel.make}}</label>                                        
+            </fieldset>
+        </div>
+        <div class="col-xl-6 text-xs-center" style="height: 35px;">
+            <fieldset class="form-group">
+                <label><b>Job Number: </b>{{jobModel.jobno}}</label>                                        
+            </fieldset>
+        </div>
+        <div class="col-xl-6 text-xs-center" style="height: 35px;">
+            <fieldset class="form-group">
+                <label><b>Model: </b>{{jobModel.model}}</label>                                        
+            </fieldset>
+        </div>
+        <div class="col-xl-6 text-xs-center" style="height: 35px;">
+            <fieldset class="form-group">
+                <label><b>Location: </b>{{jobModel.location}}</label>
+            </fieldset>
+        </div>
+        <div class="col-xl-6 text-xs-center" style="height: 35px;">
+            <fieldset class="form-group">
+                <label><b>Component: </b>{{selectedComponent.code}}-{{selectedComponent.description}}</label>                                        
+            </fieldset>
+        </div>        
+        <div class="col-xl-12 text-xs-center">
+            <fieldset class="form-group">
+                <label><b>Job Short Desc.: </b>{{jobModel.equipment}}</label>                                        
+            </fieldset>
+        </div>
+    </div>    
+    <div class="col-xl-12">
+        <ngb-tabset>
+            <!-- GEN INFO -->
+            <ngb-tab>
+                <ng-template ngbTabTitle><b>General Info</b></ng-template>
+                <ng-template ngbTabContent>
+                    <!-- <form role="form"  novalidat [formGroup]="jobForm" novalidat (ngSubmit)="saveJob()"> -->
+                        <div class="row tab-border">
+                            <div class="text-xs-center col-xl-4" [ngClass]="{'col-xl-4': id == 0, 'col-xl-12': id != 0}">
+                                <fieldset class="form-group">
+                                    <a (click)="selectComponent()" class="btn btn-primary" style="color: white;">Select Component</a>
+                                </fieldset>
+                            </div>
+                            <div class="col-xl-4 text-xs-center" *ngIf="id == 0">
+                                <fieldset class="form-group">
+                                    <a (click)="selectJobForCopy('library')" class="btn btn-primary pull-left" style="color: white;">Copy from job library</a>
+                                </fieldset>
+                            </div>
+                            <div class="col-xl-4 text-xs-center" *ngIf="id == 0">
+                                <fieldset class="form-group">
+                                    <a (click)="selectJobForCopy('previous')" class="btn btn-primary" style="color: white;">Copy from job my previous job</a>
+                                </fieldset>
+                            </div>
+                            <div class="col-xl-6 text-xs-center">
+                                <fieldset class="form-group">
+                                    <label>Job Description:</label>
+                                    <textarea class="form-control" rows="4" [(ngModel)]="jobModel.description"></textarea>                                                                      
+                                </fieldset>
+                            </div>
+                            <div class="col-xl-6 text-xs-center">
+                                <fieldset class="form-group">
+                                    <label>Make:</label>
+                                    <input class="form-control" rows="4" placeholder="Make" [(ngModel)]="jobModel.make">                                 
+                                </fieldset>
+                            </div>
+                            <div class="col-xl-6 text-xs-center">
+                                <fieldset class="form-group">
+                                    <label>Model:</label>
+                                    <input class="form-control" rows="4" placeholder="Model" [(ngModel)]="jobModel.model">                               
+                                </fieldset>
+                            </div>
+                            <div class="col-xl-6 text-xs-center">
+                                <fieldset class="form-group">
+                                    <label>Description:</label>
+                                    <input class="form-control" rows="4" placeholder="Description" [(ngModel)]="jobModel.makeModelDescription">                                   
+                                </fieldset>
+                            </div>
+                            <div class="col-xl-6 text-xs-center">
+                                <fieldset class="form-group">
+                                    <label>Equipment :</label>
+                                    <textarea class="form-control" [(ngModel)]="jobModel.equipment"> </textarea>                               
+                                </fieldset>
+                            </div>
+                            <div class="col-xl-6 text-xs-center">
+                                <fieldset class="form-group">
+                                    <label>Location:</label>
+                                    <input class="form-control"  [(ngModel)]="jobModel.location"/>                               
+                                </fieldset>
+                            </div>
+                            <div class="col-xl-6 text-xs-center">
+                                <fieldset class="form-group">
+                                    <label>Date:</label>
+                                    <div class="input-group datepicker-input">
+                                        <input class="form-control" placeholder="yyyy-mm-dd "
+                                            ngbDatepicker #keelLayingDate="ngbDatepicker" [(ngModel)]="jobModel.jobdate">
+                                        <button class="input-group-addon" (click)="keelLayingDate.toggle()" type="button">
+                                            <span class="fa fa-calendar"></span>
+                                        </button>
+                                    </div>                                  
+                                </fieldset>
+                            </div>
+                            <div class="col-xl-6 text-xs-center">
+                                <fieldset class="form-group input-group">
+                                    <label>External Reference for Material:</label>
+                                    <span *ngIf="!externalReferenceEditable">
+                                        <a [href]="jobModel.externalReference" target="_blank">{{jobModel.externalReference}}</a>
+                                        <a href="javascript:void(0)" (click)="externalReferenceEditable = !externalReferenceEditable" placement="top" ngbTooltip="Edit External Link" class="btn btn-primary btn-sm action-buton-margin"><i class="fa fa-pencil fa-fw"></i></a>
+                                    </span>
+                                    <div class="input-group margin-bottom-sm" *ngIf="externalReferenceEditable">
+                                        <input class="form-control" type="text" [(ngModel)]="jobModel.externalReference">
+                                        <a href="javascript:void(0)" (click)="externalReferenceEditable = !externalReferenceEditable" placement="top" ngbTooltip="Save" class="btn btn-primary btn-sm action-buton-margin"><i class="fa fa-check" aria-hidden="true"></i></a> 
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="col-xl-12 text-xs-center">
+                                <div class="card mb-3">
+                                    <div class="card-header" (click)="checkbocCollapse.isCollapsedToBeInclude = !checkbocCollapse.isCollapsedToBeInclude" [attr.aria-expanded]="!checkbocCollapse.isCollapsedToBeInclude" aria-controls="toBeInclude" style="cursor: pointer;">
+                                        <b>Services To Include: &nbsp;</b>
+                                        <span *ngIf="checkbocCollapse.isCollapsedToBeInclude">
+                                            <ng-container *ngFor="let com of checkboxList['Services to include']; let index=index; let last = last">
+                                                <span *ngIf="com.isSelected">{{com.description}}, &nbsp;</span>
+                                            </ng-container>
+                                        </span>
+                                        <i class="fa fa-angle-right custom-arrow pull-right" aria-hidden="true" *ngIf="checkbocCollapse.isCollapsedToBeInclude"></i>
+                                        <i class="fa fa-angle-down custom-arrow pull-right" aria-hidden="true" *ngIf="!checkbocCollapse.isCollapsedToBeInclude"></i>
+                                    </div>
+                                    <div class="card-body" id="toBeInclude" [ngbCollapse]="checkbocCollapse.isCollapsedToBeInclude">  
+                                        <div class="row">
+                                            <div *ngFor="let com of checkboxList['Services to include']; let index=index" class="col-xl-2">
+                                                <label class="container">{{com.description}}
+                                                    <input type="checkbox" [(ngModel)]="com.isSelected">
+                                                    <span class="checkmark"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                            <div class="col-xl-12 text-xs-center">
+                                <div class="card mb-3">
+                                    <div class="card-header" (click)="checkbocCollapse.isCollapsedMeterials = !checkbocCollapse.isCollapsedMeterials" [attr.aria-expanded]="!checkbocCollapse.isCollapsedMeterials" aria-controls="meterials" style="cursor: pointer;">
+                                            <b>Meterials: &nbsp;</b>
+                                        <span *ngIf="checkbocCollapse.isCollapsedMeterials">
+                                            <ng-container *ngFor="let com of checkboxList['Materials']; let index=index; let last = last">
+                                                <span *ngIf="com.isSelected">{{com.description}}, &nbsp;</span>
+                                            </ng-container>
+                                        </span>
+                                        <i class="fa fa-angle-right custom-arrow pull-right" aria-hidden="true" *ngIf="checkbocCollapse.isCollapsedMeterials"></i>
+                                        <i class="fa fa-angle-down custom-arrow pull-right" aria-hidden="true" *ngIf="!checkbocCollapse.isCollapsedMeterials"></i>
+                                    </div>
+                                    <div class="card-body" id="meterials" [ngbCollapse]="checkbocCollapse.isCollapsedMeterials">
+                                        <div class="row">
+                                            <div *ngFor="let com of checkboxList['Materials']; let index=index" class="col-xl-2">
+                                                <label class="container">{{com.description}}
+                                                    <input type="checkbox" [(ngModel)]="com.isSelected">
+                                                    <span class="checkmark"></span>
+                                                </label>
+                                            </div>
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-12 text-xs-center">
+                                <div class="card mb-3">
+                                    <div class="card-header" (click)="checkbocCollapse.isCollapsedTheWorkToBeSurvedAlsoBy = !checkbocCollapse.isCollapsedTheWorkToBeSurvedAlsoBy" [attr.aria-expanded]="!checkbocCollapse.isCollapsedTheWorkToBeSurvedAlsoBy" aria-controls="theWorkToBeSurvedAlsoBy" style="cursor: pointer;">
+                                        <b>The Work To Be Surved Also By: &nbsp;</b>
+                                        <span *ngIf="checkbocCollapse.isCollapsedTheWorkToBeSurvedAlsoBy">
+                                            <ng-container *ngFor="let com of checkboxList['The work to be surveyed also by']; let index=index; let last = last">
+                                                <span *ngIf="com.isSelected">{{com.description}}, &nbsp;</span>
+                                            </ng-container>
+                                        </span>
+                                        <i class="fa fa-angle-right custom-arrow pull-right" aria-hidden="true" *ngIf="checkbocCollapse.isCollapsedTheWorkToBeSurvedAlsoBy"></i>
+                                        <i class="fa fa-angle-down custom-arrow pull-right" aria-hidden="true" *ngIf="!checkbocCollapse.isCollapsedTheWorkToBeSurvedAlsoBy"></i>
+                                    </div>
+                                    <div class="card-body" id="theWorkToBeSurvedAlsoBy" [ngbCollapse]="checkbocCollapse.isCollapsedTheWorkToBeSurvedAlsoBy">  
+                                        <div class="row">
+                                            <div *ngFor="let com of checkboxList['The work to be surveyed also by']; let index=index" class="col-xl-2">
+                                                <label class="container">{{com.description}}
+                                                    <input type="checkbox" [(ngModel)]="com.isSelected">
+                                                    <span class="checkmark"></span>
+                                                </label>
+                                            </div>
+                                        </div>                                       
+                                        <!-- <label *ngFor="let com of checkboxList['The work to be surveyed also by']; let index=index" class="container col-xl-2">{{com.description}}
+                                            <input type="checkbox" [(ngModel)]="com.isSelected">
+                                            <span class="checkmark"></span>
+                                        </label> -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-12 text-xs-center" *ngIf="id !== 0">
+                                <fieldset class="form-group">
+                                    <label>Last updated info:</label>
+                                    <b>Last Updated By: </b> {{userDetail.firstname}} {{userDetail.lastname}}    <b>Last Update:</b> {{jobModel.updatedate | date: dateTimeFormat}}                              
+                                </fieldset>
+                            </div>
+                        </div>
+                    <!-- </form> -->
+                </ng-template>
+            </ngb-tab>
+            <!-- GEN INFO -->
+            <!-- JOB SPEC -->
+            <ngb-tab *ngIf="id !== 0">
+                <ng-template ngbTabTitle><b>Job Spec Detail</b></ng-template>
+                <ng-template ngbTabContent>
+                    <div class="row tab-border">
+                        <div class="col-xl-12 text-xs-center">
+                            <fieldset class="form-group">
+                                <label>Detailed Specification:</label>
+                                <ckeditor [(ngModel)]="jobModel.detailedSpecification"
+                                            [ngModelOptions]="{standalone: true}"
+                                            [config]="options"></ckeditor>
+                            </fieldset>
+                        </div>
+                        <div class="col-xl-12 text-xs-center">
+                            <fieldset class="form-group">
+                                <label>Enclosed (Photo):</label>
+                                <div class="row">
+                                    <ng-container *ngFor="let attachment of jobModel.jobAttachmentList;let  index=index">
+                                        <div class="image-grid" *ngIf="attachment.attachmentType == 'SPEC'">
+                                            <div class="hovereffect">
+                                                <img class="img-responsive" [src]="attachment.src" *ngIf="attachment.ext == 'image'" style="height: 100%;">
+                                                <img class="img-responsive" [src]="imagePath.pdf" *ngIf="attachment.ext == 'pdf'" style="height: 100%;">
+                                                <img class="img-responsive" [src]="imagePath.excel" *ngIf="attachment.ext == 'excel'" style="height: 100%;">
+                                                <div class="overlay">
+                                                    <h2 style="font-size: 12px !important;">{{attachment.attachmentName}}</h2>
+                                                    <p>
+                                                        <a href="javascript:void(0)" (click)="downloadFile(attachment)" style="padding: 10px;"><i class="fa fa-download" aria-hidden="true"></i></a>
+                                                        <a href="javascript:void(0)" (click)="deleteFile(index)" style="padding: 10px;"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div> 
+                                    </ng-container> 
+                                    <div class="image-grid" style="width: 200px">
+                                        <div class="input--file" style="padding-top: 5px">
+                                            <span>
+                                                <span style="color: #007bff;">Upload File (Default)</span>
+                                                <input name="Select File" #fileUpload class="file-class" (change)="handleFileInput($event.target.files, 'specification');" type="file" multiple style="height: 51px;width: 155px;top: 10px;cursor: pointer;"/>
+                                            </span>                                                                              
+                                        </div>
+                                        <br>
+                                        <span style="padding-top: 20px">
+                                            <a href="javascript: void(0)" (click)="getVesselAttachmentForCopy('SPEC')" style="text-decoration: none">Fetch from Vessel Document List</a>
+                                        </span>
+                                    </div>                                   
+                                 </div>
+
+
+
+
+                                <!-- <div class="row">
+                                    <ng-container *ngFor="let attachment of jobModel.jobAttachmentList;let  index=index">
+                                    <div class="col-md-2" *ngIf="attachment.attachmentType == 'SPEC'">
+                                        <div class="thumbnail">
+                                            <img [src]="attachment.src" *ngIf="attachment.ext == 'image'" alt="Lights" style="width:100%;height: 150px;">
+                                            <img [src]="imagePath.pdf" *ngIf="attachment.ext == 'pdf'" alt="Lights" style="width:100%;height: 150px;">
+                                            <img [src]="imagePath.excel" *ngIf="attachment.ext == 'excel'" alt="Lights" style="width:100%;height: 150px;">
+                                            <div class="overlay">
+                                                <a href="javascript: void(0)" class="download-icon">
+                                                    <i class="fa fa-download"></i>
+                                                </a>
+                                                <a (click)="deleteFile(index)" href="javascript: void(0)" class="del-icon">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+                                            </div>
+                                            <div class="caption">
+                                            <p>{{attachment.attachmentName}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </ng-container>                                            
+                                        
+                                    <div class="col-xl-2">
+                                        <div class="input--file">
+                                            <span>
+                                                <span style="color: #007bff;">Upload File (Default)</span>
+                                                <input name="Select File" #fileUpload class="file-class" (change)="handleFileInput($event.target.files, 'specification');" type="file" multiple style="height: 51px;width: 155px;top: 10px;cursor: pointer;"/>
+                                            </span>                                                                              
+                                        </div>
+                                        <br>
+                                        <span style="padding-top: 20px">
+                                            <a href="javascript: void(0)" style="text-decoration: none">Fetch from Vessel Document List</a>
+                                        </span>
+                                    </div>
+                                </div> -->
+                            </fieldset>
+                        </div>
+                    </div>
+                </ng-template>
+            </ngb-tab>
+            <!-- JOB SPEC -->
+            <!-- Materials Required -->
+            <ngb-tab *ngIf="id !== 0">
+                <ng-template ngbTabTitle><b>Materials Required</b></ng-template>
+                <ng-template ngbTabContent>
+                    <div class="row tab-border"> 
+                        <div class="col-xl-8 text-xs-center">
+                            <fieldset class="form-group">
+                                <!-- <label><b>External Reference: </b><a href="javascript: void(0)">Link</a></label>                                         -->
+                            </fieldset>
+                        </div>
+                        <div class="col-xl-4 text-xs-center">
+                            <fieldset class="form-group">
+                                <a href="javascript:void(0)" (click)="addRowInMeterialList()" placement="top" ngbTooltip="Add Line Items" class="btn btn-primary pull-right">
+                                    Add Line Items
+                                </a>                                       
+                            </fieldset>
+                        </div>                                             
+                        <div class="row">
+                            <div class="col col-xl-12 col-lg-12">              
+                                <div class="card-body table-responsive table-pading">
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>                        
+                                                <th>Make</th>
+                                                <th>Model</th>
+                                                <th>Part Number</th>
+                                                <th>Part Name</th>
+                                                <th>Quantity</th>
+                                                <th>UOM</th>
+                                                <th>Drawing No</th>
+                                                <th>Remark</th>
+                                                <th style="width: 5%">Action</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <!-- <tr *ngFor="let meterial of jobModel.jobMeterialList;let  index=index"> -->
+                                            <ng-container *ngFor="let meterial of jobModel.jobMaterialDetailsList;let  index=index">
+                                                <tr *ngIf="meterial.isactive == 1">
+                                                    <th>{{meterial.index}}</th>                        
+                                                    <td><input type="text" [(ngModel)]="meterial.make" (focus)="focusOnMeterialRow(index)" class="form-control" placeholder="Make"></td>
+                                                    <td><input type="text" [(ngModel)]="meterial.model" (focus)="focusOnMeterialRow(index)" class="form-control" placeholder="Model"></td>
+                                                    <td><input type="text" [(ngModel)]="meterial.partNo" (focus)="focusOnMeterialRow(index)" class="form-control" placeholder="Part Number"></td>
+                                                    <td><input type="text" [(ngModel)]="meterial.partName" (focus)="focusOnMeterialRow(index)" class="form-control" placeholder="Part Name"></td>
+                                                    <td><input type="text" [(ngModel)]="meterial.quantity" (focus)="focusOnMeterialRow(index)" class="form-control" placeholder="Quantity"></td>
+                                                    <td><input type="text" [(ngModel)]="meterial.uom" (focus)="focusOnMeterialRow(index)" class="form-control" placeholder="UOM"></td>
+                                                    <td><input type="text" [(ngModel)]="meterial.drawingNo" (focus)="focusOnMeterialRow(index)" class="form-control" placeholder="Drawing no"></td>
+                                                    <td><textarea type="text" rows="1" [(ngModel)]="meterial.remark" (focus)="focusOnMeterialRow(index)" class="form-control" placeholder="Remark"></textarea></td>
+                                                    <td class="text-align">                                                
+                                                        <a href="javascript:void(0)" (click)="deleteRowInMeterialList(index)" placement="top" ngbTooltip="Delete" class="btn btn-danger btn-sm action-buton-margin">
+                                                            <i class="fa fa-trash-o fa-fw"></i>
+                                                        </a>
+                                                    </td>                            
+                                                </tr>  
+                                            </ng-container>                                
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>                            
+                        </div>
+                        <div class="col-xl-12 text-xs-center">
+                            <fieldset class="form-group">
+                                <a href="javascript:void(0)" (click)="addRowInMeterialList()" placement="top" ngbTooltip="Add Line Items" class="btn btn-primary pull-right">
+                                    Add Line Items
+                                </a>                                       
+                            </fieldset>
+                        </div>
+                    </div>
+                </ng-template>
+            </ngb-tab>
+            <!-- Materials Required -->
+            <!-- Progress Report -->
+            <ngb-tab *ngIf="id !== 0">
+                <ng-template ngbTabTitle><b>Progress Report</b></ng-template>
+                <ng-template ngbTabContent>
+                    <div class="row tab-border">
+                        <div class="col-xl-12 text-xs-center">
+                            <div class="row">
+                                <div class="col-xl-6 text-xs-center">
+                                    <fieldset class="form-group">
+                                        <label>Reporting Date: </label>
+                                        <div class="div-textbox">
+                                                {{progressReport.reportingDate | date: dateTimeFormat}}
+                                        </div>                                  
+                                    </fieldset>
+                                </div>
+                                <div class="col-xl-6 text-xs-center">
+                                    <fieldset class="form-group">
+                                        <label>Execution Date: </label>
+                                        <div class="input-group datepicker-input">
+                                            <input class="form-control" placeholder="yyyy-mm-dd" [(ngModel)]="progressReport.executionDate"
+                                                ngbDatepicker #keelLayingDate="ngbDatepicker">
+                                            <button class="input-group-addon" (click)="keelLayingDate.toggle()" type="button">
+                                                <span class="fa fa-calendar"></span>
+                                            </button>
+                                        </div>                                  
+                                    </fieldset>
+                                </div>
+                                <div class="col-xl-12 text-xs-center">
+                                    <fieldset class="form-group">
+                                        <label>Work Done For The Day On This Job: </label>
+                                        <div class="input-group datepicker-input">
+                                            <textarea class="form-control" [(ngModel)]="progressReport.workDone"></textarea>
+                                        </div>                                  
+                                    </fieldset>
+                                </div> 
+                                <div class="col-xl-12 text-xs-center">
+                                    <fieldset class="form-group">
+                                        <label>Attachments:</label>
+                                        <div class="row" style="padding-left: 15px;padding-right: 15px;">
+                                            <ng-container *ngFor="let attachment of progressReport.jobAttachmentList;let  index=index">
+                                                <div class="image-grid">
+                                                    <div class="hovereffect">
+                                                        <img class="img-responsive" [src]="attachment.src" *ngIf="attachment.ext == 'image'" style="height: 100%;">
+                                                        <img class="img-responsive" [src]="imagePath.pdf" *ngIf="attachment.ext == 'pdf'" style="height: 100%;">
+                                                        <img class="img-responsive" [src]="imagePath.excel" *ngIf="attachment.ext == 'excel'" style="height: 100%;">
+                                                        <div class="overlay">
+                                                            <h2 style="font-size: 12px !important;">{{attachment.attachmentName}}</h2>
+                                                            <p>
+                                                                <a href="javascript:void(0)" (click)="downloadFile(attachment)" style="padding: 10px;"><i class="fa fa-download" aria-hidden="true"></i></a>
+                                                                <a href="javascript:void(0)" (click)="deleteFile(index)" style="padding: 10px;"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <textarea class="form-control" [(ngModel)]="attachment.attachmentDescription" style="resize: none;" placeholder="description"></textarea>
+                                                </div> 
+                                            </ng-container> 
+                                            <div class="image-grid" style="width: 200px">
+                                                <div class="input--file">                                                
+                                                    <i class="fa fa-paperclip fa-4" aria-hidden="true" style="font-size: 50px;"></i>
+                                                    <input name="Select File" #fileUpload class="file-class" (change)="handleFileInput($event.target.files, 'progress-report');" type="file" multiple style="height: 80px;width: 80px;"/>
+                                                </div>
+                                            </div>                                   
+                                        </div>
+                                        <!-- <div class="row" style="padding-left: 15px;padding-right: 15px;">
+                                            <ng-container *ngFor="let attachment of jobModel.jobAttachmentList;let  index=index">
+                                            <div class="col-md-2 image-thumble-border" *ngIf="attachment.attachmentType == 'JPR'">
+                                                <div class="thumbnail">
+                                                    <img [src]="attachment.src" *ngIf="attachment.ext == 'image'" alt="Lights" style="width:100%;height: 150px;">
+                                                    <img [src]="imagePath.pdf" *ngIf="attachment.ext == 'pdf'" alt="Lights" style="width:100%;height: 150px;">
+                                                    <img [src]="imagePath.excel" *ngIf="attachment.ext == 'excel'" alt="Lights" style="width:100%;height: 150px;">
+                                                    <div class="overlay">
+                                                        <a href="javascript: void(0)" class="download-icon">
+                                                            <i class="fa fa-download"></i>
+                                                        </a>
+                                                        <a (click)="deleteFile(index)" href="javascript: void(0)" class="del-icon">
+                                                            <i class="fa fa-trash"></i>
+                                                        </a>
+                                                    </div>
+                                                    <div class="caption" style="padding-top: 5px;">
+                                                        <textarea class="form-control" style="resize: none;"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            </ng-container>                                            
+                                            <div class="col-xl-2">
+                                                <div class="input--file">                                                
+                                                    <i class="fa fa-paperclip fa-4" aria-hidden="true" style="font-size: 50px;"></i>
+                                                    <input name="Select File" #fileUpload class="file-class" (change)="handleFileInput($event.target.files, 'progress-report');" type="file" multiple style="height: 80px;width: 80px;"/>
+                                                </div>
+                                            </div>                                        
+                                        </div> -->
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="col-xl-12 text-xs-center">
+                            <fieldset class="form-group">
+                                <button type="button" (click)="addJobProgressReport()" class="btn btn-primary pull-right">Add Report</button>
+                            </fieldset>
+                        </div> -->
+
+                        <div class="col-xl-12 text-xs-center">
+                            <div class="card mb-3">
+                                <div class="card-header">Report History</div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-xl-12 text-xs-center">                                            
+                                            <div class="row" *ngFor="let report of jobModel.jobProgressReportList;let  index=index, let odd = odd; let even = even; let last = last; let first = first">
+                                                <div class="col-xl-12 text-xs-center" *ngIf="first && value != 0" [counter]="report.counter" [interval]="interval" (value)="value = $event">
+                                                    <fieldset class="form-group">
+                                                        <button type="button" class="btn btn-primary pull-right" (click)="editProgressReport(index)" ngbTooltip="Edit Progress Report" style="margin-left: 10px;">Edit Progress Report</button>
+                                                    </fieldset>
+                                                </div>
+                                                <div class="col-xl-6 text-xs-center">
+                                                    <fieldset class="form-group">
+                                                        <label>Reporting Date: </label>
+                                                        <div class="div-textbox">
+                                                            {{report.reportingDate | date: dateTimeFormat}}
+                                                        </div>                                  
+                                                    </fieldset>
+                                                </div>
+                                                <div class="col-xl-6 text-xs-center">
+                                                    <fieldset class="form-group">
+                                                        <label>Execution Date: </label>
+                                                        <div class="div-textbox">
+                                                            {{report.executionDate | date: dateFormat}}
+                                                        </div>                                  
+                                                    </fieldset>
+                                                </div>
+                                                <div class="col-xl-12 text-xs-center">
+                                                    <fieldset class="form-group">
+                                                        <label>Work Done For The Day On This Job: </label>
+                                                        <div class="input-group datepicker-input">
+                                                            <textarea class="form-control" [(ngModel)]="report.workDone" disabled></textarea>
+                                                        </div>                                  
+                                                    </fieldset>
+                                                </div>
+                                                <div class="col-xl-12 text-xs-center">
+                                                    <fieldset class="form-group">
+                                                        <div class="attachment-col" (click)="report.isOpen = !report.isOpen"
+                                                        [attr.aria-expanded]="!report.isOpen" aria-controls="index">
+                                                            <label>Attachments:</label>
+                                                            <i class="fa fa-angle-right custom-arrow pull-right" aria-hidden="true" *ngIf="!report.isOpen"></i>
+                                                            <i class="fa fa-angle-down custom-arrow pull-right" aria-hidden="true" *ngIf="report.isOpen"></i>
+                                                        </div>                                                        
+                                                        <div class="row" id="index" [ngbCollapse]="!report.isOpen" style="padding-left: 15px;padding-right: 15px;">
+                                                            <ng-container *ngFor="let attachment of report.jobAttachmentList;let  index=index">
+                                                                    <div class="image-grid">
+                                                                        <div class="hovereffect">
+                                                                            <img class="img-responsive" [src]="attachment.src" *ngIf="attachment.ext == 'image'" style="height: 100%;">
+                                                                            <img class="img-responsive" [src]="imagePath.pdf" *ngIf="attachment.ext == 'pdf'" style="height: 100%;">
+                                                                            <img class="img-responsive" [src]="imagePath.excel" *ngIf="attachment.ext == 'excel'" style="height: 100%;">
+                                                                            <div class="overlay">
+                                                                                <h2 style="font-size: 12px !important;">{{attachment.attachmentName}}</h2>
+                                                                                <p>
+                                                                                    <a href="javascript:void(0)" (click)="downloadFile(attachment)" style="padding: 10px;"><i class="fa fa-download" aria-hidden="true"></i></a>
+                                                                                </p>
+                                                                            </div>
+                                                                        </div>
+                                                                        <textarea class="form-control" [(ngModel)]="attachment.attachmentDescription" style="resize: none;" placeholder="description"></textarea>
+                                                                    </div> 
+                                                            </ng-container>                                                                                                  
+                                                        </div>
+                                                    </fieldset>
+                                                </div>
+                                                <div *ngIf="!last" [ngClass]="{ 'odd-border': odd, 'even-border': even }"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </ngb-tab>
+            <!-- Progress Report -->
+            <!-- Phatos and report -->
+            <ngb-tab *ngIf="id !== 0">
+                <ng-template ngbTabTitle><b>Exec Photos & Reports</b></ng-template>
+                <ng-template ngbTabContent>
+                        <div class="row tab-border" style="padding-left: 15px;padding-right: 15px;">
+                            <ng-container *ngFor="let attachment of jobModel.jobAttachmentList;let  index=index">
+                                <div class="image-grid" *ngIf="attachment.attachmentType == 'JER'">
+                                    <div class="hovereffect">
+                                        <img class="img-responsive" [src]="attachment.src" *ngIf="attachment.ext == 'image'" style="height: 100%;">
+                                        <img class="img-responsive" [src]="imagePath.pdf" *ngIf="attachment.ext == 'pdf'" style="height: 100%;">
+                                        <img class="img-responsive" [src]="imagePath.excel" *ngIf="attachment.ext == 'excel'" style="height: 100%;">
+                                        <div class="overlay">
+                                            <h2 style="font-size: 12px !important;">{{attachment.attachmentName}}</h2>
+                                            <p>
+                                                <a href="javascript:void(0)" (click)="downloadFile(attachment)" style="padding: 10px;"><i class="fa fa-download" aria-hidden="true"></i></a>
+                                                <a href="javascript:void(0)" (click)="deleteFile(index)" style="padding: 10px;"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <textarea class="form-control" style="resize: none;" [(ngModel)]="attachment.description" placeholder="description"></textarea>
+                                </div> 
+                            </ng-container> 
+                            <div class="image-grid" style="width: 200px">
+                                <div class="input--file">                                                
+                                    <i class="fa fa-paperclip fa-4" aria-hidden="true" style="font-size: 50px;"></i>
+                                    <input name="Select File" #fileUpload class="file-class" (change)="handleFileInput($event.target.files, 'exp-report');" type="file" multiple style="height: 80px;width: 80px;"/>
+                                </div>
+                            </div>                                   
+                        </div>
+                    <!-- <div class="row tab-border" style="padding-left: 15px;padding-right: 15px;">
+                        <ng-container *ngFor="let attachment of jobModel.jobAttachmentList;let  index=index">
+                        <div class="col-md-2 image-thumble-border" *ngIf="attachment.attachmentType == 'JER'">
+                            <div class="thumbnail">
+                                <img [src]="attachment.src" *ngIf="attachment.ext == 'image'" alt="Lights" style="width:100%;height: 150px;">
+                                <img [src]="imagePath.pdf" *ngIf="attachment.ext == 'pdf'" alt="Lights" style="width:100%;height: 150px;">
+                                <img [src]="imagePath.excel" *ngIf="attachment.ext == 'excel'" alt="Lights" style="width:100%;height: 150px;">
+                                <div class="overlay">
+                                    <a href="javascript: void(0)" class="download-icon">
+                                        <i class="fa fa-download"></i>
+                                    </a>
+                                    <a (click)="deleteFile(index)" href="javascript: void(0)" class="del-icon">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                </div>
+                                <div class="caption" style="padding-top: 5px;">
+                                    <textarea class="form-control" style="resize: none;"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        </ng-container>                                            
+                        <div class="col-xl-2">
+                            <div class="input--file">                                                
+                                <i class="fa fa-paperclip fa-4" aria-hidden="true" style="font-size: 50px;"></i>
+                                <input name="Select File" #fileUpload class="file-class" (change)="handleFileInput($event.target.files, 'exp-report');" accept="image/*" type="file" multiple style="height: 80px;width: 80px;"/>
+                            </div>
+                        </div>                                        
+                    </div>	 -->
+                </ng-template>
+            </ngb-tab>
+            <!-- Phatos and report -->
+            <ngb-tab title="Old" *ngIf="false">
+                <ng-template ngbTabContent>
+                    <div class="col-xl-12" *ngIf="id != 0">
+                        <marquee direction="right" speed="normal" behavior="loop" >
+                            <b>Last Updated By: </b> {{userDetail.firstname}} {{userDetail.lastname}}    <b>Last Update:</b> {{jobModel.updatedate | date: 'dd-MM-yyyy'}}
+                         </marquee>
+                    </div>
+                    <div class="row">  
+                        <div class="col-xl-8">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <form role="form"  novalidat [formGroup]="jobForm" novalidat (ngSubmit)="saveJob()">
+                                        <div class="row">
+                                            <div class="col-xl-4 text-xs-center" *ngIf="id == 0">
+                                                <fieldset class="form-group">
+                                                    <a (click)="selectJobForCopy('library')" class="btn btn-primary pull-left" style="color: white;">Copy from job library</a>
+                                                </fieldset>
+                                            </div>
+                                            <div class="col-xl-4 text-xs-center" *ngIf="id == 0">
+                                                <fieldset class="form-group">
+                                                    <a (click)="selectJobForCopy('previous')" class="btn btn-primary" style="color: white;">Copy from job my previous job</a>
+                                                </fieldset>
+                                            </div>
+                                            <div class="text-xs-center" [ngClass]="{'col-xl-4': id == 0, 'col-xl-12': id != 0}">
+                                                <fieldset class="form-group">
+                                                    <a (click)="selectComponent()" class="btn btn-primary pull-right" style="color: white;">Select Component</a>
+                                                </fieldset>
+                                            </div>
+                                            <div class="col-xl-6 text-xs-center">
+                                                <fieldset class="form-group">
+                                                    <label><b>Ship Name: </b>{{shipname}}</label>                                        
+                                                </fieldset>
+                                            </div>
+                                            <div class="col-xl-6 text-xs-center">
+                                                <fieldset class="form-group">
+                                                    <label><b>Component: </b>{{selectedComponent.code}}-{{selectedComponent.description}}</label>
+                                                </fieldset>
+                                            </div>
+                                            <div class="col-xl-12 text-xs-center">
+                                                <fieldset class="form-group">
+                                                    <label>Date: </label>
+                                                    <div class="input-group datepicker-input">
+                                                        <input class="form-control" placeholder="yyyy-mm-dd"
+                                                            ngbDatepicker #keelLayingDate="ngbDatepicker" formControlName="jobdate">
+                                                        <button class="input-group-addon" (click)="keelLayingDate.toggle()" type="button">
+                                                            <span class="fa fa-calendar"></span>
+                                                        </button>
+                                                    </div>                                  
+                                                </fieldset>
+                                            </div>
+                                            <div class="col-xl-12 text-xs-center">
+                                                <fieldset class="form-group">
+                                                    <label>Job Description:</label>
+                                                    <textarea class="form-control" rows="4" formControlName="description"></textarea>
+                                                    <div class="has-error" *ngIf="jobForm.controls.description.errors && (jobForm.controls.description.dirty 	|| jobForm.controls.description.touched)"> 
+                                                            <p *ngIf="jobForm.controls.description.errors.required || jobForm.get('description').hasError('invalidvalue')">Job Description is required</p>
+                                                            <p *ngIf="jobForm.controls.description.errors.maxlength">Max length exceeded</p>
+                                                        </div>                                    
+                                                </fieldset>
+                                            </div>
+                                            <div class="col-xl-12 text-xs-center">
+                                                <fieldset class="form-group">
+                                                    <label>Account No:</label>
+                                                    <input class="form-control" formControlName="accountno"/>                                    
+                                                </fieldset>
+                                            </div>
+                                            <div class="col-xl-12 text-xs-center">
+                                                <fieldset class="form-group">
+                                                    <label>Make, Type etc:</label>
+                                                    <textarea class="form-control" rows="4" formControlName="specification" placeholder="Make, Type, Rating, Weight, Volume, RPM, Voltage,etc."></textarea>                                    
+                                                </fieldset>
+                                            </div>
+                                            <div class="col-xl-12 text-xs-center">
+                                                <fieldset class="form-group">
+                                                    <label>Location:</label>
+                                                    <input class="form-control" formControlName="location" />                               
+                                                </fieldset>
+                                            </div>
+                                            <div class="col-xl-12 text-xs-center">
+                                                <fieldset class="form-group">
+                                                    <label>Detailed specification:</label>
+                                                    <textarea class="form-control" rows="4" formControlName="detailedSpecification" placeholder="Detailed specification incl. size, amount,dimension, material etc."></textarea>                                    
+                                                </fieldset>
+                                            </div>
+                                            <!-- <div class="col-xl-12 text-xs-center">
+                                                <fieldset class="form-group">
+                                                    <label>Total Area:</label>
+                                                    <input class="form-control" formControlName="totalArea" />                               
+                                                </fieldset>
+                                            </div> -->
+                                            <div class="col-xl-12 text-xs-center">
+                                                <fieldset class="form-group">
+                                                    <label>Estimated Budget:</label>
+                                                    <input type="number" class="form-control" formControlName="estimatedBudget" />                               
+                                                </fieldset>
+                                            </div>
+                                            <div class="col-xl-12 text-xs-center">
+                                                <fieldset class="form-group">
+                                                    <label>Currency:</label>
+                                                    <select class="form-control" formControlName="currency">
+                                                        <option value="">-Select-</option>
+                                                        <option value="INR">INR</option>
+                                                        <option value="U.S. Dollar">U.S. Dollar</option>
+                                                        <option value="British Pound">British Pound</option>
+                                                    </select>                             
+                                                </fieldset>
+                                            </div>
+                                            <div class="col-xl-12 text-xs-center">
+                                                <fieldset class="form-group">
+                                                    <label>Enclosed (Photo):</label>
+                                                    <div class="row">
+                                                        <ng-container *ngFor="let attachment of jobModel.jobAttachmentList;let  index=index">
+                                                            <div class="col-xl-3" *ngIf="attachment.attachmentType == 'image'"> 
+                                                                <div class="image-container">
+                                                                    <img class="img-thumbnail" [src]="attachment.src" alt="Lights" style="width:100%;height: 150px;"> 
+                                                                    <div class="overlay">
+                                                                        <a href="javascript: void(0)" (click)="deleteFile(index)" class="del-icon">
+                                                                        <i class="fa fa-trash"></i>
+                                                                        </a>
+                                                                    </div>
+                                                                </div> 
+                                                            </div>
+                                                        </ng-container>                                            
+                                                          
+                                                        <div class="col-xl-3">
+                                                            <div class="input--file">                                                
+                                                                <i class="fa fa-camera fa-4" aria-hidden="true" style="font-size: 50px;"></i>
+                                                                <input name="Select File" #fileUpload class="file-class" (change)="handleFileInput($event.target.files, true);" accept="image/*" type="file" multiple style="height: 80px;width: 80px;"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>                        
+                                                </fieldset>
+                                            </div>
+                                            <div class="col-xl-12 text-xs-center">
+                                                <fieldset class="form-group">
+                                                    <label>Enclosed (Drawing/Sketch):</label>
+                                                    <div class="browse-wrap">
+                                                        <div class="title">Choose a file to upload</div>
+                                                        <input type="file" #fileUpload (change)="handleFileInput($event.target.files, false);" multiple name="upload" class="upload" title="Choose a file to upload">
+                                                    </div>                                        
+                                                    <table class="table table-bordered table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>File Name</th>  
+                                                                <th>File Description</th>                                                      
+                                                                <th class="text-align">Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <ng-container *ngFor="let attachment of jobModel.jobAttachmentList;let  index=index">
+                                                                <tr *ngIf="attachment.attachmentType == 'file'">
+                                                                    <td>{{attachment.relativepath.split('/')[1]}}</td>
+                                                                    <td>
+                                                                        <textarea class="form-control" [(ngModel)]="attachment.attachmentDescription" [ngModelOptions]="{standalone: true}"></textarea>
+                                                                    </td>
+                                                                    <td style="width: 20%" class="text-align">
+                                                                        <!-- <a href="javascript:void(0)" (click)="downloadFile(attachment)" class="btn btn-primary btn-sm" placement="top" ngbTooltip="Download File">
+                                                                            <i class="fa fa-download fa-fw"></i>
+                                                                        </a> -->
+                                                                        <a href="javascript:void(0)" (click)="deleteFile(index)" placement="top" ngbTooltip="Delete File" class="btn btn-danger btn-sm action-buton-margin">
+                                                                            <i class="fa fa-trash-o fa-fw"></i>
+                                                                        </a>
+                                                                    </td>
+                                                                </tr>
+                                                            </ng-container>
+                                                        </tbody>
+                                                    </table>
+                                                    
+                                                </fieldset>
+                                            </div>
+                                            <div class="col-xl-12 text-xs-center">
+                                                <fieldset class="form-group">
+                                                    <label>Previous Comment:</label>                                                                             
+                                                    <table class="table table-bordered table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>#</th>  
+                                                                <th>Comment</th> 
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>                                                
+                                                            <tr *ngFor="let comment of jobModel.jobCommentList;let  index=index">
+                                                                <td>{{index + 1}}</td>
+                                                                <td>{{comment.jobComment}}</td>                                                        
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>                                        
+                                                </fieldset>
+                                            </div>
+                                            <div class="col-xl-12 text-xs-center">
+                                                <fieldset class="form-group">
+                                                    <label>Comment:</label>
+                                                    <textarea class="form-control" formControlName="jobComment"></textarea>                               
+                                                </fieldset>
+                                            </div>
+            
+                                            <div class="col-xl-12 text-xs-center">
+                                                <fieldset class="form-group">
+                                                    <button type="submit" [disabled]="jobForm.invalid" class="btn btn-primary pull-right">Save</button>
+                                                </fieldset>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div> 
+                        <div class="col-xl-4">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <div class="list-group">                               
+                                        <a href="javascript:void(0)" class="list-group-item active">Services To Include</a>
+                                        <a href="javascript:void(0)" class="list-group-item list-group-item-height" *ngFor="let com of checkboxList['Services to include']; let index=index">
+                                            <label class="container">{{com.description}}
+                                                <input type="checkbox" [(ngModel)]="com.isSelected">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </a>                            
+                                    </div>
+                                    <br>
+                                    <div class="list-group">                               
+                                        <a href="javascript:void(0)" class="list-group-item active">Meterials</a>
+                                        <a href="javascript:void(0)" class="list-group-item list-group-item-height" *ngFor="let com of checkboxList['Materials']; let index=index">
+                                            <label class="container">{{com.description}}
+                                                    <input type="checkbox" [(ngModel)]="com.isSelected">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </a>                            
+                                    </div>
+                                    <br>
+                                    <div class="list-group">                               
+                                        <a href="javascript:void(0)" class="list-group-item active">The Work To Be Surved Also By</a>
+                                        <a href="javascript:void(0)" class="list-group-item list-group-item-height" *ngFor="let com of checkboxList['The work to be surveyed also by']; let index=index">
+                                            <label class="container">{{com.description}}
+                                                    <input type="checkbox" [(ngModel)]="com.isSelected">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </a>                            
+                                    </div>
+                                </div>
+                            </div>
+                        </div>           
+                    </div>
+                </ng-template>
+            </ngb-tab>
+        </ngb-tabset>
+        <div class="col-xl-12 text-xs-center" style="margin-top: 15px">
+            <fieldset class="form-group">            
+                <button type="button" class="btn btn-primary pull-right" (click)="saveJob()" ngbTooltip="Save All Tabs" style="margin-left: 10px;">Save</button>
+                <button type="button" class="btn btn-primary pull-right" (click)="gotoJobList()" ngbTooltip="Exit">Close</button>
+            </fieldset>
+        </div>
+        <div class="card mb-3" *ngIf="id !== 0">
+            <div class="card-header">Comment</div>
+            <div class="card-body">
+                <div class="col-xl-12 text-xs-center">
+                    <fieldset class="form-group">
+                        <textarea class="form-control" [(ngModel)]="jobModel.jobComment"></textarea>                               
+                    </fieldset>
+                </div>
+                <div class="col-xl-12 text-xs-center">
+                    <fieldset class="form-group">            
+                        <button type="button" class="btn btn-primary pull-right" (click)="saveJob()" style="margin-left: 10px;">Save Comment</button>
+                    </fieldset>
+                </div>
+                <div class="col-xl-12 text-xs-center">
+                    <fieldset class="form-group">
+                        <label>Previous Comments:</label>                                                                             
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</th>  
+                                    <th style="width: 60%">Comment</th> 
+                                    <th>User Name</th> 
+                                    <th>Time</th> 
+                                </tr>
+                            </thead>
+                            <tbody>                                                
+                                <tr *ngFor="let comment of jobModel.jobCommentList;let  index=index">
+                                    <td>{{index + 1}}</td>
+                                    <td>{{comment.jobComment}}</td>  
+                                    <td>{{comment.updatedBy}}</td>   
+                                    <td>{{comment.updatedate | date: dateTimeFormat}}</td>                                                   
+                                </tr>
+                            </tbody>
+                        </table>                                        
+                    </fieldset>
+                </div>
+            </div>
+        </div>           
+    </div>
+</div>

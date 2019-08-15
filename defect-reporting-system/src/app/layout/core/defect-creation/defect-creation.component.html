@@ -1,0 +1,567 @@
+<div [@routerTransition]>
+    <app-page-header [breadcrumb]="BREADCRUMB" [icon]="'fa-table'"></app-page-header>
+    <form role="form" [formGroup]="defectForm" novalidat (ngSubmit)="saveShip()">
+        <div class="row">
+            <div class="col-xl-12 text-xs-center">
+                <fieldset class="form-group">
+                    <button type="submit" [disabled]="defectForm.invalid" class="btn btn-primary pull-right">Save
+                        Defect Details</button>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Ship Name<span class="has-error">*</span></label>
+                    <ngx-select-dropdown formControlName="shipName" [config]="searchDropdownConfig" [options]="['1', '2']"></ngx-select-dropdown>
+                    <div class="has-error" *ngIf="defectForm.controls.shipName.errors && (defectForm.controls.shipName.dirty 	|| defectForm.controls.shipName.touched)">
+                        <p *ngIf="defectForm.controls.shipName.errors.required">Ship name is required</p>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Def ID<span class="has-error">*</span></label>
+                    <input class="form-control" formControlName="defId">
+                </fieldset>
+            </div>
+            <div class="col-xl-12 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Defect Detail:</label>
+                    <textarea class="form-control" formControlName="defectDetail" rows="5"></textarea>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Component</label>
+                    <input class="form-control" formControlName="component">
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Raised On<span class="has-error">*</span></label>
+                    <div class="input-group datepicker-input">
+                        <input class="form-control" placeholder="yyyy-mm-dd" ngbDatepicker #raisedOnDate="ngbDatepicker"
+                            formControlName="raisedOn">
+                        <button class="input-group-addon" (click)="raisedOnDate.toggle()" type="button">
+                            <span class="fa fa-calendar"></span>
+                        </button>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Severity<span class="has-error">*</span> </label>
+                    <ngx-select-dropdown formControlName="severity" [config]="searchDropdownConfig" [options]="['Severity 1', 'Severity 2']"></ngx-select-dropdown>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Raised By<span class="has-error">*</span></label>
+                    <ngx-select-dropdown formControlName="raisedBy" [config]="searchDropdownConfig" [options]="['User 1', 'User 2']"></ngx-select-dropdown>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>System</label>
+                    <ngx-select-dropdown formControlName="system" [config]="searchDropdownConfig" [options]="['System 1', 'System 2']"></ngx-select-dropdown>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Repair Criteria</label>
+                    <ngx-select-dropdown formControlName="repairCriteria" [config]="searchDropdownConfig" [options]="['Repair Criteria 1', 'Repair Criteria 2']"></ngx-select-dropdown>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Status<span class="has-error">*</span></label>
+                    <select class="form-control" formControlName="status">
+                        <option>Open</option>
+                        <option>In-progress</option>
+                        <option>Done</option>
+                    </select>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Target Date</label>
+                    <div class="input-group datepicker-input">
+                        <input class="form-control" placeholder="yyyy-mm-dd" ngbDatepicker #targetDate="ngbDatepicker"
+                            formControlName="targetDate">
+                        <button class="input-group-addon" (click)="targetDate.toggle()" type="button">
+                            <span class="fa fa-calendar"></span>
+                        </button>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="col-xl-12 text-xs-center" style="padding-bottom: 50px">
+                <fieldset class="form-group">
+                    <button type="submit" [disabled]="defectForm.invalid" class="btn btn-primary pull-right">Save
+                        Defect Details</button>
+                </fieldset>
+            </div>
+
+            <div class="col-xl-12">
+                <ngb-tabset>
+                    <ngb-tab>
+                        <ng-template ngbTabTitle><b>Comments</b></ng-template>
+                        <ng-template ngbTabContent>
+                            <div class="row" style="padding: 15px;">
+                                <div class="col-xl-12 text-xs-center">                                    
+                                    <div class="chat-panel ">
+                                        <ul class="chat">
+                                            <li class="left clearfix">
+                                                <div class="chat-body clearfix">
+                                                    <div class="header">
+                                                        <strong class="primary-font">Aloke Kantal<i class="fa fa-pencil chat-edit-bth-right"></i></strong>
+                                                        <small class="pull-right text-muted">
+                                                            <i class="fa fa-clock-o fa-fw"></i> 2019-01-01 10:10 AM
+                                                        </small>
+                                                    </div>
+                                                    <p>
+                                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                                        Curabitur
+                                                        bibendum ornare dolor,
+                                                        quis ullamcorper ligula sodales.
+                                                    </p>
+                                                </div>
+                                            </li>
+                                            <li class="right clearfix">
+                                                <div class="chat-body clearfix">
+                                                    <div class="header">
+                                                        <small class=" text-muted">
+                                                            <i class="fa fa-clock-o fa-fw"></i> 2019-01-01 08:10 AM
+                                                        </small>
+                                                        <strong class="pull-right primary-font"><i class="fa fa-pencil chat-edit-bth-left"></i>Rupah Hazra</strong>
+                                                    </div>
+                                                    <p>
+                                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                                        Curabitur
+                                                        bibendum ornare dolor,
+                                                        quis ullamcorper ligula sodales.
+                                                    </p>
+                                                </div>
+                                            </li>
+                                            <li class="left clearfix">
+                                                <div class="chat-body clearfix">
+                                                    <div class="header">
+                                                        <strong class="primary-font">Aloke Kantal<i class="fa fa-pencil chat-edit-bth-right"></i></strong>
+                                                        <small class="pull-right text-muted">
+                                                            <i class="fa fa-clock-o fa-fw"></i> 2019-01-01 7:10 AM
+                                                        </small>
+                                                    </div>
+                                                    <p>
+                                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                                        Curabitur
+                                                        bibendum ornare dolor,
+                                                        quis ullamcorper ligula sodales.
+                                                    </p>
+                                                </div>
+                                            </li>
+                                            <li class="right clearfix">
+                                                <div class="chat-body clearfix">
+                                                    <div class="header">
+                                                        <small class=" text-muted">
+                                                            <i class="fa fa-clock-o fa-fw"></i> 2019-01-01 05:10 AM
+                                                        </small>
+                                                        <strong class="pull-right primary-font"><i class="fa fa-pencil chat-edit-bth-left"></i>Rupah Hazra</strong>
+                                                    </div>
+                                                    <p>
+                                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                                        Curabitur
+                                                        bibendum ornare dolor,
+                                                        quis ullamcorper ligula sodales.
+                                                    </p>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-12 text-xs-center">
+                                    <fieldset class="form-group">
+                                        <label>Comment:</label>
+                                        <textarea class="form-control" rows="5"></textarea>
+                                    </fieldset>
+                                </div>
+                                <div class="col-xl-12 text-xs-center">
+                                    <fieldset class="form-group">
+                                        <button type="submit" class="btn btn-primary pull-right">Save Comment</button>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngb-tab>
+
+                    <ngb-tab>
+                        <ng-template ngbTabTitle><b>Corrective Action</b></ng-template>
+                        <ng-template ngbTabContent>
+                            <div class="row" style="padding: 15px;">
+                                <div class="col-xl-12 text-xs-center">                                    
+                                    <div class="chat-panel ">
+                                        <ul class="chat">
+                                            <li class="left clearfix">
+                                                <div class="chat-body clearfix">
+                                                    <div class="header">
+                                                        <strong class="primary-font">Aloke Kantal<i class="fa fa-pencil chat-edit-bth-right"></i></strong>
+                                                        <small class="pull-right text-muted">
+                                                            <i class="fa fa-clock-o fa-fw"></i> 2019-01-01 10:10 AM
+                                                        </small>
+                                                    </div>
+                                                    <p>
+                                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                                        Curabitur
+                                                        bibendum ornare dolor,
+                                                        quis ullamcorper ligula sodales.
+                                                    </p>
+                                                </div>
+                                            </li>
+                                            <li class="right clearfix">
+                                                <div class="chat-body clearfix">
+                                                    <div class="header">
+                                                        <small class=" text-muted">
+                                                            <i class="fa fa-clock-o fa-fw"></i> 2019-01-01 08:10 AM
+                                                        </small>
+                                                        <strong class="pull-right primary-font"><i class="fa fa-pencil chat-edit-bth-left"></i>Rupah Hazra</strong>
+                                                    </div>
+                                                    <p>
+                                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                                        Curabitur
+                                                        bibendum ornare dolor,
+                                                        quis ullamcorper ligula sodales.
+                                                    </p>
+                                                </div>
+                                            </li>
+                                            <li class="left clearfix">
+                                                <div class="chat-body clearfix">
+                                                    <div class="header">
+                                                        <strong class="primary-font">Aloke Kantal<i class="fa fa-pencil chat-edit-bth-right"></i></strong>
+                                                        <small class="pull-right text-muted">
+                                                            <i class="fa fa-clock-o fa-fw"></i> 2019-01-01 7:10 AM
+                                                        </small>
+                                                    </div>
+                                                    <p>
+                                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                                        Curabitur
+                                                        bibendum ornare dolor,
+                                                        quis ullamcorper ligula sodales.
+                                                    </p>
+                                                </div>
+                                            </li>
+                                            <li class="right clearfix">
+                                                <div class="chat-body clearfix">
+                                                    <div class="header">
+                                                        <small class=" text-muted">
+                                                            <i class="fa fa-clock-o fa-fw"></i> 2019-01-01 05:10 AM
+                                                        </small>
+                                                        <strong class="pull-right primary-font"><i class="fa fa-pencil chat-edit-bth-left"></i>Rupak Hazra</strong>
+                                                    </div>
+                                                    <p>
+                                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                                        Curabitur
+                                                        bibendum ornare dolor,
+                                                        quis ullamcorper ligula sodales.
+                                                    </p>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-12 text-xs-center">
+                                    <fieldset class="form-group">
+                                        <label>Corrective Action:</label>
+                                        <textarea class="form-control" rows="5"></textarea>
+                                    </fieldset>
+                                </div>
+                                <div class="col-xl-12 text-xs-center">
+                                    <fieldset class="form-group">
+                                        <button type="submit" class="btn btn-primary pull-right">Save Corrective Action</button>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngb-tab>
+                </ngb-tabset>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+            <!-- <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Name<span class="has-error">*</span></label>
+                    <input class="form-control" formControlName="name">
+                    <div class="has-error" *ngIf="defectForm.controls.name.errors && (defectForm.controls.name.dirty 	|| defectForm.controls.name.touched)">
+                        <p *ngIf="defectForm.controls.name.errors.required || defectForm.get('name').hasError('invalidvalue')">Name
+                            is required</p>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>MMSI No</label>
+                    <input type="number" class="form-control" formControlName="mmsi_no">
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Call Sign</label>
+                    <input class="form-control" formControlName="call_sign">
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Official Number </label>
+                    <input class="form-control" formControlName="official_no">
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Vessel Type</label>
+                    <select class="form-control" formControlName="v_type">
+                        <option value="">-Select-</option>
+                        <option *ngFor="let vessel of vesselList" value={{vessel.id}}>
+                            {{vessel.description}}
+                        </option>
+                    </select>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Register Owner Name</label>
+                    <input class="form-control" formControlName="owner_name">
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Mail ID</label>
+                    <input class="form-control" formControlName="emailID">
+                    <div class="has-error" *ngIf="defectForm.controls.emailID.errors && (defectForm.controls.emailID.dirty 	|| defectForm.controls.emailID.touched)">
+                        <p *ngIf="defectForm.get('emailID').hasError('invalidEmail')">Please give email in currect
+                            format</p>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Class</label>
+                    <input class="form-control" formControlName="shipClass">
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Class Notations</label>
+                    <input class="form-control" formControlName="class_notations">
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Classification ID.No.</label>
+                    <input class="form-control" formControlName="Classi_Id_No">
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Flag</label>
+                    <input class="form-control" formControlName="flag">
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Port Of Registry</label>
+                    <input class="form-control" formControlName="port_of_registry">
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Year Built</label>
+                    <input class="form-control" formControlName="year_built">
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Keel Laying Date</label>
+                    <div class="input-group datepicker-input">
+                        <input class="form-control" placeholder="yyyy-mm-dd" ngbDatepicker #keelLayingDate="ngbDatepicker"
+                            formControlName="keel_laying_date">
+                        <button class="input-group-addon" (click)="keelLayingDate.toggle()" type="button">
+                            <span class="fa fa-calendar"></span>
+                        </button>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Vessel Delivery Date</label>
+                    <div class="input-group datepicker-input">
+                        <input class="form-control" placeholder="yyyy-mm-dd" ngbDatepicker #vesselDeliveryDate="ngbDatepicker"
+                            formControlName="vessel_delivery_date">
+                        <button class="input-group-addon" (click)="vesselDeliveryDate.toggle()" type="button">
+                            <span class="fa fa-calendar"></span>
+                        </button>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Hull Type(SingleHull/Double Sided/Double Bottom/Double Hull)</label>
+                    <input class="form-control" formControlName="hull_type">
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Length Overall</label>
+                    <input type="number" class="form-control" formControlName="length_overall">
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Breadth MLD</label>
+                    <input type="number" class="form-control" formControlName="breadth_MLD">
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Depth</label>
+                    <input type="number" class="form-control" formControlName="depth">
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Summer Draft (M)</label>
+                    <input type="number" class="form-control" formControlName="summer_draft_M">
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Summer DWT (MT)</label>
+                    <input class="form-control" formControlName="summer_DWT_MT">
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>International GRT</label>
+                    <input class="form-control" formControlName="international_GRT">
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>International NRT</label>
+                    <input class="form-control" formControlName="international_NRT">
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Life Boat Capacity</label>
+                    <input type="number" class="form-control" formControlName="life_boat_cap">
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Vessel Short Name</label>
+                    <input class="form-control" formControlName="v_short_name">
+                </fieldset>
+            </div>
+
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Email 1</label>
+                    <input class="form-control" formControlName="email1">
+                    <div class="has-error" *ngIf="defectForm.controls.email1.errors && (defectForm.controls.email1.dirty 	|| defectForm.controls.email1.touched)">
+                        <p *ngIf="defectForm.get('email1').hasError('invalidEmail')">Please give email in currect
+                            format</p>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Email 2</label>
+                    <input class="form-control" formControlName="email2">
+                    <div class="has-error" *ngIf="defectForm.controls.email2.errors && (defectForm.controls.email2.dirty 	|| defectForm.controls.email2.touched)">
+                        <p *ngIf="defectForm.get('email2').hasError('invalidEmail')">Please give email in currect
+                            format</p>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Phone No</label>
+                    <input class="form-control" type="number" formControlName="phoneNo">
+                </fieldset>
+            </div>
+
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Phone No 1</label>
+                    <input class="form-control" type="number" formControlName="phoneNo1">
+                </fieldset>
+            </div>
+
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Phone No 2</label>
+                    <input class="form-control" type="number" formControlName="phoneNo2">
+                </fieldset>
+            </div>
+
+            <div class="col-xl-12 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Enclosed (Photo):</label>
+                    <div class="row">
+                        <ng-container *ngFor="let attachment of shipModel.shipAttachmentList;let  index=index">
+                            <div class="image-grid">
+                                <div class="hovereffect">
+                                    <img class="img-responsive" [src]="attachment.src" *ngIf="attachment.ext == 'image'"
+                                        style="height: 100%;">
+                                    <img class="img-responsive" [src]="imagePath.pdf" *ngIf="attachment.ext == 'pdf'"
+                                        style="height: 100%;">
+                                    <img class="img-responsive" [src]="imagePath.excel" *ngIf="attachment.ext == 'excel'"
+                                        style="height: 100%;">
+                                    <div class="overlay">
+                                        <h2 style="font-size: 12px !important;">{{attachment.attachmentName}}</h2>
+                                        <p>
+                                            <a href="javascript:void(0)" (click)="downloadFile(attachment)" style="padding: 10px;"><i
+                                                    class="fa fa-download" aria-hidden="true"></i></a>
+                                            <a href="javascript:void(0)" (click)="deleteFile(index)" style="padding: 10px;"><i
+                                                    class="fa fa-trash" aria-hidden="true"></i></a>
+                                        </p>
+                                    </div>
+                                </div>
+                                <select class="form-control" [(ngModel)]="attachment.vesselDocTypeId" [ngModelOptions]="{standalone: true}"
+                                    style="margin-bottom: 5px;">
+                                    <option value="0">-Select-</option>
+                                    <option *ngFor="let docType of vesselDocTypeMaster" value={{docType.id}}>
+                                        {{docType.vesselDocDescription}}
+                                    </option>
+                                </select>
+                                <textarea class="form-control" [(ngModel)]="attachment.attachmentDescription"
+                                    [ngModelOptions]="{standalone: true}" style="resize: none;" placeholder="description"></textarea>
+                            </div>
+                        </ng-container>
+                        <div class="image-grid" style="width: 200px">
+                            <div class="input--file">
+                                <i class="fa fa-paperclip fa-4" aria-hidden="true" style="font-size: 50px;"></i>
+                                <input name="Select File" #fileUpload class="file-class" (change)="handleFileInput($event.target.files, true);"
+                                    type="file" multiple style="height: 80px;width: 80px;" />
+                            </div>
+                        </div> 
+                       
+                    </div>
+                </fieldset>
+            </div>-->
+
+
+        </div>
+    </form>
+</div>

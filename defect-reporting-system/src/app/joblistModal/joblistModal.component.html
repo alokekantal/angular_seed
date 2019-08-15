@@ -1,0 +1,39 @@
+<div class="modal-header">
+    <h4 class="modal-title">{{ title }}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="dismiss()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col col-xl-12 col-lg-12">
+            <div class="card-body table-responsive table-pading">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th style="width: 10%;">#</th>
+                            <th>Job Description</th>
+                            <th class="text-align" style="width: 20%;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let job of jobLibraryList;let  index=index">
+                            <th>{{index + 1}}</th>
+                            <td>{{job.description}}</td>
+                            <td class="text-align">
+                                <a href="javascript:void(0)" class="btn btn-primary btn-sm"
+                                    (click)="previewJob(job)" placement="top" ngbTooltip="Job Preview"><i class="fa fa-eye fa-fw"></i>
+                                </a>                               
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="decline()">{{ btnCancelText }}</button>
+    <!-- <button type="button" class="btn btn-primary" (click)="accept()">{{btnOkText }}</button> -->
+</div>

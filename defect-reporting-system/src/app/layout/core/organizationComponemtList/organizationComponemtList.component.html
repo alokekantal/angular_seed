@@ -1,0 +1,67 @@
+<div [@routerTransition]>
+    <app-page-header [breadcrumb]="BREADCRUMB" [icon]="'fa-table'"></app-page-header>
+    <form role="form" [formGroup]="componemtForm" novalidat (ngSubmit)="addcomponent()">
+        <div class="row">                
+            <div class="col-xl-5 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Code <span class="has-error">*</span></label>
+                    <input class="form-control" formControlName="code">
+                    <div class="has-error" *ngIf="componemtForm.controls.code.errors && (componemtForm.controls.code.dirty 	|| componemtForm.controls.code.touched)"> 
+                        <p *ngIf="componemtForm.controls.code.errors.required || componemtForm.get('code').hasError('invalidvalue')">Code is required</p>
+                        <p *ngIf="componemtForm.controls.code.errors.maxlength">Max length exceeded</p>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-xl-5 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Description<span class="has-error">*</span></label>
+                    <input class="form-control" formControlName="description">
+                    <div class="has-error" *ngIf="componemtForm.controls.description.errors && (componemtForm.controls.description.dirty 	|| componemtForm.controls.description.touched)"> 
+                        <p *ngIf="componemtForm.controls.description.errors.required">Description is required</p>
+                        <p *ngIf="componemtForm.controls.description.errors.maxlength">Max length exceeded</p>
+                    </div>
+                </fieldset>
+            </div>          
+            <div class="col-xl-2 text-xs-center">
+                <fieldset class="form-group" style="padding-top: 30px;">
+                    <button type="submit" [disabled]="componemtForm.invalid" class="btn btn-primary pull-left">Add</button>
+                </fieldset>
+            </div>
+        </div>
+    </form>
+    <div class="card mb-3">
+        <div class="card-header">
+            <div class="col-xl-6"> 
+                <div class="input-group stylish-input-group">
+                    <input type="text" class="form-control" (keyup)="searchOnEnter($event)" placeholder="Search" [(ngModel)]="searchKeyword">
+                    <span class="input-group-addon search-component">
+                        <button type="btn" (click)="searchComponent()">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </button>  
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="card-body" style="height: 500px; overflow:auto;">           
+            <div class="row">       
+                <div class='title'>
+                    <!--  ================================== -->
+                    <lib-ngx-tree-component 
+                        [treeData]="myTree"
+                        (ondragstart)="onDragStart($event)"
+                        (ondragenter)="onDragEnter($event)"
+                        (ondragleave)="onDragLeave($event)"
+                        (ondrop)="onDrop($event)"
+                        (onallowdrop)="onAllowDrop($event)"
+                        (onadditem)="onAddItem($event)"
+                        (onremoveitem)="onDeleteItem($event)"
+                        (onrenameitem)="onEditItem($event)"
+                        (onselectitem)="onSelectItem($event)"
+                        [config]='config'>
+                    </lib-ngx-tree-component>
+                    <!-- =================================== -->
+                </div> 
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,229 @@
+<div [@routerTransition]>
+    <h2 class="text-muted">Ship Dashboard</h2>
+    <div class="row">
+        <div class="col-xl-7">
+            <div class="card mb-3">
+                <div class="card-body">
+                        <ng-container *ngIf="shipDetail.shipAttachmentList.length !== 0">
+                            <div class="image-grid" *ngFor="let attachment of shipDetail.shipAttachmentList;let  index=index">
+                                <div class="hovereffect">
+                                    <img class="img-responsive" [src]="attachment.src" *ngIf="attachment.ext == 'image'" style="height: 100%;">
+                                    <img class="img-responsive" [src]="imagePath.pdf" *ngIf="attachment.ext == 'pdf'" style="height: 100%;">
+                                    <img class="img-responsive" [src]="imagePath.excel" *ngIf="attachment.ext == 'excel'" style="height: 100%;">
+                                    <div class="overlay">
+                                        <h2 style="font-size: 12px !important;">{{attachment.attachmentName}}</h2>
+                                        <p>
+                                            <a href="javascript:void(0)" (click)="downloadShipFile(attachment)" style="padding: 10px;"><i class="fa fa-download" aria-hidden="true"></i></a>
+                                        </p>
+                                    </div>
+                                </div>
+                                <textarea class="form-control" style="resize: none;" [(ngModel)]="attachment.attachmentDescription" disabled></textarea>
+                            </div> 
+                        </ng-container>
+                    <span *ngIf="shipDetail.shipAttachmentList.length === 0">No image found</span>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-header">Running Jobs ({{jobList | runningJobCount}}):
+                    <span class="pull-right" style="margin-left: 20px"><a href="javascript:void(0)">Dockyard: {{activeProjectDetail.dockyard | singleDockyardFilter: dockyardList}}</a></span>
+                    <span class="pull-right"><a href="javascript:void(0)">Project Start Date: {{activeProjectDetail.startdate}}</a></span>                    
+                </div>
+                <div class="card-body">
+                    <div class="row" style="max-height: 200px; overflow: scroll;">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Job No</th>
+                                    <th>Description</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let job of jobList | orderBy:['updatedate'] | slice:0:limit; let  index=index">
+                                    <td><a href="javascript:void(0)" (click)='jobClick(job)'>{{job.jobno}}</a></td>
+                                    <td>{{job.description}}</td>
+                                    <td>{{job.status == 'A' ? 'WIP' : job.status == 'COM' ? 'Completed' : 'NA'}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <a href="javascript:void(0)" style="padding-left: 30px;" [ngStyle]="{'pointerEventNone': jobList.length == limit}"
+                                (click)="loadMoreJob()" class="pull-right">More
+                            </a>
+                            <a href="javascript:void(0)" style="padding-left: 30px;" [ngStyle]="{'pointerEventNone': jobList.length == limit}"
+                                (click)="loadAllJob()" class="pull-right">Show All
+                            </a>
+                            <span class="pull-right">Showing {{limit}} from {{jobList.length}}</span>                            
+                        </div>                        
+                    </div>                    
+                </div>
+            </div>
+            <div class="row">                    
+                    <div class="col-sm-12">
+                        <div class="row absolute">
+                            <div class="col-sm-3">
+                                <a href="javascript:void(0)" placement="top" 
+                                    ngbTooltip="Home"
+                                    class="btn btn-primary pull-right">
+                                    Home
+                                </a>
+                            </div>
+                            <div class="col-sm-3">
+                                <a href="javascript:void(0)" placement="top" 
+                                    ngbTooltip="Job List" (click)="gotoJobList()"
+                                    class="btn btn-primary pull-right">
+                                    Job List
+                                </a>
+                            </div>        
+                            <div class="col-sm-3">
+                                <a href="javascript:void(0)" placement="top" 
+                                    ngbTooltip="Components" (click)="manageComponent()"
+                                    class="btn btn-primary pull-right">
+                                    Components
+                                </a>
+                            </div>
+                            <div class="col-sm-3">
+                                <a href="javascript:void(0)" placement="top" 
+                                    ngbTooltip="Create Job" (click)="gotoJobCreate()"
+                                    class="btn btn-primary pull-right">Create Job
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        <div class="col-xl-5">
+            <div class="card mb-3">
+                <div class="card-header">Previous Project(s):</div>
+                <div class="card-body">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Dry Dock</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let project of projectList; let  index=index">
+                                <td><a href="javascript:void(0)" (click)="showJobList()">{{project.description}}</a></td>
+                                <td>{{project.startdate}}</td>
+                                <td>{{project.enddate}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header">Vessel information:</div>
+                <div class="card-body">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr *ngIf="shipDetail.name.length !== 0 && shipDetail.name !== null">
+                                <th>Vessel Name</th>
+                                <th>{{shipDetail.name}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngIf="shipDetail.v_imo_no !== null && shipDetail.v_imo_no !== 0">
+                                <td>IMO Number</td>
+                                <td>{{shipDetail.v_imo_no}}</td>
+                            </tr>
+                            <tr *ngIf="shipDetail.flag !== null && shipDetail.flag.length !== 0">
+                                <td>Flag</td>
+                                <td>{{shipDetail.flag}}</td>
+                            </tr>
+                            <tr *ngIf="shipDetail.flag !== null && shipDetail.flag.length !== 0">
+                                <td>Class</td>
+                                <td>
+                                    <span title="[{{shipDetail.shipClass}}] [{{shipDetail.class_notations}}]">[{{shipDetail.shipClass}}] [{{shipDetail.class_notations  | characterLimit: 100}}]</span>                                    
+                                </td>
+                            </tr>
+                            <tr *ngIf="shipDetail.vessel_delivery_date !== null && shipDetail.vessel_delivery_date.length !== 0">
+                                <td>Delivery</td>
+                                <td>{{shipDetail.vessel_delivery_date | date: 'yyyy-MM-dd'}}</td>
+                            </tr>
+                            <tr *ngIf="shipDetail.keel_laying_date !== null && shipDetail.keel_laying_date.length !== 0">
+                                <td>Keel Laid</td>
+                                <td>{{shipDetail.keel_laying_date | date: 'yyyy-MM-dd'}}</td>
+                            </tr>
+                            <tr *ngIf="shipDetail.length_overall !== null && shipDetail.length_overall !== 0">
+                                <td>Length Overall</td>
+                                <td>{{shipDetail.length_overall}}</td>
+                            </tr>
+                            <tr *ngIf="shipDetail.breadth_MLD !== null && shipDetail.breadth_MLD !== 0">
+                                <td>Breadth</td>
+                                <td>{{shipDetail.breadth_MLD}}</td>
+                            </tr>
+                            <tr *ngIf="shipDetail.depth !== null && shipDetail.depth !== 0">
+                                <td>Depth</td>
+                                <td>{{shipDetail.depth}}</td>
+                            </tr>
+                            <tr *ngIf="shipDetail.summer_draft_M !== null && shipDetail.summer_draft_M !== 0">
+                                <td>Summer Draft (M)</td>
+                                <td>{{shipDetail.summer_draft_M}}</td>
+                            </tr>
+                            <tr>
+                                <td>DWT/GRT/NRT</td>
+                                <td>
+                                    <span *ngIf="(shipDetail.summer_DWT_MT !== null && shipDetail.summer_DWT_MT.length !== 0); else DWT_null">{{shipDetail.summer_DWT_MT}}/</span>
+                                    <ng-template #DWT_null>-</ng-template>
+
+                                    <span *ngIf="(shipDetail.international_GRT !== null && shipDetail.international_GRT.length !== 0); else GRT_null">{{shipDetail.international_GRT}}/</span>
+                                    <ng-template #GRT_null>-</ng-template>
+
+                                    <span *ngIf="(shipDetail.international_NRT !== null && shipDetail.international_NRT.length !== 0); else NRT_null">{{shipDetail.international_NRT}}</span>
+                                    <ng-template #NRT_null>-</ng-template>
+                                </td>
+                            </tr>
+                            <!-- <tr *ngIf="shipDetail.v_short_name.length !== 0 && shipDetail.v_short_name !== null && shipDetail.v_short_name !== ''">
+                                <td>Vessel Short Name</td>
+                                <td>{{shipDetail.v_short_name}}</td>
+                            </tr> -->
+                            <!-- <tr *ngIf="shipDetail.owner_imo_no !== 0 && shipDetail.owner_imo_no !== null">
+                                <td>IMO No</td>
+                                <td>{{shipDetail.owner_imo_no}}</td>
+                            </tr> -->
+                             
+                            <!--<tr *ngIf="shipDetail.official_no.length !== 0 && shipDetail.official_no !== null">
+                                <td>Official Number</td>
+                                <td>{{shipDetail.official_no}}</td>
+                            </tr>
+                            <tr *ngIf="shipDetail.v_type !== 0 && shipDetail.v_type !== null">
+                                <td>Vessel Type</td>
+                                <td>{{shipDetail.v_type | singleVesselTypeFilter: vesselTypeList}}</td>
+                            </tr>                            
+                            <tr *ngIf="shipDetail.class_notations.length !== 0 && shipDetail.class_notations !== null">
+                                <td>Class Notations</td>
+                                <td>{{shipDetail.class_notations}}</td>
+                            </tr> -->                            
+                            <!-- <tr *ngIf="shipDetail.year_built.length !== 0 && shipDetail.year_built !== null">
+                                <td>Year Built</td>
+                                <td>{{shipDetail.year_built}}</td>
+                            </tr>
+                            <tr *ngIf="shipDetail.hull_type.length !== 0 && shipDetail.hull_type !== null">
+                                <td>Hull Type</td>
+                                <td>{{shipDetail.hull_type}}</td>
+                            </tr>
+                            <tr *ngIf="shipDetail.length_overall !== 0 && shipDetail.length_overall !== null">
+                                <td>Length Overall</td>
+                                <td>{{shipDetail.length_overall}}</td>
+                            </tr>
+                            <tr *ngIf="shipDetail.breadth_MLD !== 0 && shipDetail.breadth_MLD !== null">
+                                <td>Breadth MLD</td>
+                                <td>{{shipDetail.breadth_MLD}}</td>
+                            </tr>
+                            <tr *ngIf="shipDetail.depth !== 0 && shipDetail.depth !== null">
+                                <td>Depth</td>
+                                <td>{{shipDetail.depth}}</td>
+                            </tr> -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

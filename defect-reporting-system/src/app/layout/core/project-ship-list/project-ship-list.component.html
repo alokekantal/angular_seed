@@ -1,0 +1,38 @@
+<div [@routerTransition]>
+    <app-page-header [breadcrumb]="BREADCRUMB" [icon]="'fa-table'"></app-page-header>
+    <div class="row">
+        <div class="col-xl-4">
+            <div class="input-group pull-left">
+                <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="Ship name" name="search">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col col-xl-12 col-lg-12">              
+            <div class="card-body table-responsive table-pading">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>IMO No</th>
+                        <th>Ship Name</th>
+                        <th>Description</th>
+                        <th class="text-align">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let ship of (shipList | searchByName: searchText: 'name');let  index=index">
+                        <th>{{index+1}}</th>
+                        <td>{{ship.v_imo_no}}</td>
+                        <td>{{ship.name}}</td>
+                        <td width="50%">{{ship.description}}</td>
+                        <td class="text-align">
+                            <a href="javascript:void(0)" (click)="gotoProjectList(ship)" placement="top" ngbTooltip="Project List" class="btn btn-primary btn-sm"><i class="fa fa-briefcase" aria-hidden="true"></i></a>
+                        </td>
+                    </tr>                                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

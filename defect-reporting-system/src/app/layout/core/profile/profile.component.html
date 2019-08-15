@@ -1,0 +1,60 @@
+<div [@routerTransition]>
+    <app-page-header [breadcrumb]="BREADCRUMB" [icon]="'fa-table'"></app-page-header>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card mb-3">
+                <div class="card-header">User Profile</div>
+                <div class="card-body">
+                    <div class="box box-info">
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div align="center">
+                                        <img alt="User Pic" src="https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg"
+                                            id="profile-image1" class="img-circle img-responsive">
+                                        <!-- <input id="profile-image-upload" class="hidden" type="file"> -->
+                                        <!-- <div style="color:#999;">click here to change profile image</div> -->
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <h4 style="color:#00b1b1;">{{userDetail.firstname}} {{userDetail.lastname}}</h4>
+                                    <span>
+                                        <p>{{userDetail.userType == 1 ? 'Ship User' : 'Offshore User'}}</p>
+                                    </span>
+                                    <span>
+                                        <p>{{userDetail.designationId | singleDesignationFilter: designationList}}</p>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <hr style="margin:5px 0 5px 0;">
+                            <div class="row">
+                                <div class="col-xl-3 tital "><b>User Id:</b></div>
+                                <div class="col-xl-3">{{userDetail.userCode}}</div>
+                                <div class="col-xl-3 tital "><b>Department:</b></div>
+                                <div class="col-xl-3">{{userDetail.deptId | singleDeptFilter: departmentList}}</div>
+                            </div>
+
+                            <div class="clearfix"></div>
+                            <div class="bot-border"></div>
+
+                            <div class="row">
+                                <div class="col-xl-3 tital "><b>Phone Number:</b></div>
+                                <div class="col-xl-3">{{userDetail.phonenumber}}</div>
+                                <div class="col-xl-3 tital "><b>Mail ID:</b></div>
+                                <div class="col-xl-3"> {{userDetail.personalMailid}}</div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="bot-border"></div>
+
+                            <div class="row">
+                                <div class="col-xl-3 tital "><b>Role:</b></div>
+                                <div class="col-xl-3">{{userDetail.roleList | multipleRoleFilter: roleList}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,220 @@
+
+<div [@routerTransition]>
+  <app-page-header [breadcrumb]="BREADCRUMB" [icon]="'fa-table'"></app-page-header>
+  <div class="row">
+      <div class="col-xl-4">
+            <a href="javascript:void(0)" placement="top" ngbTooltip="Search" style="margin-left: 10px;"
+            (click)="openSearchModal()" class="btn btn-primary pull-left">
+            Search
+        </a>
+      </div>      
+      <div class="col-xl-8">
+          <a href="javascript:void(0)" placement="top" ngbTooltip="Add Defect" style="margin-left: 10px;"
+              routerLink="/core/defect-creation/0" class="btn btn-primary pull-right">
+              Report Defect
+          </a>
+      </div>
+  </div>
+  <div class="row">
+      <div class="col col-xl-12 col-lg-12">
+          <div class="card-body table-responsive table-pading">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Ship Name</th>
+                            <th>Defect ID</th>
+                            <th>Component</th>
+                            <th>Raised On</th>
+                            <th>Severity</th>
+                            <th>Defect Detai</th>
+                            <th>Raised By</th>
+                            <th>Last  Corrective Action</th> 
+                            <th>System</th>
+                            <th>Repair Criteria</th>
+                            <th>Status</th>                 
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- <tr *ngFor="let dept of (deptList | searchByName: searchText: 'deptName');let  index=index">
+                            <th>{{index + 1}}</th>
+                            <td>{{dept.deptName}}</td>
+                            <td>{{dept.deptMail}}</td>
+                            <td class="text-align">
+                                <a href="javascript:void(0)" routerLink="/core/department-creation/{{dept.dept_id}}"
+                                    class="btn btn-primary btn-sm" placement="top" ngbTooltip="Edit Department"><i
+                                        class="fa fa-pencil fa-fw"></i>
+                                </a>
+                            </td>
+                        </tr> -->
+                        <tr>
+                            <td>1</td>
+                            <td>Ship 1</td>
+                            <td>001/19</td>
+                            <td>Component 1</td>
+                            <td>2019-01-13</td>
+                            <td>Severity 1</td>
+                            <td>Defect detail 1</td>
+                            <td>Aloke Kantal</td>
+                            <td>Last  Corrective Action 1</td>
+                            <td>System 1</td>
+                            <td>Repair Criteria 1</td>
+                            <td>Open</td>
+                        </tr>
+                        <tr>
+                                <td>1</td>
+                                <td>Ship 1</td>
+                                <td>001/19</td>
+                                <td>Component 1</td>
+                                <td>2019-01-13</td>
+                                <td>Severity 1</td>
+                                <td>Defect detail 1</td>
+                                <td>Aloke Kantal</td>
+                                <td>Last  Corrective Action 1</td>
+                                <td>System 1</td>
+                                <td>Repair Criteria 1</td>
+                                <td>Open</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Ship 2</td>
+                                <td>002/19</td>
+                                <td>Component 2</td>
+                                <td>2019-01-04</td>
+                                <td>Severity 2</td>
+                                <td>Defect detail 2</td>
+                                <td>Rupak Hazra</td>
+                                <td>Last  Corrective Action 2</td>
+                                <td>System 2</td>
+                                <td>Repair Criteria 2</td>
+                                <td>Open</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Ship 3</td>
+                                <td>003/19</td>
+                                <td>Component 3</td>
+                                <td>2019-01-25</td>
+                                <td>Severity 3</td>
+                                <td>Defect detail 3</td>
+                                <td>Jayanta Kumar Das</td>
+                                <td>Last  Corrective Action 3</td>
+                                <td>System 3</td>
+                                <td>Repair Criteria 3</td>
+                                <td>In-progress</td>
+                            </tr>
+                    </tbody>
+                </table>
+                <div class="row" style="margin-right: 0px;margin-left: 0px;">
+                    <div class="col-xl-1 text-xs-center">
+                        <select class="form-control pull-left">
+                            <option>10</option>
+                            <option>20</option>
+                            <option>30</option>
+                            <option>40</option>
+                            <option>50</option>
+                        </select>
+                    </div>
+                    <div class="col-xl-11 text-xs-center">
+                        <ul class="pagination pagination-md pull-right">
+                            <li class="page-item"><a class="page-link" href="javascript:void(0)">Previous</a></li>
+                            <li class="page-item"><a class="page-link" href="javascript:void(0)" style="background-color: #d0cfcf;">1</a></li>
+                            <li class="page-item"><a class="page-link" href="javascript:void(0)">2</a></li>
+                            <li class="page-item"><a class="page-link" href="javascript:void(0)">3</a></li>
+                            <li class="page-item"><a class="page-link" href="javascript:void(0)">Next</a></li>
+                        </ul>
+                        <span class="pull-right" style="margin-right: 20px;">Showing 50 - 100 of 500 entries </span>                        
+                    </div>
+                </div>                
+          </div>
+      </div>
+  </div>
+
+  <ng-template #searchModal let-modal>
+      <div class="modal-header">
+          <h4 class="modal-title" id="modal-basic-title">Search</h4>
+          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross')">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+      <div class="modal-body">
+        <form role="form" [formGroup]="defectForm" novalidat (ngSubmit)="searchDefect()">
+            <div class="row">           
+                <div class="col-xl-4 text-xs-center">
+                    <fieldset class="form-group">
+                        <label>Ship Name</label>
+                        <ngx-select-dropdown formControlName="shipName" [config]="searchDropdownConfig" [options]="['Ship 1', 'Ship 2']"></ngx-select-dropdown>
+                    </fieldset>
+                </div>
+                <div class="col-xl-4 text-xs-center">
+                    <fieldset class="form-group">
+                        <label>Def ID</label>
+                        <input class="form-control" formControlName="defId">
+                    </fieldset>
+                </div>
+                <div class="col-xl-4 text-xs-center">
+                    <fieldset class="form-group">
+                        <label>Defect Detail:</label>
+                        <input class="form-control" formControlName="defectDetail">
+                    </fieldset>
+                </div>
+                <div class="col-xl-4 text-xs-center">
+                    <fieldset class="form-group">
+                        <label>Component</label>
+                        <input class="form-control" formControlName="component">
+                    </fieldset>
+                </div>
+                <div class="col-xl-4 text-xs-center">
+                    <fieldset class="form-group">
+                        <label>Raised On</label>
+                        <div class="input-group datepicker-input">
+                            <input class="form-control" placeholder="yyyy-mm-dd" ngbDatepicker #raisedOnDate="ngbDatepicker"
+                                formControlName="raisedOn">
+                            <button class="input-group-addon" (click)="raisedOnDate.toggle()" type="button">
+                                <span class="fa fa-calendar"></span>
+                            </button>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="col-xl-4 text-xs-center">
+                    <fieldset class="form-group">
+                        <label>Severity </label>
+                        <ngx-select-dropdown formControlName="severity" [config]="searchDropdownConfig" [options]="['Severity 1', 'Severity 2']"></ngx-select-dropdown>
+                    </fieldset>
+                </div>
+                <div class="col-xl-4 text-xs-center">
+                    <fieldset class="form-group">
+                        <label>Raised By</label>
+                        <ngx-select-dropdown formControlName="raisedBy" [config]="searchDropdownConfig" [options]="['User 1', 'User 2']"></ngx-select-dropdown>
+                    </fieldset>
+                </div>
+                <div class="col-xl-4 text-xs-center">
+                    <fieldset class="form-group">
+                        <label>System</label>
+                        <ngx-select-dropdown formControlName="system" [config]="searchDropdownConfig" [options]="['System 1', 'System 2']"></ngx-select-dropdown>
+                    </fieldset>
+                </div>
+                <div class="col-xl-4 text-xs-center">
+                    <fieldset class="form-group">
+                        <label>Repair Criteria</label>
+                        <ngx-select-dropdown formControlName="repairCriteria" [config]="searchDropdownConfig" [options]="['Repair Criteria 1', 'Repair Criteria 2']"></ngx-select-dropdown>
+                    </fieldset>
+                </div>
+                <div class="col-xl-4 text-xs-center">
+                    <fieldset class="form-group">
+                        <label>Status</label>
+                        <select class="form-control" formControlName="status">
+                            <option>Open</option>
+                            <option>In-progress</option>
+                            <option>Done</option>
+                        </select>
+                    </fieldset>
+                </div>
+            </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="btn btn-outline-primary" (click)="modal.close()">Search</button>
+      </div>
+  </ng-template>
+</div>

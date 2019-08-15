@@ -1,0 +1,39 @@
+<div class="modal-header">
+  <h4 class="modal-title">{{ title }}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="dismiss()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-sm-12">
+          <div class="card mb-3">
+              <div class="card-header">
+                <div class="input-group stylish-input-group">
+                    <input type="text" class="form-control" (keyup)="searchOnEnter($event)" placeholder="Search" [(ngModel)]="searchKeyword">
+                    <span class="input-group-addon search-component">
+                        <button type="btn" (click)="searchComponent()">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </button>  
+                    </span>
+                </div>
+              </div>
+              <div class="card-body" style="height: 500px; overflow:auto;">
+                  <div class='title'>
+                          <!--  ================================== -->
+                      <lib-ngx-tree-component 
+                          [treeData]="myTree"                            
+                          (onselectitem)="onSelectItem($event)"
+                          [config]='config'>
+                      </lib-ngx-tree-component>
+                      <!-- =================================== -->
+                  </div> 
+              </div>
+          </div>
+      </div>
+  </div> 
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="decline()">{{ btnCancelText }}</button>
+    <button type="button" class="btn btn-primary" (click)="accept()">{{ btnOkText }}</button>
+  </div>

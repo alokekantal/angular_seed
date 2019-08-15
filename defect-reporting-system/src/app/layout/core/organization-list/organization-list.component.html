@@ -1,0 +1,49 @@
+<div [@routerTransition]>
+    <app-page-header [breadcrumb]="BREADCRUMB" [icon]="'fa-table'"></app-page-header>
+    <div class="row">
+        <div class="col-xl-4">
+            <div class="input-group pull-left">
+                <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="Organization name" name="search">
+            </div>
+        </div>
+        <div class="col-xl-6"></div>        
+        <div class="col-xl-2">
+            <a href="javascript:void(0)" placement="top" 
+                ngbTooltip="{{ 'Organization?Create Organization' | translate }}"
+                routerLink="/core/organization-creation/0" class="btn btn-primary pull-right">
+                {{ 'Organization?Create Organization' | translate }}
+            </a>
+        </div>       
+    </div>
+    <div class="row">
+        <div class="col col-xl-12 col-lg-12">              
+            <div class="card-body table-responsive table-pading">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>{{ 'Organization?Organization Name' | translate }}</th>
+                            <th>{{ 'Organization?Organization email' | translate }}</th>
+                            <th>{{ 'Organization?Organization Registration No' | translate }}</th>
+                            <th>{{ 'Organization?Organization Description' | translate }}</th>
+                            <th class="text-align">{{ 'Organization?Action' | translate }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let org of (organizationList | searchByName: searchText: 'orgName');let  index=index">
+                            <th>{{index+1}}</th>
+                            <td>{{org.orgName}}</td>
+                            <td>{{org.orgMail}}</td>
+                            <td>{{org.orgRegNumber}}</td>
+                            <td>{{org.orgDesc}}</td>
+                            <td class="text-align">
+                                <a href="javascript:void(0)" routerLink="/core/organization-creation/{{org.org_id}}" placement="top" ngbTooltip="{{ 'Organization?Edit Organization' | translate }}" class="btn btn-primary btn-sm"><i class="fa fa-pencil fa-fw"></i></a>
+                                <!-- <a href="javascript:void(0)" placement="top" ngbTooltip="{{ 'Organization?Delete Organization' | translate }}" class="btn btn-danger btn-sm action-buton-margin"><i class="fa fa-trash-o fa-fw"></i></a> -->
+                            </td>
+                        </tr>                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+  </div>
+</div>

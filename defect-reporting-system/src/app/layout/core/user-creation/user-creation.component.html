@@ -1,0 +1,139 @@
+<div [@routerTransition]>
+    <app-page-header [breadcrumb]="BREADCRUMB" [icon]="'fa-table'"></app-page-header>
+    <ngb-alert [type]="'warning'" [dismissible]="false" *ngIf="isUserCodeExist">Login ID already present!</ngb-alert>
+    <form role="form" [formGroup]="userForm" novalidat (ngSubmit)="saveUser()">
+        <div class="row">
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Login ID<span class="has-error">*</span></label>
+                    <input class="form-control" formControlName="userCode" (keyup)="capital(userForm.controls.userCode.value)"
+                        (blur)="checkLoginCodeExists(userForm.controls.userCode.value)">
+                    <div class="has-error" *ngIf="userForm.controls.userCode.errors && (userForm.controls.userCode.dirty 	
+                                                || userForm.controls.userCode.touched)">
+                        <p *ngIf="userForm.controls.userCode.errors.required">Login ID is required</p>
+                    </div>
+                    <div class="has-error" *ngIf="isUserCodeExist">
+                        <p>Login ID already present!</p>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center" *ngIf="id == -1">
+                <fieldset class="form-group">
+                    <label>Password<span class="has-error">*</span></label>
+                    <input type="password" class="form-control" formControlName="passcode">
+                    <div class="has-error" *ngIf="userForm.controls.passcode.errors && (userForm.controls.passcode.dirty
+                                             	|| userForm.controls.passcode.touched)">
+                        <p *ngIf="userForm.controls.passcode.errors.required">Password is required</p>
+                        <p *ngIf="userForm.controls.passcode.errors.minlength">Minimum length 8 </p>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center" *ngIf="id == -1">
+                <fieldset class="form-group">
+                    <label>Confirm password</label>
+                    <input type="password" class="form-control" formControlName="cPassword" (blur)="onBlurCPassword()">
+                    <div class="has-error" *ngIf="!isPasswordMatch">
+                        <p>Password Mismatch</p>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>First Name<span class="has-error">*</span></label>
+                    <input class="form-control" formControlName="firstname">
+                    <div class="has-error" *ngIf="userForm.controls.firstname.errors && (userForm.controls.firstname.dirty
+                                             	|| userForm.controls.firstname.touched)">
+                        <p *ngIf="userForm.controls.firstname.errors.required || userForm.get('firstname').hasError('invalidvalue')">First
+                            name is required</p>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Last Name<span class="has-error">*</span></label>
+                    <input class="form-control" formControlName="lastname">
+                    <div class="has-error" *ngIf="userForm.controls.lastname.errors && (userForm.controls.lastname.dirty
+                                             	|| userForm.controls.lastname.touched)">
+                        <p *ngIf="userForm.controls.lastname.errors.required || userForm.get('lastname').hasError('invalidvalue')">Last
+                            name is required</p>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Department</label>
+                    <select class="form-control" formControlName="deptId">
+                        <option value="">-Select-</option>
+                        <option *ngFor="let dept of departmentList" value={{dept.dept_id}}>
+                            {{dept.deptName}}
+                        </option>
+                    </select>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Phone Number</label>
+                    <input class="form-control" formControlName="phonenumber">
+                    <div class="has-error" *ngIf="userForm.controls.phonenumber.errors && (userForm.controls.phonenumber.dirty
+                                             	|| userForm.controls.phonenumber.touched)">
+                        <p *ngIf="userForm.get('phonenumber').hasError('invalidNumber')">Phone no format is incorrect</p>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Mail ID</label>
+                    <input class="form-control" formControlName="personalMailid">
+                    <div class="has-error" *ngIf="userForm.controls.personalMailid.errors && (userForm.controls.personalMailid.dirty
+                                             	|| userForm.controls.personalMailid.touched)">
+                        <p *ngIf="userForm.get('personalMailid').hasError('invalidEmail')">Please give email in currect
+                            format</p>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Designation</label>
+                    <input class="form-control" formControlName="designationId">
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Defining Role<span class="has-error">*</span></label>
+                    <angular2-multiselect [data]="roleList" [(ngModel)]="selectedItems" [settings]="dropdownSettings"
+                        (onSelect)="onItemSelect($event)" (onDeSelect)="OnItemDeSelect($event)" (onSelectAll)="onSelectAll($event)"
+                        (onDeSelectAll)="onDeSelectAll($event)" formControlName="roleList">
+                    </angular2-multiselect>
+                    <div class="has-error" *ngIf="userForm.controls.roleList.errors && (userForm.controls.roleList.dirty
+                                             	|| userForm.controls.roleList.touched)">
+                        <p *ngIf="userForm.controls.roleList.errors.required">Defining Role is required</p>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Email 1</label>
+                    <input class="form-control" formControlName="email1">
+                    <div class="has-error" *ngIf="userForm.controls.email1.errors && (userForm.controls.email1.dirty 	|| userForm.controls.email1.touched)">
+                        <p *ngIf="userForm.get('email1').hasError('invalidEmail')">Please give email in currect format</p>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Is Active</label>
+                    <select class="form-control" formControlName="isactive">
+                        <option value="1">True</option>
+                        <option value="0">Flase</option>
+                    </select>
+                </fieldset>
+            </div>
+            <div class="col-xl-12 text-xs-center">
+                <fieldset class="form-group">
+                    <button type="submit" [disabled]="userForm.invalid" class="btn btn-primary pull-right">Save</button>
+                </fieldset>
+            </div>
+        </div>
+    </form>
+    <div style="height: 250px;width: 100%;"></div>
+</div>

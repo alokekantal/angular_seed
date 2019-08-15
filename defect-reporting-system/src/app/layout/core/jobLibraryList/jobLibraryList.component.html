@@ -1,0 +1,69 @@
+<div [@routerTransition]>
+    <app-page-header [breadcrumb]="BREADCRUMB" [icon]="'fa-table'"></app-page-header>
+    <div class="row">
+        <div class="col-xl-4">
+            <div class="input-group pull-left">
+                <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="Job description">               
+            </div>
+        </div>
+        <div class="col-xl-4">
+            <div class="input-group pull-left">                
+                <select class="form-control" [(ngModel)]="vesselType">
+                    <option value="">-Select Vessel Type-</option>
+                    <option *ngFor="let vessel of vesselList" value={{vessel.id}}>
+                        {{vessel.description}}
+                    </option>
+                </select> 
+            </div>
+        </div>
+        <div class="col-xl-4">
+            <a href="javascript:void(0)" placement="top" ngbTooltip="Create New Job" style="margin-left: 10px;"
+                routerLink="/core/job-library-creation/0" class="btn btn-primary pull-right">
+                Create Job
+            </a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col col-xl-12 col-lg-12">
+            <div class="card-body table-responsive table-pading">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Job Description</th>                            
+                            <th class="text-align">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let job of (jobLibraryList | searchByNameMultipleJobLibrary: searchText: ['vesselAge','componentName', 'description', 'detailedSpecification']: vesselType);let  index=index">
+                            <th>{{index + 1}}</th>                            
+                            <td>{{job.description}}</td>
+                            <td class="text-align">
+                                <a href="javascript:void(0)" routerLink="/core/job-library-creation/{{job.id}}"
+                                    class="btn btn-primary btn-sm" placement="top" ngbTooltip="Edit Job"><i
+                                        class="fa fa-pencil fa-fw"></i></a>
+                                <!-- <a href="javascript:void(0)" class="btn btn-danger btn-sm action-buton-margin"
+                                    placement="top" ngbTooltip="Delete Job"><i class="fa fa-trash-o fa-fw"></i></a> -->
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- <ng-template #errorModal let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Alert</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <ul [innerHtml]="errMsg"></ul>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-primary" (click)="modal.close('reset')">Ok</button>
+        </div>
+    </ng-template> -->
+</div>

@@ -1,0 +1,58 @@
+.has-error{
+    color: red;
+}
+
+.has-error p{
+    font-size: 13px;
+    text-align: left;
+}
+
+.table-pading {
+    padding: 10px 0px;
+}
+
+.action-buton-margin{
+    margin: 3px;
+}
+
+.text-align{
+    text-align: center;
+}
+
+.file-class {
+    position: absolute;
+    // font-size: 50px;
+    opacity: 0;
+    right: 0;
+    top: 0;
+  }
+
+//   search box
+
+.stylish-input-group .input-group-addon{
+    background: rgb(212, 210, 210) !important; 
+}
+.stylish-input-group .form-control{
+	border-right:0; 
+	box-shadow:0 0 0; 
+	border-color:#ccc;
+}
+.stylish-input-group button{
+    border:0;
+    background:transparent;
+    margin-top: 5px;
+}
+
+.search-component{
+    border-top: 1px solid #cccccc;
+    border-radius-: 4px;
+    border-bottom: 1px solid #cccccc;
+    border-right: 1px solid #cccccc
+}   
+//   search box
+
+div.title {
+    color:#3b5998;
+    font-size:14px;
+    font-weight:bold;
+    font-family:tahoma, arial, sans-serif;}

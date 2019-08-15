@@ -1,0 +1,53 @@
+<div [@routerTransition]>
+    <app-page-header [breadcrumb]="BREADCRUMB" [icon]="'fa-table'"></app-page-header>
+    <div class="row">
+        <div class="col-xl-4">
+            <div class="input-group pull-left">
+                <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="Job description" name="search">
+            </div>
+        </div>	
+        <div class="col-xl-4">
+            <div class="input-group pull-left">                
+                <select class="form-control" [(ngModel)]="vesselType">
+                    <option value="">-Select Vessel Type-</option>
+                    <option *ngFor="let vessel of vesselList" value={{vessel.id}}>
+                        {{vessel.description}}
+                    </option>
+                </select> 
+            </div>
+        </div>	     
+        <div class="col-xl-4">
+            <a href="javascript:void(0)" placement="top" ngbTooltip="Create Ship" routerLink="/core/organization-job-creation/0" class="btn btn-primary pull-right">
+                Create Job
+            </a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col col-xl-12 col-lg-12">              
+            <div class="card-body table-responsive table-pading">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th> 
+                            <th>Job Description</th>
+                            <th>Status</th>
+                            <th class="text-align">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let job of (jobList | searchByNameMultipleJobLibrary: searchText: ['vesselAge','componentName', 'description', 'detailedSpecification']: vesselType);let  index=index">
+                            <th>{{index+1}}</th>
+                            <td width="50%">{{job.description}}</td>
+                            <td>{{job.status == 'A' ? 'Active' : 'NA'}}</td>
+                            <td class="text-align">
+                                <a href="javascript:void(0)" (click)="gotoJobCreate(job)" placement="top" ngbTooltip="Job List" class="btn btn-primary btn-sm">
+                                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                                </a>
+                            </td>                            
+                        </tr>                                         
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

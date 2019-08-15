@@ -1,0 +1,828 @@
+<div [@routerTransition]>
+    <app-page-header [breadcrumb]="BREADCRUMB" [icon]="'fa-table'"></app-page-header>
+    <div class="row">        
+        <div class="col-xl-4 text-xs-center">
+            <fieldset class="form-group">
+                <label><b>Ship Name: </b>{{shipDetail.name}}</label>
+            </fieldset>
+        </div>
+        <div class="col-xl-4 text-xs-center">
+            <fieldset class="form-group">
+                <label>Project Name <span class="has-error">*</span></label>
+                <input class="form-control" [(ngModel)]="projectModel.description">
+            </fieldset>
+        </div>   
+        <div class="col-xl-4 text-xs-center">
+            <fieldset class="form-group">
+                <button type="submit" (click)="saveProject()" class="btn btn-primary pull-right">Save</button>
+            </fieldset>
+        </div>
+        <!-- <div class="col-xl-3 text-xs-center" style="padding-right: 0px!important;">
+            <div class="list-group">                               
+                <a href="javascript:void(0)" class="list-group-item active">Job List</a>
+                <ng-container *ngFor="let job of projectModel.projectJobList; let index=index">
+                    <a *ngIf="job.approvalFlag == 'Y'" href="javascript:void(0)" class="list-group-item list-group-item-height">
+                        <label class="container">{{job.jobno}} - {{job.description}}</label>
+                    </a>
+                </ng-container>
+                                            
+            </div>
+        </div> -->
+        <div class="col-xl-12 text-xs-center">
+            <!-- <div class="card mb-3">
+                <div class="card-body"> -->
+                    <ngb-tabset>
+                        <!-- maim -->
+                        <ngb-tab>
+                            <ng-template ngbTabTitle><b>Main</b></ng-template>
+                            <ng-template ngbTabContent>
+                                <div class="row" style="padding-top: 10px">
+                                    <div class="col-xl-7">
+                                        <div class="card mb-3">
+                                            <div class="card-body" style="padding: 0px!important;">
+                                                <ng-container *ngIf="shipDetail.shipAttachmentList.length !== 0">
+                                                    <div class="image-grid" *ngFor="let attachment of shipDetail.shipAttachmentList;let  index=index">
+                                                        <div class="hovereffect">
+                                                            <img class="img-responsive" [src]="attachment.src" *ngIf="attachment.ext == 'image'" style="height: 100%;">
+                                                            <img class="img-responsive" [src]="imagePath.pdf" *ngIf="attachment.ext == 'pdf'" style="height: 100%;">
+                                                            <img class="img-responsive" [src]="imagePath.excel" *ngIf="attachment.ext == 'excel'" style="height: 100%;">
+                                                            <div class="overlay">
+                                                                <h2 style="font-size: 12px !important;">{{attachment.attachmentName}}</h2>
+                                                                <p>
+                                                                    <a href="javascript:void(0)" (click)="downloadShipFile(attachment)" style="padding: 10px;"><i class="fa fa-download" aria-hidden="true"></i></a>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                        <textarea class="form-control" style="resize: none;" [(ngModel)]="attachment.attachmentDescription" disabled></textarea>
+                                                    </div> 
+                                                </ng-container>
+                                                <span *ngIf="shipDetail.shipAttachmentList.length === 0">No image found</span>
+                                            </div>
+                                        </div>
+                                        <div class="card mb-3">
+                                            <div class="card-header">Running Jobs ({{getApprovedJobCount()}}):
+                                                <!-- <span class="pull-right" style="margin-left: 20px"><a href="javascript:void(0)">Dockyard: {{activeProjectDetail.dockyard | singleDockyardFilter: dockyardList}}</a></span> -->
+                                                <span class="pull-right"><a href="javascript:void(0)">Project Start Date: {{activeProjectDetail.startdate}}</a></span>                    
+                                            </div>
+                                            <div class="card-body">
+                                                <table class="table table-bordered table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Job No</th>
+                                                            <th>Description</th>
+                                                            <th>Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <ng-container *ngFor="let job of projectModel.projectJobList | orderBy:['updatedate'] | slice:0:limit; let index=index">
+                                                            <tr *ngIf="job.approvalFlag == 'Y'">
+                                                                <td><a href="javascript:void(0)" (click)="jobClick(job)">{{job.jobno}}</a></td>
+                                                                <td>{{job.description}}</td>
+                                                                <td>{{job.status == 'A' ? 'WIP' : job.status == 'COM' ? 'Completed' : 'NA'}}</td>
+                                                            </tr>
+                                                        </ng-container>
+                                                    </tbody>
+                                                </table>
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <a href="javascript:void(0)" style="padding-left: 30px;" [ngStyle]="{'pointerEventNone': jobList.length == limit}"
+                                                            (click)="loadMoreJob()" class="pull-right">More
+                                                        </a>
+                                                        <span class="pull-right">Showing {{limit}} from {{jobList.length}}</span>                            
+                                                    </div>                        
+                                                </div> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-5">
+                                        <div class="card mb-3">
+                                            <div class="card-header">Previous Project(s):</div>
+                                            <div class="card-body">
+                                                <table class="table table-bordered table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Dry Dock</th>
+                                                            <th>Start Date</th>
+                                                            <th>End Date</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let project of projectList; let  index=index">
+                                                            <td><a href="javascript:void(0)">{{project.description}}</a></td>
+                                                            <td>{{project.startdate}}</td>
+                                                            <td>{{project.enddate}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                            
+                                        <div class="card mb-3">
+                                            <div class="card-header">Vessel information:</div>
+                                            <div class="card-body">
+                                                <table class="table table-bordered table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Vessel Name</th>
+                                                            <th>{{shipDetail.name}}</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Vessel Short Name</td>
+                                                            <td>Clarification</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>IMO No</td>
+                                                            <td>{{shipDetail.owner_imo_no}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Vessel's IMO No</td>
+                                                            <td>{{shipDetail.v_imo_no}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Official Number</td>
+                                                            <td>{{shipDetail.official_no}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Vessel Type</td>
+                                                            <td>{{shipDetail.v_type | singleVesselTypeFilter: vesselTypeList}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Class</td>
+                                                            <td>clarification</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Class Notations</td>
+                                                            <td>{{shipDetail.class_notations}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Flag</td>
+                                                            <td>{{shipDetail.flag}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Year Built</td>
+                                                            <td>{{shipDetail.year_built}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Hull Type</td>
+                                                            <td>{{shipDetail.hull_type}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Length Overall</td>
+                                                            <td>{{shipDetail.length_overall}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Breadth MLD</td>
+                                                            <td>{{shipDetail.breadth_MLD}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Depth</td>
+                                                            <td>{{shipDetail.depth}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </ngb-tab>
+                        <!-- main -->
+                        <!-- Preamble -->
+                        <ngb-tab>
+                            <ng-template ngbTabTitle><b>Preamble</b></ng-template>
+                            <ng-template ngbTabContent>
+                                <div class="row" style="padding-top: 10px">
+                                    <div class="col-xl-12 text-xs-center">
+                                        <fieldset class="form-group">
+                                            <label>Detailed Specification:</label>
+                                            <ckeditor [(ngModel)]="projectModel.preamble"
+                                                        [ngModelOptions]="{standalone: true}"
+                                                        [config]="editoeOptions"></ckeditor>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </ngb-tab>
+                        <!-- Preamble -->
+
+                        <!-- DD Parameters -->
+                        <ngb-tab>
+                            <ng-template ngbTabTitle><b>DD Parameters</b></ng-template>
+                            <ng-template ngbTabContent>
+                                <div class="row" style="padding-top: 10px">
+                                    <div class="col-xl-12">
+                                        <div class="card mb-3">
+                                            <div class="card-header">Dates</div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-xl-6 text-xs-center">
+                                                        <fieldset class="form-group">
+                                                            <label>Estimated Start:</label>
+                                                            <div class="input-group datepicker-input">
+                                                                <input class="form-control" placeholder="yyyy-mm-dd" [(ngModel)] = "projectModel.estimatedStart"
+                                                                    ngbDatepicker #keelLayingDate1="ngbDatepicker">
+                                                                <button class="input-group-addon" (click)="keelLayingDate1.toggle()" type="button">
+                                                                    <span class="fa fa-calendar"></span>
+                                                                </button>
+                                                            </div>                                  
+                                                        </fieldset>
+                                                    </div>
+                                                    <div class="col-xl-6 text-xs-center">
+                                                        <fieldset class="form-group">
+                                                            <label>Estimated Finish:</label>
+                                                            <div class="input-group datepicker-input">
+                                                                <input class="form-control" placeholder="yyyy-mm-dd" [(ngModel)] = 'projectModel.estimatedfinish'
+                                                                    ngbDatepicker #keelLayingDate2="ngbDatepicker">
+                                                                <button class="input-group-addon" (click)="keelLayingDate2.toggle()" type="button">
+                                                                    <span class="fa fa-calendar"></span>
+                                                                </button>
+                                                            </div>                                  
+                                                        </fieldset>
+                                                    </div>
+                                                    <div class="col-xl-6 text-xs-center">
+                                                        <fieldset class="form-group">
+                                                            <label>Actual Start:</label>
+                                                            <div class="input-group datepicker-input">
+                                                                <input class="form-control" placeholder="yyyy-mm-dd" [(ngModel)] = 'projectModel.actualStart'
+                                                                    ngbDatepicker #keelLayingDate3="ngbDatepicker">
+                                                                <button class="input-group-addon" (click)="keelLayingDate3.toggle()" type="button">
+                                                                    <span class="fa fa-calendar"></span>
+                                                                </button>
+                                                            </div>                                  
+                                                        </fieldset>
+                                                    </div>
+                                                    <div class="col-xl-6 text-xs-center">
+                                                        <fieldset class="form-group">
+                                                            <label>Actual Finish:</label>
+                                                            <div class="input-group datepicker-input">
+                                                                <input class="form-control" placeholder="yyyy-mm-dd" [(ngModel)] = 'projectModel.actualfinish'
+                                                                    ngbDatepicker #keelLayingDate4="ngbDatepicker">
+                                                                <button class="input-group-addon" (click)="keelLayingDate4.toggle()" type="button">
+                                                                    <span class="fa fa-calendar"></span>
+                                                                </button>
+                                                            </div>                                  
+                                                        </fieldset>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-12">
+                                        <div class="card mb-3">
+                                            <div class="card-header">List Of Yards Under Consideration</div>
+                                            <div class="card-body" style="height: 500px;overflow: scroll;">
+                                                <table class="table table-bordered table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="width: 30px">#</th>
+                                                            <th>Yard</th>  
+                                                            <th> Conatct</th>   
+                                                            <th> Remark</th>  
+                                                            <th> Default Currency</th>  
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <ng-container *ngFor="let dockyard of projectModel.projectDockyardList; let index=index">
+                                                            <tr>
+                                                                <td style="width: 30px">
+                                                                    <label class="container" style="padding-right:1px">
+                                                                        <input type="checkbox" [(ngModel)]="dockyard.isSelected" (change) = "resetYard(index, dockyard)">
+                                                                        <span class="checkmark"></span>
+                                                                    </label>
+                                                                </td>
+                                                                <td>{{dockyard.dockyardId | singleDockyardFilter: dockyardList}}</td>
+                                                                <td>
+                                                                    <input class="form-control" [(ngModel)]="dockyard.contactDetails" [disabled]="!dockyard.isSelected">
+                                                                </td>
+                                                                <td>
+                                                                    <textarea class="form-control" [(ngModel)]="dockyard.remarks" rows="1" [disabled]="!dockyard.isSelected"></textarea>
+                                                                </td>
+                                                                <td>
+                                                                    <select class="form-control" [(ngModel)]="dockyard.defaultCurrencyId" (change)="prepareCurrencyConversionList(dockyard)" [disabled]="!dockyard.isSelected">
+                                                                        <option value="">-Select-</option>
+                                                                        <option *ngFor="let currency of currencyMasterList; let index=index" value={{currency.id}}>{{currency.currencyDescription}}</option>
+                                                                    </select>
+                                                                </td>
+                                                            </tr>
+                                                        </ng-container>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xl-12">
+                                        <div class="card mb-3">
+                                            <div class="card-header">Currency</div>
+                                            <div class="card-body" style="height: 500px;overflow: scroll;">
+                                                <div class="row">
+                                                    <div class="col-xl-12 text-xs-center">
+                                                        <fieldset class="form-group">
+                                                            <label>Project Currency :</label>
+                                                            <select class="form-control" [(ngModel)]="projectModel.currencyMasterId" (change)="changeToCurrencyForConversionList()">
+                                                                <option value="">-Select-</option>
+                                                                <option *ngFor="let currency of currencyMasterList; let index=index" value={{currency.id}}>{{currency.currencyDescription}}</option>
+                                                            </select>
+                                                        </fieldset>
+                                                    </div>
+                                                    <div class="col-xl-12 text-xs-center">
+                                                        <fieldset class="form-group">
+                                                            <label>Currency Conversion List:</label>
+                                                            <table class="table table-bordered table-striped">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>From Currency</th> 
+                                                                        <th>To Currency</th> 
+                                                                        <th>Conversion Rate</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <ng-container *ngFor="let projectCurrencyConversion of projectModel.projectCurrencyConversionList; let index=index">
+                                                                        <tr *ngIf="projectCurrencyConversion.isSelected">
+                                                                            <td>{{projectCurrencyConversion.fromcurrencyid | singleCurrency :currencyMasterList}}</td>
+                                                                            <td>{{projectModel.currencyMasterId | singleCurrency :currencyMasterList}}</td>
+                                                                            <td>
+                                                                                <input type="number" class="form-control" [(ngModel)]="projectCurrencyConversion.conversionRate" [disabled]="projectCurrencyConversion.fromcurrencyid === +projectModel.currencyMasterId">
+                                                                            </td>                                                                            
+                                                                        </tr>
+                                                                    </ng-container>
+                                                                </tbody>
+                                                            </table>
+                                                        </fieldset>
+                                                    </div>
+                                                </div>                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </ngb-tab>
+                        <!-- DD Parameters -->
+
+                        <!-- Documents -->
+                        <ngb-tab>
+                            <ng-template ngbTabTitle><b>Documents</b></ng-template>
+                            <ng-template ngbTabContent>
+                                <div class="row" style="padding-top: 10px">
+                                    <div class="col-xl-12 text-xs-center">
+                                        <fieldset class="form-group">
+                                            <div class="row">
+                                                <div class="col-xl-6">
+                                                    <div class="browse-wrap">
+                                                        <div class="title">Upload File (Default)</div>
+                                                        <input type="file" #fileUpload multiple name="upload" (change)="handleFileInput($event.target.files, 'document');" class="upload" title="Upload File (Default)">
+                                                    </div>  
+                                                </div>
+                                                <div class="col-xl-6">
+                                                    <div class="browse-wrap">
+                                                        <div class="title" (click)="getVesselAttachmentForCopy('document')">Fetch from Vessel Doc List</div>
+                                                        <!-- <input type="file" #fileUpload multiple name="upload" (click)="getVesselAttachmentForCopy('document')" class="upload" title="Fetch from Vessel Doc List"> -->
+                                                    </div>  
+                                                </div>
+                                            </div>
+                                            <table class="table table-bordered table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>File Name</th>  
+                                                        <th>File Description</th>                                                      
+                                                        <th class="text-align" style="width: 11%;">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <ng-container *ngFor="let attachment of projectModel.projectAttachmentList;let  index=index"> 
+                                                        <tr>
+                                                            <td>{{index + 1}}</td>
+                                                            <td>
+                                                                <a href="javascript:void(0)" (click)="downloadFile(attachment)">
+                                                                    {{attachment.attachmentName}}
+                                                                </a>
+                                                            </td>
+                                                            <td>
+                                                                <textarea class="form-control" [(ngModel)]="attachment.attachmentDescription"></textarea>
+                                                            </td>
+                                                            <td class="text-align">
+                                                                <!-- <a href="javascript:void(0)" (click)="downloadFile(attachment)" class="btn btn-primary btn-sm" placement="top" ngbTooltip="Download File">
+                                                                    <i class="fa fa-download fa-fw"></i>
+                                                                </a> -->
+                                                                <a href="javascript:void(0)" (click)="deleteFile(index)" placement="top" ngbTooltip="Delete File" class="btn btn-danger btn-sm action-buton-margin">
+                                                                    <i class="fa fa-trash-o fa-fw"></i>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    </ng-container>
+                                                </tbody>
+                                            </table>
+                                            
+                                        </fieldset>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </ngb-tab>
+                        <!-- Documents -->
+
+                        <!-- Approvals -->
+                        <ngb-tab>
+                            <ng-template ngbTabTitle><b>Approvals</b></ng-template>
+                            <ng-template ngbTabContent>
+                                <div style="padding-top: 10px">
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Job Identifier</th>  
+                                                <th style="width: 20%">Job Description</th>
+                                                <th>Approve</th>    
+                                                <th style="width: 30%">Comment</th>  
+                                                <th>Last By</th>    
+                                                <th>Date/Time</th>                                         
+                                                <th class="text-align" style="width: 8%;">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- <ng-container *ngFor="let attachment of jobModel.jobAttachmentList;let  index=index"> -->
+                                            <ng-container>
+                                                <tr *ngFor="let job of projectModel.projectJobList; let index=index">
+                                                    <td>{{index + 1}}</td>
+                                                    <td><a href="javascript:void(0)" (click)="jobClick(job)">{{job.jobno}}</a></td>
+                                                    <td>
+                                                        <span title="{{job.description}}">{{job.description | characterLimit: 100}}</span>
+                                                    </td>
+                                                    <td>{{job.approvalFlag == 'Y' ? 'Approved': 'Rejected'}}</td>
+                                                    <td>
+                                                        <span title="{{job.approvalComment}}">{{job.approvalComment | characterLimit: 100}}</span>
+                                                    </td>
+                                                    <td>{{job.approvalLastUpdatedByName}}</td>
+                                                    <td>{{job.approvalLastUpdatedOn | date: dateTimeFormat}}</td>
+                                                    <td class="text-align">
+                                                        <a href="javascript:void(0)" (click)="open(content, index)" class="btn btn-primary btn-sm" placement="top" ngbTooltip="Approve/Reject">
+                                                            <i class="fa fa-pencil fa-fw"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            </ng-container>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </ng-template>
+                        </ngb-tab>
+                        <!-- Approvals -->
+                        
+                        <!-- Costing -->
+                        <ngb-tab>
+                            <ng-template ngbTabTitle><b>Costing</b></ng-template>
+                            <ng-template ngbTabContent>
+                                <div class="row" style="padding-top: 10px">
+                                    <div class="col-xl-12 text-xs-center" style="overflow: scroll">
+                                        <table class="table table-bordered">
+                                            <tr>
+                                               <td rowspan="2"></td>
+                                               <ng-container *ngFor="let yard of projectModel.lineitemList[0].detailsList; let index=index">
+                                                    <td colspan="4" *ngIf="yard.dockyardId !== 1">{{yard.dockyardId | singleDockyardFilter: dockyardList}}</td>
+                                                    <td colspan="5" *ngIf="yard.dockyardId === 1">Vendor</td>
+                                                </ng-container>   
+                                                 <!--for vendor  -->                                                                                           
+                                            </tr>
+                                            <tr>
+                                               <ng-container *ngFor="let yard of projectModel.lineitemList[0].detailsList; let index=index">
+                                                    <td>Unit</td>
+                                                    <td>Unit Price</td>
+                                                    <td>Unit Qty</td>
+                                                    <td *ngIf="yard.dockyardId !== 1">Cost</td>
+                                                    <td *ngIf="yard.dockyardId === 1">Cost In Local(Qte) Currency</td> 
+                                                    <td *ngIf="yard.dockyardId === 1">Cost In Project Currency</td>  
+                                                </ng-container> 
+                                                <!--for vendor  -->                                          
+                                            </tr>
+
+                                            <!-- preamble cost line item data start -->
+                                            <tr>
+                                                <td>                                                        
+                                                    <div [innerHTML]="projectModel.preamble" style="height: 40px;overflow: hidden;"></div>
+                                                    <!-- id 2 mean preamble -->
+                                                    <a href="javascript:void(0)" (click)="addItemToJob({id: 1})" class="btn btn-primary btn-sm" placement="top" ngbTooltip="Add item to job" style="padding: 0.05rem 0.25rem!important;">
+                                                        <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                                                    </a>                                                        
+                                                </td>
+                                                <ng-container *ngFor="let detail of projectModel.lineitemList[0].detailsList; let itemIndex=index">
+                                                    <td colspan="2">
+                                                        <ng-container *ngFor="let jobYardCurrency of jobYardQuoteCurrencyList; let itemIndex=index">
+                                                            <span *ngIf="jobYardCurrency.key == '1@'+detail.dockyardId">
+                                                                <select class="form-control" [(ngModel)] = "jobYardCurrency.value" (change)="setQuoteCurrencyForJobDockyardItem(jobYardCurrency)" [disabled]="detail.dockyardId !== 1">
+                                                                    <option value="">-Select-</option>
+                                                                    <option *ngFor="let currency of currencyMasterList; let index=index" value={{currency.id}}>{{currency.currencyDescription}}</option>
+                                                                </select>
+                                                            </span>
+                                                        </ng-container>
+                                                    </td>
+                                                    <td colspan="2" style="text-align: right;">
+                                                        Total: 
+                                                        <ng-container *ngFor="let jobYardTotal of jobYardTotalList; let itemIndex=index">
+                                                            <span *ngIf="jobYardTotal.key == '1@'+detail.dockyardId">{{jobYardTotal.value}}</span>
+                                                        </ng-container>
+                                                    </td> 
+                                                </ng-container>                                                                                                                                                     
+                                            </tr>
+                                                <!-- item list start -->
+                                            <ng-container *ngFor="let item of projectModel.lineitemList; let itemIndex=index">
+                                                <!-- id 1 mean Preamble -->
+                                                <tr *ngIf="item.jobid === 1">
+                                                    <td>
+                                                        <input class="form-control" style="width: 160px;" [(ngModel)]="item.lineitem">
+                                                    </td>
+                                                    <!-- detail start -->
+                                                    <ng-container *ngFor="let detail of item.detailsList; let detailIndex=index">
+                                                        <ng-container *ngIf="detail.dockyardId !== 1">
+                                                            <td>
+                                                                <input class="form-control" [(ngModel)]="detail.unit" style="width: 70px;">
+                                                            </td>
+                                                            <td>
+                                                                <input class="form-control" [(ngModel)]="detail.unitPrice" (keyup)="calculateQuoteCurrency(itemIndex, detailIndex, detail)" type="number" style="width: 70px;">
+                                                            </td>
+                                                            <td>
+                                                                <input class="form-control" [(ngModel)]="detail.unitQuantity" (keyup)="calculateQuoteCurrency(itemIndex, detailIndex, detail)" type="number" style="width: 70px;">
+                                                            </td>
+                                                            <td>
+                                                                <input class="form-control" [(ngModel)]="detail.costQuoteCurrency" type="number" style="width: 70px;" disabled>
+                                                            </td>
+                                                        </ng-container>
+                                                    </ng-container>
+                                                    <!-- detail end -->
+
+                                                    <!-- vendor Strat -->
+                                                    <ng-container *ngFor="let detail of item.detailsList; let detailIndex=index">
+                                                        <ng-container *ngIf="detail.dockyardId === 1">
+                                                            <td>
+                                                                <input class="form-control" [(ngModel)]="detail.unit" style="width: 70px;">
+                                                            </td>
+                                                            <td>
+                                                                <input class="form-control" [(ngModel)]="detail.unitPrice" (keyup)="calculateQuoteCurrency(itemIndex, detailIndex, detail)" type="number" style="width: 70px;">
+                                                            </td>
+                                                            <td>
+                                                                <input class="form-control" [(ngModel)]="detail.unitQuantity" (keyup)="calculateQuoteCurrency(itemIndex, detailIndex, detail)" type="number" style="width: 70px;">
+                                                            </td>
+                                                            <td>
+                                                                <input class="form-control" [(ngModel)]="detail.costQuoteCurrency" type="number" style="width: 70px;" disabled>
+                                                            </td>
+                                                            <td>
+                                                                <input class="form-control" [(ngModel)]="detail.costProjectCurrency" type="number" style="width: 70px;">
+                                                            </td>
+                                                        </ng-container>
+                                                    </ng-container>
+                                                <!-- vendor end -->
+                                                </tr>
+                                            </ng-container>
+                                                    <!-- item list end -->
+                                            <!-- Preamble cost line item data end -->
+
+                                            <!-- job cose line item data start -->
+                                            <ng-container *ngFor="let job of projectModel.projectJobList; let index=index">
+                                                <tr *ngIf="job.approvalFlag == 'Y'">
+                                                    <td>                                                        
+                                                        {{job.jobno}} - {{job.description}}
+                                                        <a href="javascript:void(0)" (click)="addItemToJob(job)" class="btn btn-primary btn-sm" placement="top" ngbTooltip="Add item to job" style="padding: 0.05rem 0.25rem!important;">
+                                                            <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                                                        </a>                                                        
+                                                    </td>
+                                                    <ng-container *ngFor="let detail of projectModel.lineitemList[0].detailsList; let itemIndex=index">
+                                                        <td colspan="2">
+                                                            <ng-container *ngFor="let jobYardCurrency of jobYardQuoteCurrencyList; let itemIndex=index">
+                                                                <span *ngIf="jobYardCurrency.key == job.id+'@'+detail.dockyardId">
+                                                                    <select class="form-control" [(ngModel)] = "jobYardCurrency.value" (change)="setQuoteCurrencyForJobDockyardItem(jobYardCurrency)" [disabled]="detail.dockyardId !== 1">
+                                                                        <option value="">-Select-</option>
+                                                                        <option *ngFor="let currency of currencyMasterList; let index=index" value={{currency.id}}>{{currency.currencyDescription}}</option>
+                                                                    </select>
+                                                                </span>
+                                                            </ng-container>
+                                                        </td>
+                                                        <td colspan="2" style="text-align: right;">
+                                                            Total:
+                                                            <ng-container *ngFor="let jobYardTotal of jobYardTotalList; let itemIndex=index">
+                                                                <span *ngIf="jobYardTotal.key == job.id+'@'+detail.dockyardId">{{jobYardTotal.value}}</span>
+                                                            </ng-container>
+                                                        </td> 
+                                                    </ng-container>                                                                                                                                                     
+                                                 </tr>
+                                                 <!-- item list start -->
+                                                 <ng-container *ngFor="let item of projectModel.lineitemList; let itemIndex=index">
+                                                     <tr *ngIf="item.jobid === job.id && job.approvalFlag == 'Y'">
+                                                        <td>
+                                                            <input class="form-control" style="width: 160px;" [(ngModel)]="item.lineitem">
+                                                        </td>
+                                                        <!-- detail start -->
+                                                        <ng-container *ngFor="let detail of item.detailsList; let detailIndex=index">
+                                                            <ng-container *ngIf="detail.dockyardId !== 1">
+                                                                <td>
+                                                                    <input class="form-control" [(ngModel)]="detail.unit" style="width: 70px;">
+                                                                </td>
+                                                                <td>
+                                                                    <input class="form-control" [(ngModel)]="detail.unitPrice" (keyup)="calculateQuoteCurrency(itemIndex, detailIndex, detail)" type="number" style="width: 70px;">
+                                                                </td>
+                                                                <td>
+                                                                    <input class="form-control" [(ngModel)]="detail.unitQuantity" (keyup)="calculateQuoteCurrency(itemIndex, detailIndex, detail)" type="number" style="width: 70px;">
+                                                                </td>
+                                                                <td>
+                                                                    <input class="form-control" [(ngModel)]="detail.costQuoteCurrency" type="number" style="width: 70px;" disabled>
+                                                                </td>
+                                                            </ng-container>
+                                                        </ng-container>
+                                                        <!-- detail end -->
+
+                                                        <!-- vendor Strat -->
+                                                        <ng-container *ngFor="let detail of item.detailsList; let detailIndex=index">
+                                                            <ng-container *ngIf="detail.dockyardId === 1">
+                                                                <td>
+                                                                    <input class="form-control" [(ngModel)]="detail.unit" style="width: 70px;">
+                                                                </td>
+                                                                <td>
+                                                                    <input class="form-control" [(ngModel)]="detail.unitPrice" (keyup)="calculateQuoteCurrency(itemIndex, detailIndex, detail)" type="number" style="width: 70px;">
+                                                                </td>
+                                                                <td>
+                                                                    <input class="form-control" [(ngModel)]="detail.unitQuantity" (keyup)="calculateQuoteCurrency(itemIndex, detailIndex, detail)" type="number" style="width: 70px;">
+                                                                </td>
+                                                                <td>
+                                                                    <input class="form-control" [(ngModel)]="detail.costQuoteCurrency" type="number" style="width: 70px;" disabled>
+                                                                </td>
+                                                                <td>
+                                                                    <input class="form-control" [(ngModel)]="detail.costProjectCurrency" type="number" style="width: 70px;">
+                                                                </td>
+                                                            </ng-container>
+                                                        </ng-container>
+                                                    <!-- vendor end -->
+                                                    </tr>
+                                                 </ng-container>
+                                                 <!-- item list end -->
+                                            </ng-container>
+                                            <!-- job cose line item data end -->  
+                                            
+                                            <!-- other cost line item data start -->
+                                            <tr>
+                                                <td>                                                        
+                                                    others
+                                                    <!-- id 2 mean othre -->
+                                                    <a href="javascript:void(0)" (click)="addItemToJob({id: 2})" class="btn btn-primary btn-sm" placement="top" ngbTooltip="Add item to job" style="padding: 0.05rem 0.25rem!important;">
+                                                        <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                                                    </a>                                                        
+                                                </td>
+                                                <ng-container *ngFor="let detail of projectModel.lineitemList[0].detailsList; let itemIndex=index">
+                                                    <td colspan="2">
+                                                        <ng-container *ngFor="let jobYardCurrency of jobYardQuoteCurrencyList; let itemIndex=index">
+                                                            <span *ngIf="jobYardCurrency.key == '2@'+detail.dockyardId">
+                                                                <select class="form-control" [(ngModel)] = "jobYardCurrency.value" (change)="setQuoteCurrencyForJobDockyardItem(jobYardCurrency)" [disabled]="detail.dockyardId !== 1">
+                                                                    <option value="">-Select-</option>
+                                                                    <option *ngFor="let currency of currencyMasterList; let index=index" value={{currency.id}}>{{currency.currencyDescription}}</option>
+                                                                </select>
+                                                            </span>
+                                                        </ng-container>                                                        
+                                                    </td>
+                                                    <td colspan="2" style="text-align: right">
+                                                        Total:
+                                                        <ng-container *ngFor="let jobYardTotal of jobYardTotalList; let itemIndex=index">
+                                                            <span *ngIf="jobYardTotal.key == '2@'+detail.dockyardId">{{jobYardTotal.value}}</span>
+                                                        </ng-container>
+                                                    </td> 
+                                                </ng-container>                                                                                                                                                     
+                                            </tr>
+                                                <!-- item list start -->
+                                            <ng-container *ngFor="let item of projectModel.lineitemList; let itemIndex=index">
+                                                <!-- id 2 mean othre -->
+                                                <tr *ngIf="item.jobid === 2">
+                                                    <td>
+                                                        <input class="form-control" style="width: 160px;" [(ngModel)]="item.lineitem">
+                                                    </td>
+                                                    <!-- detail start -->
+                                                    <ng-container *ngFor="let detail of item.detailsList; let detailIndex=index">
+                                                        <ng-container *ngIf="detail.dockyardId !== 1">
+                                                            <td>
+                                                                <input class="form-control" [(ngModel)]="detail.unit" style="width: 70px;">
+                                                            </td>
+                                                            <td>
+                                                                <input class="form-control" [(ngModel)]="detail.unitPrice" (keyup)="calculateQuoteCurrency(itemIndex, detailIndex, detail)" type="number" style="width: 70px;">
+                                                            </td>
+                                                            <td>
+                                                                <input class="form-control" [(ngModel)]="detail.unitQuantity" (keyup)="calculateQuoteCurrency(itemIndex, detailIndex, detail)" type="number" style="width: 70px;">
+                                                            </td>
+                                                            <td>
+                                                                <input class="form-control" [(ngModel)]="detail.costQuoteCurrency" type="number" style="width: 70px;" disabled>
+                                                            </td>
+                                                        </ng-container>
+                                                    </ng-container>
+                                                    <!-- detail end -->
+
+                                                    <!-- vendor Strat -->
+                                                    <ng-container *ngFor="let detail of item.detailsList; let detailIndex=index">
+                                                        <ng-container *ngIf="detail.dockyardId === 1">
+                                                            <td>
+                                                                <input class="form-control" [(ngModel)]="detail.unit" style="width: 70px;">
+                                                            </td>
+                                                            <td>
+                                                                <input class="form-control" [(ngModel)]="detail.unitPrice" (keyup)="calculateQuoteCurrency(itemIndex, detailIndex, detail)" type="number" style="width: 70px;">
+                                                            </td>
+                                                            <td>
+                                                                <input class="form-control" [(ngModel)]="detail.unitQuantity" (keyup)="calculateQuoteCurrency(itemIndex, detailIndex, detail)" type="number" style="width: 70px;">
+                                                            </td>
+                                                            <td>
+                                                                <input class="form-control" [(ngModel)]="detail.costQuoteCurrency" type="number" style="width: 70px;" disabled>
+                                                            </td>
+                                                            <td>
+                                                                <input class="form-control" [(ngModel)]="detail.costProjectCurrency" type="number" style="width: 70px;">
+                                                            </td>
+                                                        </ng-container>
+                                                    </ng-container>
+                                                    <!-- vendor end -->
+                                                </tr>
+                                            </ng-container>
+                                                 <!-- item list end -->
+                                            <!-- other cost line item data end -->
+                                         </table>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </ngb-tab>
+                        <!-- Costing -->
+                    </ngb-tabset>
+                <!-- </div>
+            </div> -->
+        </div>
+    </div>
+
+    <!-- approval modal -->
+    <ng-template #content let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Approve/Reject</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="dateOfBirth">Approve/Reject</label>
+                <div class="input-group">
+                    <select class="form-control" [(ngModel)]='selectedJob.approvalFlag'>
+                        <option value="Y">Approve</option>
+                        <option value="N">Reject</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="dateOfBirth">Comment</label>
+                <div class="input-group">
+                    <textarea  class="form-control" [(ngModel)]='selectedJob.approvalComment'></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+        </div>
+        </ng-template>
+
+
+
+    <!-- <form role="form" [formGroup]="projectForm" novalidat (ngSubmit)="saveProject()">
+        <div class="row">
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label><b>IMO No: </b>{{projectModel.shipid | singleShipImofilter: shipList}}</label>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label><b>Ship Name: </b>{{projectModel.shipid | singleShipNamefilter: shipList}}</label>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label><b>Start Date: </b>{{projectModel.startdate | date: 'dd-MM-yyyy'}}</label>
+                </fieldset>
+            </div>
+            <div class="col-xl-4 text-xs-center">
+                    <fieldset class="form-group">
+                        <label>Dockyard</label>
+                        <select class="form-control" formControlName="dockyard">
+                            <option value="">-Select-</option>
+                            <option *ngFor="let dockyard of dockyardList" value={{dockyard.id}}>
+                                {{dockyard.dockyard}}
+                            </option>
+                        </select>
+                    </fieldset>
+                </div>
+            <div class="col-xl-12 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Description <span class="has-error">*</span></label>
+                    <textarea class="form-control" formControlName="description"></textarea>
+                    <div class="has-error" *ngIf="projectForm.controls.description.errors && (projectForm.controls.description.dirty 	|| projectForm.controls.description.touched)"> 
+                        <p *ngIf="projectForm.controls.description.errors.required || projectForm.get('description').hasError('invalidvalue')">Description name is required</p>
+                        <p *ngIf="projectForm.controls.description.errors.maxlength">Max length exceeded</p>
+                    </div>
+                </fieldset>
+            </div>                     
+            <div class="col-xl-12 text-xs-center">
+                <fieldset class="form-group">
+                    <button type="submit" [disabled]="projectForm.invalid" class="btn btn-primary pull-right">Save</button>
+                </fieldset>
+            </div>
+        </div>
+    </form> -->
+</div>

@@ -1,0 +1,31 @@
+<nav class="navbar navbar-expand-lg fixed-top" style="background: #3f51b5;color: #fff;">
+    <button class="navbar-toggler" type="button" (click)="toggleSidebar()">
+        <span class="navbar-toggler-icon"></span>
+        <i class="fa fa-bars text-muted" aria-hidden="true" style="color: white;"></i>
+    </button>
+    <div class="nav-brand" style="width: 250px!important; font-size: 17px;">
+        Ship's Defect Reporting System
+    </div>
+
+    <div class="collapse navbar-collapse">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item dropdown" ngbDropdown>
+                <a href="javascript:void(0)" class="nav-link" ngbDropdownToggle style="color: white;">
+                    <i class="fa fa-user"></i> {{userName}} <b class="caret"></b>
+                </a>
+                <div class="dropdown-menu" ngbDropdownMenu>
+                    <a class="dropdown-item" href="javascript:void(0)" [routerLink]="['/core/profile']">
+                        <i class="fa fa-fw fa-user"></i> {{ 'Profile' | translate }}
+                    </a>
+                    <a class="dropdown-item" href="javascript:void(0)">
+                        <i class="fa fa-fw fa-envelope"></i> {{ 'Inbox' | translate }}
+                    </a>
+                </div>
+            </li>
+            <li class="nav-item"  style="margin-left: 20px;">
+                <a [routerLink]="['/login']" (click)="onLoggedout()" style="color: white;">
+                    <i class="fa fa-sign-out" style="padding-top: 100%;" aria-hidden="true"></i></a>
+            </li>
+        </ul>
+    </div>
+</nav>

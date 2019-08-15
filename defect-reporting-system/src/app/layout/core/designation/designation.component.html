@@ -1,0 +1,43 @@
+<div [@routerTransition]>
+    <app-page-header [breadcrumb]="BREADCRUMB" [icon]="'fa-table'"></app-page-header>
+    <form role="form" [formGroup]="designationForm" novalidat (ngSubmit)="saveDesignation()">
+       <div class="row">
+            <div class="col-xl-12 text-xs-center">
+                <fieldset class="form-group">
+                    <label><b>Organization Name: </b>{{orgName}}</label>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Designation Code<span class="has-error">*</span></label>
+                    <input class="form-control" formControlName="code">
+                    <div class="has-error" *ngIf="designationForm.controls.code.errors && (designationForm.controls.code.dirty 	|| designationForm.controls.code.touched)"> 
+                        <p *ngIf="designationForm.controls.code.errors.required || designationForm.get('code').hasError('invalidvalue')">Designation code is required</p>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Designation<span class="has-error">*</span></label>
+                    <input class="form-control" formControlName="designation">
+                    <div class="has-error" *ngIf="designationForm.controls.designation.errors && (designationForm.controls.designation.dirty 	|| designationForm.controls.description.touched)"> 
+                        <p *ngIf="designationForm.controls.designation.errors.required || designationForm.get('designation').hasError('invalidvalue')">Designation is required</p>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Designation Description</label>
+                    <input class="form-control" formControlName="description">
+                </fieldset>
+            </div>
+            <div class="col-xl-12 text-xs-center">
+                <fieldset class="form-group">
+                    <button type="submit" [disabled]="designationForm.invalid" class="btn btn-primary pull-right">Save</button>
+                </fieldset>
+            </div>
+       </div>
+    </form>
+</div>

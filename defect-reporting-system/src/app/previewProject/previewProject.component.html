@@ -1,0 +1,331 @@
+<div class="modal-header">
+    <h4 class="modal-title">{{ title }}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="dismiss()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="row">
+            <ngb-tabset>
+                    <!-- GEN INFO -->
+                    <ngb-tab>
+                        <ng-template ngbTabTitle><b>General Info</b></ng-template>
+                        <ng-template ngbTabContent>
+                                <div class="row tab-border">
+                                    <div class="col-xl-6 text-xs-center">
+                                        <fieldset class="form-group">
+                                            <label><b>Component: </b>{{selectedComponent.code}}-{{selectedComponent.description}}</label>
+                                        </fieldset>
+                                    </div>                                    
+                                    <div class="col-xl-6 text-xs-center">
+                                        <fieldset class="form-group">
+                                            <label>Job Description:</label>
+                                            <textarea class="form-control" [(ngModel)]="jobDetail.description" disabled></textarea>                                                                                
+                                        </fieldset>
+                                    </div>
+                                    <div class="col-xl-6 text-xs-center">
+                                        <fieldset class="form-group">
+                                            <label>Make:</label>
+                                            <input class="form-control" [(ngModel)]="jobDetail.make" disabled/>                                    
+                                        </fieldset>
+                                    </div>
+                                    <div class="col-xl-6 text-xs-center">
+                                        <fieldset class="form-group">
+                                            <label>Model:</label>
+                                            <input class="form-control" [(ngModel)]="jobDetail.model" disabled/>                                    
+                                        </fieldset>
+                                    </div>
+                                    <div class="col-xl-6 text-xs-center">
+                                        <fieldset class="form-group">
+                                            <label>Description:</label>
+                                            <textarea class="form-control" [(ngModel)]="jobDetail.makeModelDescription" placeholder="Make, Type, Rating, Weight, Volume, RPM, Voltage,etc." disabled></textarea>                                    
+                                        </fieldset>
+                                    </div>
+                                    <div class="col-xl-6 text-xs-center">
+                                        <fieldset class="form-group">
+                                            <label>Location:</label>
+                                            <input class="form-control" [(ngModel)]="jobDetail.location" disabled/>                               
+                                        </fieldset>
+                                    </div>
+                                    <div class="col-xl-6 text-xs-center">
+                                        <fieldset class="form-group">
+                                            <label>Equipment:</label>
+                                            <input class="form-control" [(ngModel)]="jobDetail.equipment" disabled/>                               
+                                        </fieldset>
+                                    </div>
+                                    <div class="col-xl-6 text-xs-center">
+                                        <fieldset class="form-group">
+                                            <label>Date:</label>
+                                            <div class="input-group datepicker-input">
+                                                <input class="form-control" placeholder="yyyy-mm-dd" disabled
+                                                    ngbDatepicker #keelLayingDate="ngbDatepicker" [(ngModel)]="jobDetail.jobdate" [ngModelOptions]="{standalone: true}">
+                                                <button class="input-group-addon" (click)="keelLayingDate.toggle()" type="button">
+                                                    <span class="fa fa-calendar"></span>
+                                                </button>
+                                            </div>                                  
+                                        </fieldset>
+                                    </div>
+                                    <div class="col-xl-6 text-xs-center">
+                                        <fieldset class="form-group">
+                                            <label>Vessel Type:</label>
+                                            <select class="form-control" [(ngModel)]="jobDetail.vesselType" disabled>
+                                                <option *ngFor="let vessel of vesselList" value={{vessel.id}}>
+                                                    {{vessel.description}}
+                                                </option>
+                                            </select>                             
+                                        </fieldset>
+                                    </div> 
+                                    <div class="col-xl-6 text-xs-center">
+                                        <fieldset class="form-group">
+                                            <label>Vessel Age:</label>
+                                            <input class="form-control" type="number" [(ngModel)]="jobDetail.vesselAge" disabled/>                               
+                                        </fieldset>
+                                    </div> 
+                                    <div class="col-xl-12 text-xs-center">
+                                        <fieldset class="form-group">
+                                            <label>Details Job Desc:</label>
+                                            <span [innerHTML]="jobDetail.detailedSpecification"></span>
+                                            <!-- <ckeditor [(ngModel)]="jobModel.detailedSpecification"
+                                                [ngModelOptions]="{standalone: true}"
+                                                [config]="options"></ckeditor> -->
+                                        </fieldset>
+                                    </div>
+                                                                    
+                                    <div class="col-xl-12 text-xs-center">
+                                        <div class="card mb-3">
+                                            <div class="card-header" (click)="checkbocCollapse.isCollapsedToBeInclude = !checkbocCollapse.isCollapsedToBeInclude" [attr.aria-expanded]="!checkbocCollapse.isCollapsedToBeInclude" aria-controls="toBeInclude" style="cursor: pointer;">
+                                                <b>Services To Include: &nbsp;</b>
+                                                <span *ngIf="checkbocCollapse.isCollapsedToBeInclude">
+                                                    <ng-container *ngFor="let com of checkboxList['Services to include']; let index=index; let last = last">
+                                                        <span *ngIf="com.isSelected">{{com.description}}, &nbsp;</span>
+                                                    </ng-container>
+                                                </span>
+                                                <i class="fa fa-angle-right custom-arrow pull-right" aria-hidden="true" *ngIf="checkbocCollapse.isCollapsedToBeInclude"></i>
+                                                <i class="fa fa-angle-down custom-arrow pull-right" aria-hidden="true" *ngIf="!checkbocCollapse.isCollapsedToBeInclude"></i>
+                                            </div>
+                                            <div class="card-body" id="toBeInclude" [ngbCollapse]="checkbocCollapse.isCollapsedToBeInclude">  
+                                                <div class="row">
+                                                    <div *ngFor="let com of checkboxList['Services to include']; let index=index" class="col-xl-2">
+                                                        <label class="container">{{com.description}}
+                                                            <input type="checkbox" [(ngModel)]="com.isSelected" [ngModelOptions]="{standalone: true}" disabled>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> 
+                                    <div class="col-xl-12 text-xs-center">
+                                        <div class="card mb-3">
+                                            <div class="card-header" (click)="checkbocCollapse.isCollapsedMeterials = !checkbocCollapse.isCollapsedMeterials" [attr.aria-expanded]="!checkbocCollapse.isCollapsedMeterials" aria-controls="meterials" style="cursor: pointer;">
+                                                    <b>Meterials: &nbsp;</b>
+                                                <span *ngIf="checkbocCollapse.isCollapsedMeterials">
+                                                    <ng-container *ngFor="let com of checkboxList['Materials']; let index=index; let last = last">
+                                                        <span *ngIf="com.isSelected">{{com.description}}, &nbsp;</span>
+                                                    </ng-container>
+                                                </span>
+                                                <i class="fa fa-angle-right custom-arrow pull-right" aria-hidden="true" *ngIf="checkbocCollapse.isCollapsedMeterials"></i>
+                                                <i class="fa fa-angle-down custom-arrow pull-right" aria-hidden="true" *ngIf="!checkbocCollapse.isCollapsedMeterials"></i>
+                                            </div>
+                                            <div class="card-body" id="meterials" [ngbCollapse]="checkbocCollapse.isCollapsedMeterials">
+                                                <div class="row">
+                                                    <div *ngFor="let com of checkboxList['Materials']; let index=index" class="col-xl-2">
+                                                        <label class="container">{{com.description}}
+                                                            <input type="checkbox" [(ngModel)]="com.isSelected" [ngModelOptions]="{standalone: true}" disabled>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                    </div>
+                                                </div> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-12 text-xs-center">
+                                        <div class="card mb-3">
+                                            <div class="card-header" (click)="checkbocCollapse.isCollapsedTheWorkToBeSurvedAlsoBy = !checkbocCollapse.isCollapsedTheWorkToBeSurvedAlsoBy" [attr.aria-expanded]="!checkbocCollapse.isCollapsedTheWorkToBeSurvedAlsoBy" aria-controls="theWorkToBeSurvedAlsoBy" style="cursor: pointer;">
+                                                <b>The Work To Be Surved Also By: &nbsp;</b>
+                                                <span *ngIf="checkbocCollapse.isCollapsedTheWorkToBeSurvedAlsoBy">
+                                                    <ng-container *ngFor="let com of checkboxList['The work to be surveyed also by']; let index=index; let last = last">
+                                                        <span *ngIf="com.isSelected">{{com.description}}, &nbsp;</span>
+                                                    </ng-container>
+                                                </span>
+                                                <i class="fa fa-angle-right custom-arrow pull-right" aria-hidden="true" *ngIf="checkbocCollapse.isCollapsedTheWorkToBeSurvedAlsoBy"></i>
+                                                <i class="fa fa-angle-down custom-arrow pull-right" aria-hidden="true" *ngIf="!checkbocCollapse.isCollapsedTheWorkToBeSurvedAlsoBy"></i>
+                                            </div>
+                                            <div class="card-body" id="theWorkToBeSurvedAlsoBy" [ngbCollapse]="checkbocCollapse.isCollapsedTheWorkToBeSurvedAlsoBy">  
+                                                <div class="row">
+                                                    <div *ngFor="let com of checkboxList['The work to be surveyed also by']; let index=index" class="col-xl-2">
+                                                        <label class="container">{{com.description}}
+                                                            <input type="checkbox" [(ngModel)]="com.isSelected" [ngModelOptions]="{standalone: true}" disabled>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>                                    
+                                </div>
+                        </ng-template>
+                    </ngb-tab>
+                    <!-- Materials Required -->
+                    <ngb-tab>
+                        <ng-template ngbTabTitle><b>Materials Required</b></ng-template>
+                        <ng-template ngbTabContent>
+                            <div class="row tab-border">                                                                            
+                                <div class="row">
+                                    <div class="col col-xl-12 col-lg-12">              
+                                        <div class="card-body table-responsive table-pading">
+                                            <table class="table table-bordered table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>                        
+                                                        <th>Make</th>
+                                                        <th>Model</th>
+                                                        <th>Part Number</th>
+                                                        <th>Part Name</th>
+                                                        <th>Quantity</th>
+                                                        <th>UOM</th>
+                                                        <th>Drawing No</th>
+                                                        <th>Remark</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <!-- <tr *ngFor="let meterial of jobModel.jobMeterialList;let  index=index"> -->
+                                                    <ng-container *ngFor="let meterial of jobDetail.jobMaterialDetailsList;let  index=index">
+                                                        <tr *ngIf="meterial.isactive == 1">
+                                                            <th>{{meterial.index}}</th>                        
+                                                            <td><input type="text" [(ngModel)]="meterial.make" class="form-control" placeholder="Make" disabled></td>
+                                                            <td><input type="text" [(ngModel)]="meterial.model" class="form-control" placeholder="Model" disabled></td>
+                                                            <td><input type="text" [(ngModel)]="meterial.partNo" class="form-control" placeholder="Part Number" disabled></td>
+                                                            <td><input type="text" [(ngModel)]="meterial.partName" class="form-control" placeholder="Part Name" disabled></td>
+                                                            <td><input type="number" [(ngModel)]="meterial.quantity" class="form-control" placeholder="Quantity" disabled></td>
+                                                            <td><input type="text" [(ngModel)]="meterial.uom" class="form-control" placeholder="UOM" disabled></td>
+                                                            <td><input type="text" [(ngModel)]="meterial.drawingNo" class="form-control" placeholder="Drawing no" disabled></td>
+                                                            <td><textarea type="text" rows="1" [(ngModel)]="meterial.remark" class="form-control" placeholder="Remark" disabled></textarea></td>                           
+                                                        </tr>  
+                                                    </ng-container>                                
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>                            
+                                </div>                                
+                            </div>
+                        </ng-template>
+                    </ngb-tab>
+                </ngb-tabset>
+
+            <!-- <div class="col-xl-7">
+                    <div class="card mb-3">
+                        <div class="card-body">                            
+                                <div class="row">                                    
+                                    <div class="col-xl-6 text-xs-center" *ngIf="inputModel.jobSelectFrom == 'previous'">
+                                        <fieldset class="form-group">
+                                            <label><b>Component: </b>{{selectedComponent.code}}-{{selectedComponent.description}}</label>
+                                        </fieldset>
+                                    </div>
+                                    <div class="col-xl-12 text-xs-center" *ngIf="inputModel.jobSelectFrom == 'previous'">
+                                        <fieldset class="form-group">
+                                            <label>Date: </label>
+                                            <div class="input-group datepicker-input">
+                                                <input class="form-control" placeholder="yyyy-mm-dd" disabled
+                                                    ngbDatepicker #keelLayingDate="ngbDatepicker" [(ngModel)]="jobDetail.jobdate">
+                                            </div>                                  
+                                        </fieldset>
+                                    </div>
+                                    <div class="col-xl-12 text-xs-center">
+                                        <fieldset class="form-group">
+                                            <label>Job Description:</label>
+                                            <textarea class="form-control" [(ngModel)]="jobDetail.description" disabled></textarea>
+                                        </fieldset>
+                                    </div>
+                                    <div class="col-xl-12 text-xs-center">
+                                        <fieldset class="form-group">
+                                            <label>Account No:</label>
+                                            <input class="form-control" [(ngModel)]="jobDetail.accountno" disabled/>                                    
+                                        </fieldset>
+                                    </div>
+                                    <div class="col-xl-12 text-xs-center">
+                                        <fieldset class="form-group">
+                                            <label>Make, Type etc:</label>
+                                            <textarea class="form-control" [(ngModel)]="jobDetail.specification" disabled placeholder="Make, Type, Rating, Weight, Volume, RPM, Voltage,etc."></textarea>                                    
+                                        </fieldset>
+                                    </div>
+                                    <div class="col-xl-12 text-xs-center">
+                                        <fieldset class="form-group">
+                                            <label>Location:</label>
+                                            <input class="form-control" [(ngModel)]="jobDetail.location" disabled/>                               
+                                        </fieldset>
+                                    </div>
+                                    <div class="col-xl-12 text-xs-center">
+                                        <fieldset class="form-group">
+                                            <label>Detailed specification:</label>
+                                            <textarea class="form-control" [(ngModel)]="jobDetail.detailedSpecification" disabled placeholder="Detailed specification incl. size, amount,dimension, material etc."></textarea>                                    
+                                        </fieldset>
+                                    </div>
+                                    <div class="col-xl-12 text-xs-center">
+                                        <fieldset class="form-group">
+                                            <label>Total Area:</label>
+                                            <input class="form-control" [(ngModel)]="jobDetail.totalArea" disabled/>                               
+                                        </fieldset>
+                                    </div>
+                                    <div class="col-xl-12 text-xs-center">
+                                        <fieldset class="form-group">
+                                            <label>Estimated Budget:</label>
+                                            <input type="number" class="form-control" [(ngModel)]="jobDetail.estimatedBudget" disabled/>                               
+                                        </fieldset>
+                                    </div>
+                                    <div class="col-xl-12 text-xs-center">
+                                        <fieldset class="form-group">
+                                            <label>Currency:</label>
+                                            <select class="form-control" [(ngModel)]="jobDetail.currency" >
+                                                <option value="">-Select-</option>
+                                                <option value="INR">INR</option>
+                                                <option value="U.S. Dollar">U.S. Dollar</option>
+                                                <option value="British Pound">British Pound</option>
+                                            </select>                             
+                                        </fieldset>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+            </div> 
+            <div class="col-xl-5">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="list-group">                               
+                            <a href="javascript:void(0)" class="list-group-item active">Services To Include</a>
+                            <a href="javascript:void(0)" class="list-group-item " *ngFor="let com of checkboxList['Services to include']; let index=index">
+                                <label class="container">{{com.description}}
+                                    <input type="checkbox" [(ngModel)]="com.isSelected" disabled>
+                                    <span class="checkmark"></span>
+                                </label>
+                            </a>                            
+                        </div>
+                        <br>
+                        <div class="list-group">                               
+                            <a href="javascript:void(0)" class="list-group-item active">Meterials</a>
+                            <a href="javascript:void(0)" class="list-group-item " *ngFor="let com of checkboxList['Materials']; let index=index">
+                                <label class="container">{{com.description}}
+                                        <input type="checkbox" [(ngModel)]="com.isSelected" disabled>
+                                    <span class="checkmark"></span>
+                                </label>
+                            </a>                            
+                        </div>
+                        <br>
+                        <div class="list-group">                               
+                            <a href="javascript:void(0)" class="list-group-item active">The Work To Be Surved Also By</a>
+                            <a href="javascript:void(0)" class="list-group-item " *ngFor="let com of checkboxList['The work to be surveyed also by']; let index=index">
+                                <label class="container">{{com.description}}
+                                        <input type="checkbox" [(ngModel)]="com.isSelected" disabled>
+                                    <span class="checkmark"></span>
+                                </label>
+                            </a>                            
+                        </div>
+                    </div>
+                </div>
+            </div>   -->
+
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="decline()">{{ btnCancelText }}</button>
+</div>

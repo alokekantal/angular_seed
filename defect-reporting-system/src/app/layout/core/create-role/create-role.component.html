@@ -1,0 +1,59 @@
+<div [@routerTransition]>
+    <app-page-header [breadcrumb]="BREADCRUMB" [icon]="'fa-table'"></app-page-header>
+    <form role="form" [formGroup]="roleForm" novalidat (ngSubmit)="saveRole()">
+       <div class="row">
+            <div class="col-xl-12 text-xs-center">
+                <fieldset class="form-group">
+                    <label><b>Organization Name: </b>{{orgName}}</label>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Role Code<span class="has-error">*</span></label>
+                    <input class="form-control" formControlName="code">
+                    <div class="has-error" *ngIf="roleForm.controls.code.errors && (roleForm.controls.code.dirty 	|| roleForm.controls.code.touched)"> 
+                        <p *ngIf="roleForm.controls.code.errors.required || roleForm.get('code').hasError('invalidvalue')">Role code is required</p>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Description<span class="has-error">*</span></label>
+                    <textarea class="form-control" formControlName="description"></textarea>
+                    <div class="has-error" *ngIf="roleForm.controls.description.errors && (roleForm.controls.description.dirty 	|| roleForm.controls.description.touched)"> 
+                        <p *ngIf="roleForm.controls.description.errors.required || roleForm.get('description').hasError('invalidvalue')">Role description is required</p>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Department<span class="has-error">*</span></label>
+                    <angular2-multiselect [data]="departmentList" 
+                                        [(ngModel)]="selectedItems" 
+                                        [settings]="dropdownSettings" 
+                                        (onSelect)="onItemSelect($event)"
+                                        (onDeSelect)="OnItemDeSelect($event)" 
+                                        (onSelectAll)="onSelectAll($event)" 
+                                        (onDeSelectAll)="onDeSelectAll($event)"
+                                        formControlName="deptIdList">
+                    </angular2-multiselect>
+                    <!-- <select class="form-control" formControlName="deptId">
+                        <option value="">-Select-</option>
+                        <option *ngFor="let dept of deptList" value={{dept.dept_id}}>
+                            {{dept.deptName}}
+                        </option>
+                    </select> -->
+                    <div class="has-error" *ngIf="roleForm.controls.deptIdList.errors && (roleForm.controls.deptIdList.dirty 	|| roleForm.controls.deptIdList.touched)"> 
+                        <p *ngIf="roleForm.controls.deptIdList.errors.required">Department is required</p>
+                    </div>
+                </fieldset>
+            </div>       
+            <div class="col-xl-12 text-xs-center">
+                <fieldset class="form-group">
+                    <button type="submit" [disabled]="roleForm.invalid" class="btn btn-primary pull-right">Save</button>
+                </fieldset>
+            </div>
+        </div>
+    </form>
+    <div style="height: 250px;width: 100%;"></div>
+</div>

@@ -1,0 +1,257 @@
+<div [@routerTransition]>
+    <app-page-header [breadcrumb]="BREADCRUMB" [icon]="'fa-table'"></app-page-header>
+    <div class="row">
+        <div class="col-xl-4">
+            <div class="input-group pull-left">
+                <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="Project description" name="search">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col col-xl-12 col-lg-12">
+            <div class="card-body table-responsive table-pading">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>IMO No</th>
+                            <th>Ship Name</th>
+                            <th>Project Description</th>
+                            <th>Start Date</th>
+                            <th>Status</th>
+                            <th class="text-align">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let project of (projectList | searchByNameMultiple: searchText: ['description','shipName']);let index=index">
+                            <th>{{index+1}}</th>
+                            <td>{{project.shipid | singleShipImofilter: shipList}}</td>
+                            <td>{{project.shipid | singleShipNamefilter: shipList}}</td>
+                            <td width="40%">{{project.description}}</td>
+                            <th>{{project.startdate | date: 'dd-MM-yyyy'}}</th>
+                            <th>{{project.status == 'A' ? 'Active' : 'Close'}}</th>
+                            <td class="text-align">                                
+                                <a href="javascript:void(0)" (click)="openReportModal(contentreport, project)"
+                                    placement="top" ngbTooltip="Report Config" class="btn btn-primary btn-sm">
+                                    <i class="fa fa-eye" aria-hidden="true"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <ng-template #contentreport let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Download Report</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <!-- project detail start -->
+            <div class="row">
+                <div class="col-xl-12 text-xs-center">
+                    <div class="card mb-3">
+
+                        <div class="card-header">
+                            <label class="container" style="width: 60%;">Project Detail:
+                                <input type="checkbox" [(ngModel)]="reportFields.projectDetail" (change)="projectDetailVisibility($event.target.checked)">
+                                <span class="checkmark"></span>
+                            </label>
+                            <i class="fa fa-angle-right custom-arrow pull-right" (click)="reportFields.isCollapsed = !reportFields.isCollapsed" [attr.aria-expanded]="!reportFields.isCollapsed" aria-controls="project" style="cursor: pointer;" aria-hidden="true" *ngIf="reportFields.isCollapsed" [ngClass]='{"pointer-event-none": reportFields.projectDetail === false, "pointer-event-auto": reportFields.projectDetail === true}'></i>
+                            <i class="fa fa-angle-down custom-arrow pull-right" (click)="reportFields.isCollapsed = !reportFields.isCollapsed" [attr.aria-expanded]="!reportFields.isCollapsed" aria-controls="project" style="cursor: pointer;" aria-hidden="true" *ngIf="!reportFields.isCollapsed"></i>
+                        </div>
+                        <div class="card-body" id = 'project' [ngbCollapse]="reportFields.isCollapsed">
+                            <div class="row">
+                                <div class="col-xl-4">
+                                    <label class="container">DD Parameters
+                                        <input type="checkbox" [(ngModel)]="reportFields.ddParameter">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                                <div class="col-xl-4">
+                                    <label class="container">Preamble
+                                        <input type="checkbox" [(ngModel)]="reportFields.preamble">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                                <!-- for general info start -->
+                                <div class="col-xl-12">
+                                    <div class="row">
+                                        <div class="col-xl-12 text-xs-center">
+                                            <div class="card mb-3">
+                                                <div class="card-header">
+                                                    <label class="container">Project Attachment:
+                                                        <input type="checkbox" [(ngModel)]="reportFields.projectAttachments"
+                                                            (change)="projectAttachmentsVisibility($event.target.checked)">
+                                                        <span class="checkmark"></span>
+                                                    </label>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-xl-4" *ngFor="let attachment of selectedProject.projectAttachmentList; let attachmentIndex=index;">
+                                                            <label class="container">{{attachment.attachmentName}}
+                                                                <input type="checkbox" [(ngModel)]="attachment.isSelect">
+                                                                <span class="checkmark"></span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- project detail end -->
+
+            <div class="row">
+                <div class="col col-xl-12 col-lg-12">
+                    <table class="table table-bordered c-table">
+                        <thead class="c-thead">
+                            <tr>
+                                <td>
+                                    <label class="container">&nbsp;
+                                        <input type="checkbox" [(ngModel)]="reportFields.isAllJobSelected" (change)="selectDeselectAllJob($event.target.checked)">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="container"><b>Job No</b></label>
+                                </td>
+                                <td>
+                                    <label class="container"><b>Job Desc.</b></label>
+                                </td>
+                                <td>
+                                    <label class="container"><b>General Info</b>
+                                        <input type="checkbox" [(ngModel)]="reportHeader.jobGeneralInfo" (change)="ReportJobHeaderVisibility($event.target.checked, 'jobGeneralInfo')">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="container"><b>Job Specification Details</b>
+                                        <input type="checkbox" [(ngModel)]="reportHeader.jobSpecificationDetail" (change)="ReportJobHeaderVisibility($event.target.checked, 'jobSpecificationDetail')">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="container"><b>Job Specification Attachments</b>
+                                        <input type="checkbox" [(ngModel)]="reportHeader.jobSpecificationAttachment" (change)="ReportJobHeaderVisibility($event.target.checked, 'jobSpecificationAttachment')">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="container"><b>Meterial Detail</b>
+                                        <input type="checkbox" [(ngModel)]="reportHeader.meterialDetail" (change)="ReportJobHeaderVisibility($event.target.checked, 'meterialDetail')">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="container"><b>Progress Report</b>
+                                        <input type="checkbox" [(ngModel)]="reportHeader.progressReport" (change)="ReportJobHeaderVisibility($event.target.checked, 'progressReport')">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="container"><b>Progress Report Attachment</b>
+                                        <input type="checkbox" [(ngModel)]="reportHeader.progressReportAttachments" (change)="ReportJobHeaderVisibility($event.target.checked, 'progressReportAttachments')">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="container"><b>Exec Photos & Reps</b>
+                                        <input type="checkbox" [(ngModel)]="reportHeader.execPhotosReps" (change)="ReportJobHeaderVisibility($event.target.checked, 'execPhotosReps')">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="container"><b>Comments</b>
+                                        <input type="checkbox" [(ngModel)]="reportHeader.jobComment" (change)="ReportJobHeaderVisibility($event.target.checked, 'jobComment')">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody class="c-tbody">
+                            <ng-container *ngFor="let job of reportFields.jobList; let jobIndex=index;">
+                                <tr>
+                                    <td>
+                                        <label class="container">&nbsp;
+                                            <input type="checkbox" [(ngModel)]="job.specificationOfRepairs" (change)="specificationOfRepairsVisibility($event.target.checked, jobIndex)">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </td>
+                                    <td style="word-break: break-all;">
+                                        {{job.selectedJobNo}}
+                                    </td>
+                                    <td style="word-break: break-all;">
+                                        {{job.shortDescription}}
+                                    </td>
+                                    <td>
+                                        <label class="container">&nbsp;
+                                            <input type="checkbox" [(ngModel)]="job.jobGeneralInfo" [disabled]="!job.specificationOfRepairs">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <label class="container">&nbsp;
+                                            <input type="checkbox" [(ngModel)]="job.jobSpecificationDetail" [disabled]="!job.specificationOfRepairs">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <label class="container">&nbsp;
+                                            <input type="checkbox" [(ngModel)]="job.jobSpecificationAttachment"
+                                                [disabled]="!job.specificationOfRepairs">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <label class="container">&nbsp;
+                                            <input type="checkbox" [(ngModel)]="job.meterialDetail" [disabled]="!job.specificationOfRepairs">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <label class="container">&nbsp;
+                                            <input type="checkbox" [(ngModel)]="job.progressReport" [disabled]="!job.specificationOfRepairs">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <label class="container">&nbsp;
+                                            <input type="checkbox" [(ngModel)]="job.progressReportAttachments"
+                                                [disabled]="!job.specificationOfRepairs">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <label class="container">&nbsp;
+                                            <input type="checkbox" [(ngModel)]="job.execPhotosReps" [disabled]="!job.specificationOfRepairs">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <label class="container">&nbsp;
+                                            <input type="checkbox" [(ngModel)]="job.jobComment" [disabled]="!job.specificationOfRepairs">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Download Report</button>
+        </div>
+    </ng-template>
+</div>

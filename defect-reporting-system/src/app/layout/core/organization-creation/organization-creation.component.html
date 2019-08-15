@@ -1,0 +1,200 @@
+<div [@routerTransition]>
+    <app-page-header [breadcrumb]="BREADCRUMB" [icon]="'fa-table'"></app-page-header>
+    <div class="row" *ngIf="id == 0">        
+        <div class="col-xl-6 text-xs-center">
+            <fieldset class="form-group">
+                <label>Copy Cofiguration From:</label> 
+                <select class="form-control" [(ngModel)]="orgId" (change)="getOrganizationCofin()">
+                    <option value="">-Select-</option>
+                    <option *ngFor="let org of orgList" value={{org.org_id}}>
+                        {{org.orgName}}
+                    </option>
+                </select>
+            </fieldset>
+        </div>
+    </div>
+    <form role="form" [formGroup]="organizationForm" novalidat (ngSubmit)="saveOrganization()">
+        <div class="row">
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>{{ 'Organization?Organization Name' | translate }}<span class="has-error">*</span></label>
+                    <input class="form-control" formControlName="orgName">
+                    <div class="has-error" *ngIf="organizationForm.controls.orgName.errors && (organizationForm.controls.orgName.dirty 	|| organizationForm.controls.orgName.touched)"> 
+                        <p *ngIf="organizationForm.controls.orgName.errors.required">{{ 'Organization?Organization name is required' | translate }}</p>
+                        <p *ngIf="organizationForm.get('orgName').hasError('invalidvalue')">Organization name is required</p>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>{{ 'Organization?Organization email' | translate }}<span class="has-error">*</span></label>
+                    <input class="form-control" formControlName="orgMail">
+                    <div class="has-error" *ngIf="organizationForm.controls.orgMail.errors && (organizationForm.controls.orgMail.dirty 	|| organizationForm.controls.orgMail.touched)"> 
+                        <p *ngIf="organizationForm.controls.orgMail.errors.required">{{ 'Organization?Organization email is required' | translate }}</p>
+
+                        <p  *ngIf="organizationForm.get('orgMail').hasError('invalidEmail')">{{ 'Organization?Please give email in currect format' | translate }}</p>
+                        <!-- <p *ngIf="organizationForm.controls.orgMail.errors.pattern">{{ 'Organization?Please give email in currect format' | translate }}</p> -->
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>{{ 'Organization?Registered Address' | translate }}<span class="has-error">*</span></label>
+                    <textarea class="form-control" formControlName="address"></textarea>
+                    <div class="has-error" *ngIf="organizationForm.controls.address.errors && (organizationForm.controls.address.dirty 	|| organizationForm.controls.address.touched)"> 
+                        <p *ngIf="organizationForm.controls.address.errors.required">{{ 'Organization?Address is required' | translate }}</p>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>{{ 'Organization?Contact No' | translate }}<span class="has-error">*</span></label>
+                    <input class="form-control"formControlName="phoneNo">
+                    <div class="has-error" *ngIf="organizationForm.controls.phoneNo.errors && (organizationForm.controls.phoneNo.dirty 	|| organizationForm.controls.phoneNo.touched)"> 
+                        <p *ngIf="organizationForm.controls.phoneNo.errors.required">{{ 'Organization?Phone Number is required' | translate }}</p>
+                        <p *ngIf="organizationForm.get('phoneNo').hasError('invalidNumber')">Phone no format is incorrect</p>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>{{ 'Organization?Fax' | translate }}</label>
+                    <input class="form-control" type="number" formControlName="faxNo">
+                    <div class="has-error" *ngIf="organizationForm.controls.faxNo.errors && (organizationForm.controls.faxNo.dirty 	|| organizationForm.controls.faxNo.touched)"> 
+                        <p *ngIf="organizationForm.controls.faxNo.errors.required">{{ 'Organization?Fax number is required' | translate }}</p>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>{{ 'Organization?Organization Registration Number (if any)' | translate }}</label>
+                    <input class="form-control" formControlName="orgRegNumber">
+                </fieldset>
+            </div>
+
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                <label>{{ 'Organization?Organization Description' | translate }}</label>
+                <input class="form-control" formControlName="orgDesc">
+                </fieldset>
+            </div>
+
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>{{ 'Organization?Organization Email 1' | translate }}</label>
+                    <input class="form-control" formControlName="email1">
+                    <div class="has-error" *ngIf="organizationForm.controls.email1.errors && (organizationForm.controls.email1.dirty 	|| organizationForm.controls.email1.touched)"> 
+                        <p *ngIf="organizationForm.get('email1').hasError('invalidEmail')">{{ 'Organization?Please give email in currect format' | translate }}</p>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>{{ 'Organization?Organization Email 2' | translate }}</label>
+                    <input class="form-control" formControlName="email2">
+                    <div class="has-error" *ngIf="organizationForm.controls.email2.errors && (organizationForm.controls.email2.dirty 	|| organizationForm.controls.email2.touched)"> 
+                        <p *ngIf="organizationForm.get('email2').hasError('invalidEmail')">{{ 'Organization?Please give email in currect format' | translate }}</p>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                <label>{{ 'Organization?Organization Phone No 1' | translate }}</label>
+                <input class="form-control" formControlName="phoneNo1">
+                <div class="has-error" *ngIf="organizationForm.controls.phoneNo1.errors && (organizationForm.controls.phoneNo1.dirty 	|| organizationForm.controls.phoneNo1.touched)"> 
+                    <p *ngIf="organizationForm.get('phoneNo1').hasError('invalidNumber')">Phone no format is incorrect</p>
+                </div>
+                </fieldset>
+            </div>
+
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                <label>{{ 'Organization?Organization Phone No 2' | translate }}</label>
+                <input class="form-control" formControlName="phoneNo2">
+                <div class="has-error" *ngIf="organizationForm.controls.phoneNo2.errors && (organizationForm.controls.phoneNo2.dirty 	|| organizationForm.controls.phoneNo2.touched)"> 
+                    <p *ngIf="organizationForm.controls.phoneNo2.errors.required">{{ 'Organization?Phone Number is required' | translate }}</p>
+                    <p *ngIf="organizationForm.get('phoneNo2').hasError('invalidNumber')">Phone no format is incorrect</p>
+                </div>
+                </fieldset>
+            </div>
+            
+            <div style="width: 100%;margin-top: 20px;     border: 1px solid #797878; margin: 30px 15px 20px 20px;">
+                <div class="the-legend" style="width: 200px;    border: 1px solid #797878;border-radius: 5px;padding: 5px;margin-left: 20px;margin-top: -19px;background-color: white;">Default User Detail</div>            
+                <div class="row">
+                    <div class="col-xl-5 text-xs-center" style="margin-left: 10px;">
+                        <fieldset class="form-group">
+                            <label>Login ID<span class="has-error">*</span></label>
+                            <input class="form-control" (keyup)="capital(organizationForm.controls.userCode.value)" formControlName="userCode" (blur)="checkLoginCodeExists(organizationForm.controls.userCode.value)">                
+                            <div class="has-error" *ngIf="organizationForm.controls.userCode.errors && (organizationForm.controls.userCode.dirty 	
+                                                || organizationForm.controls.userCode.touched)"> 
+                                <p *ngIf="organizationForm.controls.userCode.errors.required">Login ID is required</p>
+                                <p *ngIf="organizationForm.get('userCode').hasError('invalidvalue')">Login ID is required</p>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-xl-5 text-xs-center" *ngIf="id == 0" style="margin-left: 10px;">
+                        <fieldset class="form-group">
+                            <label>Password<span class="has-error">*</span></label>
+                            <input type="password" class="form-control" formControlName="passcode">
+                            <div class="has-error" *ngIf="organizationForm.controls.passcode.errors && (organizationForm.controls.passcode.dirty
+                                             	|| organizationForm.controls.passcode.touched)"> 
+                                <p *ngIf="organizationForm.controls.passcode.errors.required">Password is required</p>
+                                <p *ngIf="organizationForm.controls.passcode.errors.minlength">Minimum length 8 </p>
+                            </div>              
+                        </fieldset>
+                    </div>
+                    <div class="col-xl-5 text-xs-center" style="margin-left: 10px;">
+                        <fieldset class="form-group">
+                            <label>First Name<span class="has-error">*</span></label>
+                            <input class="form-control" formControlName="firstname">  
+                            <div class="has-error" *ngIf="organizationForm.controls.firstname.errors && (organizationForm.controls.firstname.dirty
+                                             	|| organizationForm.controls.firstname.touched)"> 
+                                <p *ngIf="organizationForm.controls.firstname.errors.required">First name is required</p>
+                            </div>              
+                        </fieldset>
+                    </div>
+                    <div class="col-xl-5 text-xs-center" style="margin-left: 10px;">
+                        <fieldset class="form-group">
+                            <label>Last Name<span class="has-error">*</span></label>
+                            <input class="form-control" formControlName="lastname">
+                            <div class="has-error" *ngIf="organizationForm.controls.lastname.errors && (organizationForm.controls.lastname.dirty
+                                             	|| organizationForm.controls.lastname.touched)"> 
+                                <p *ngIf="organizationForm.controls.lastname.errors.required">Last name is required</p>
+                            </div>                
+                        </fieldset>
+                    </div>        
+                    <div class="col-xl-5 text-xs-center" style="margin-left: 10px;">
+                        <fieldset class="form-group">
+                            <label>Phone Number<span class="has-error">*</span></label>
+                            <input class="form-control" formControlName="phonenumber">
+                            <div class="has-error" *ngIf="organizationForm.controls.phonenumber.errors && (organizationForm.controls.phonenumber.dirty
+                                                            || organizationForm.controls.phonenumber.touched)"> 
+                                <p *ngIf="organizationForm.controls.phonenumber.errors.required">Phone Number is required</p>
+                                <p *ngIf="organizationForm.get('phonenumber').hasError('invalidNumber')">Phone no format is incorrect</p>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-xl-5 text-xs-center" style="margin-left: 10px;">
+                        <fieldset class="form-group">
+                            <label>Registered Mail ID<span class="has-error">*</span></label>
+                            <input class="form-control" formControlName="personalMailid">
+                            <div class="has-error" *ngIf="organizationForm.controls.personalMailid.errors && (organizationForm.controls.personalMailid.dirty
+                                             	|| organizationForm.controls.personalMailid.touched)"> 
+                                <p *ngIf="organizationForm.controls.personalMailid.errors.required">Mail ID is required</p>
+                                <p *ngIf="organizationForm.get('personalMailid').hasError('invalidEmail')">Please give email in currect format</p>
+                            </div>
+                        </fieldset>
+                    </div> 
+                </div>
+            </div>
+
+            <div class="col-xl-12 text-xs-center">
+                <fieldset class="form-group">
+                    <button type="submit" class="btn btn-primary pull-right" [disabled]="organizationForm.invalid || isUserCodeExist">{{ 'button?Submit' | translate }}</button>
+                </fieldset>
+            </div>
+        </div>
+    </form>
+</div>

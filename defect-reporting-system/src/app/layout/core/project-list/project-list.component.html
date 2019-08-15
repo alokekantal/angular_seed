@@ -1,0 +1,240 @@
+<div [@routerTransition]>
+    <app-page-header [breadcrumb]="BREADCRUMB" [icon]="'fa-table'"></app-page-header>
+    <div class="row">
+        <div class="col-xl-4">
+            <div class="input-group pull-left">
+                <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="Project description" name="search">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col col-xl-12 col-lg-12">              
+            <div class="card-body table-responsive table-pading">
+                <table class="table table-bordered table-striped" id="dataTable">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>IMO No</th>
+                        <th>Ship Name</th>
+                        <th>Project Description</th>
+                        <th>Start Date</th>
+                        <th class="text-align">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let project of (projectList | searchByNameMultiple: searchText: ['description','shipName']);let index=index">
+                        <th>{{index+1}}</th>
+                        <td>{{project.shipid | singleShipImofilter: shipList}}</td> 
+                        <td>{{project.shipid | singleShipNamefilter: shipList}}</td>
+                        <td width="40%">{{project.description}}</td>
+                        <th>{{project.startdate | date: 'dd-MM-yyyy'}}</th>
+                        <td class="text-align">                            
+                            <a href="javascript:void(0)" routerLink="/core/project-creation/{{project.id}}/{{project.shipid}}" placement="top" ngbTooltip="Edit Project" class="btn btn-primary btn-sm action-buton-margin">
+                                <i class="fa fa-briefcase" aria-hidden="true"></i>
+                            </a>
+                            <a href="javascript:void(0)" (click)="gotoJobList(project)" placement="top" ngbTooltip="Go To Job List" class="btn btn-primary btn-sm action-buton-margin">
+                                    <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+                            </a>                            
+                        </td>
+                    </tr>                                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- job closer modal -->
+    <div style="display:none">
+        <!-- Project Preamble Start -->
+        <div id="project" *ngIf="previewOriginalData !== null">
+                <div class="row">
+                    <div class="col col-xl-12">   
+                        <ng-container>
+                            <table class="table table-bordered">
+                                <tbody>                  
+                                    <tr><td><h2 style="text-align: center"><b>Preamble</b></h2>  </td></tr>                                   
+                                    <tr>
+                                        <td>
+                                            <span [innerHTML]="previewOriginalData.preamble"></span>
+                                        </td>
+                                    </tr>                         
+                                </tbody>
+                            </table>    
+                        </ng-container>
+                    </div>            
+                </div>
+            </div>
+            <!-- project preamble end -->
+
+
+        <div [id]="job.id" *ngFor="let job of jobDetailList; let index = index">
+            <div class="row">
+                <div class="col col-xl-12">   
+                    <ng-container>
+                        <table class="table table-bordered">
+                            <tbody>                  
+                                <tr><td colspan="4"><h2 style="text-align: center"><b>Specification of Repairs	</b></h2>  </td></tr>
+                                <tr>
+                                    <td style="width: 15%"><b>Job : </b></td>
+                                    <td style="width: 35%">{{job.jobno}}</td>
+                                    <td style="width: 15%"><b>Make : </b></td>
+                                    <td style="width: 35%">{{job.make}}</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 15%"><b>Component Data (Make and Number) : </b></td>
+                                    <td style="width: 35%"><span *ngIf="job.selectedComponent !== null">{{job.selectedComponent.code}}-{{job.selectedComponent.description}}</span></td>
+                                    <td style="width: 15%"><b>Model : </b></td>
+                                    <td style="width: 35%">{{job.model}}</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 15%"><b>Location : </b></td>
+                                    <td style="width: 35%">{{job.location}}</td>
+                                    <td style="width: 15%"><b>Equipment Description : </b></td>
+                                    <td style="width: 35%">{{job.equipment}}</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 15%"><b>Short Job Description : </b></td>
+                                    <td colspan="3" style="width: 35%">{{job.description}}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">
+                                        <b>Job Spec Details:</b><br>
+                                        <span [innerHTML]="job.detailedSpecification"></span>
+                                    </td>
+                                </tr>                         
+                            </tbody>
+                        </table>
+                        <div class="row">
+                            <div class="col-xl-12 text-xs-center">
+                                <div class="card mb-3">
+                                    <div class="card-header" aria-controls="toBeInclude">
+                                        <b>Services To Include: &nbsp;</b>
+                                    </div>
+                                    <div class="card-body" id="toBeInclude">  
+                                        <div class="row">
+                                            <div *ngFor="let com of job.checkboxesList['Services to include']; let index=index" class="col-xl-2">
+                                                <label class="container">{{com.description}}
+                                                    <input type="checkbox" [(ngModel)]="com.isSelected">
+                                                    <span class="checkmark"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                            <div class="col-xl-12 text-xs-center">
+                                <div class="card mb-3">
+                                    <div class="card-header" aria-controls="meterials">
+                                        <b>Meterials: &nbsp;</b>
+                                    </div>
+                                    <div class="card-body" id="meterials">
+                                        <div class="row">
+                                            <div *ngFor="let com of job.checkboxesList['Materials']; let index=index" class="col-xl-2">
+                                                <label class="container">{{com.description}}
+                                                    <input type="checkbox" [(ngModel)]="com.isSelected">
+                                                    <span class="checkmark"></span>
+                                                </label>
+                                            </div>
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-12 text-xs-center">
+                                <div class="card mb-3">
+                                    <div class="card-header" aria-controls="theWorkToBeSurvedAlsoBy">
+                                        <b>The Work To Be Surved Also By: &nbsp;</b>
+                                    </div>
+                                    <div class="card-body" id="theWorkToBeSurvedAlsoBy">  
+                                        <div class="row">
+                                            <div *ngFor="let com of job.checkboxesList['The work to be surveyed also by']; let index=index" class="col-xl-2">
+                                                <label class="container">{{com.description}}
+                                                    <input type="checkbox" [(ngModel)]="com.isSelected">
+                                                    <span class="checkmark"></span>
+                                                </label>
+                                            </div>
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xl-12 text-xs-center">
+                                <div class="card mb-3">
+                                    <div class="card-header" aria-controls="toBeInclude">
+                                        <b>Meterial Detail: &nbsp;</b>
+                                    </div>
+                                    <div class="card-body" id="toBeInclude">  
+                                        <div class="row">
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Make</th>
+                                                            <th>Model</th>
+                                                            <th>Part Number</th>
+                                                            <th>Part Name</th>
+                                                            <th>Quantity</th>
+                                                            <th>UOM</th>
+                                                            <th>Drawing No</th>
+                                                            <th>Remark</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let material of job.jobMaterialDetailsList; let index = index">
+                                                            <td>{{material.make}}</td>
+                                                            <td>{{material.model}}</td>
+                                                            <td>{{material.partNo}}</td>
+                                                            <td>{{material.partName}}</td>
+                                                            <td>{{material.quantity}}</td>
+                                                            <td>{{material.uom}}</td>
+                                                            <td>{{material.drawingNo}}</td>
+                                                            <td>{{material.remarks}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xl-12 text-xs-center">
+                                <div class="card mb-3">
+                                    <div class="card-header">Report History</div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-xl-12 text-xs-center">                                            
+                                                <div class="row" *ngFor="let report of job.jobProgressReportList;let  index=index, let odd = odd; let even = even; let last = last; let first = first">
+                                                    <div class="col-xl-6 text-xs-center">
+                                                        <fieldset class="form-group">
+                                                            <label><b>Reporting Date: </b>{{report.reportingDate | date: dateTimeFormat}}</label>
+                                                        </fieldset>
+                                                    </div>
+                                                    <div class="col-xl-6 text-xs-center">
+                                                        <fieldset class="form-group">
+                                                            <label><b>Execution Date: </b>{{report.executionDate | date: dateFormat}}</label>
+                                                        </fieldset>
+                                                    </div>
+                                                    <div class="col-xl-12 text-xs-center">
+                                                        <fieldset class="form-group">
+                                                            <label><b>Work Done For The Day On This Job: </b></label>
+                                                            <div class="input-group datepicker-input">
+                                                                <span>{{report.workDone}}</span>
+                                                            </div>                                  
+                                                        </fieldset>
+                                                    </div>                                                
+                                                    <div *ngIf="!last" [ngClass]="{ 'odd-border': odd, 'even-border': even }"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>            
+            </div>
+        </div>
+    </div>
+</div>

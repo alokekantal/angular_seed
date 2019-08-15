@@ -1,0 +1,182 @@
+.has-error{
+    color: red;
+}
+
+.has-error p{
+    font-size: 13px;
+}
+
+.input--file {
+    position: relative;
+    color: #7f7f7f;
+    padding-top: 25px;
+  }
+  
+  .input--file input[type="file"] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+  }
+
+  
+// .img-thumbnail  {
+//     border: 1px solid #ddd;
+//     border-radius: 4px;
+//     padding: 5px;
+//     width: 150px;
+// }
+
+// .img-thumbnail:hover {
+//     box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+// }
+
+// .image-container {
+//     position: relative;
+//     width: 100%;
+//     max-width: 200px;
+//     padding: 10px 0px !important;
+//   }
+
+// .overlay {
+//     position: absolute;
+//     top: 0;
+//     bottom: 0;
+//     left: 0;
+//     right: 0;
+//     height: 100%;
+//     width: 100%;
+//     opacity: 0;
+//     transition: .3s ease;
+//     background-color: #171616;
+//     padding: 10px 0px !important;
+//   }
+  
+//   .image-container:hover .overlay {
+//     opacity: 0.5;
+//   }
+  
+//   .del-icon {
+//     color: white;
+//     font-size: 50px;
+//     position: absolute;
+//     top: 50%;
+//     left: 50%;
+//     transform: translate(-50%, -50%);
+//     -ms-transform: translate(-50%, -50%);
+//     text-align: center;
+//   }
+  
+//   .fa-trash:hover {
+//     color: #eee;
+//   }
+  
+
+
+  .pointer-event-none{
+    pointer-events: none;
+}
+
+.pointer-event-auto{
+  pointer-events: auto;
+}
+
+// image galary start
+.image-grid{
+  width:130px;
+  position: relative;
+  min-height: 1px;
+  padding: 15px;
+  display: block;
+  float: left;
+}
+.hovereffect {
+width: 100%;
+height: 100px;
+float: left;
+overflow: hidden;
+position: relative;
+text-align: center;
+cursor: default;
+background: #42b078;
+}
+
+.hovereffect .overlay {
+width: 100%;
+height: 100%;
+position: absolute;
+overflow: hidden;
+top: 0;
+left: 0;
+padding: 10px 10px;
+}
+
+.hovereffect img {
+display: block;
+position: relative;
+max-width: none;
+width: calc(100% + 20px);
+-webkit-transition: opacity 0.35s, -webkit-transform 0.35s;
+transition: opacity 0.35s, transform 0.35s;
+-webkit-transform: translate3d(-10px, 0, 0);
+transform: translate3d(-10px, 0, 0);
+-webkit-backface-visibility: hidden;
+backface-visibility: hidden;
+}
+
+.hovereffect:hover img {
+opacity: 0.4;
+filter: alpha(opacity=40);
+-webkit-transform: translate3d(0, 0, 0);
+transform: translate3d(0, 0, 0);
+}
+
+.hovereffect h2 {
+text-transform: uppercase;
+color: #fff;
+text-align: center;
+position: relative;
+font-size: 17px;
+overflow: hidden;
+padding: 0.5em 0;
+background-color: transparent;
+}
+
+.hovereffect h2:after {
+position: absolute;
+bottom: 0;
+left: 0;
+width: 100%;
+height: 2px;
+background: #fff;
+content: '';
+-webkit-transition: -webkit-transform 0.35s;
+transition: transform 0.35s;
+-webkit-transform: translate3d(-100%, 0, 0);
+transform: translate3d(-100%, 0, 0);
+}
+
+.hovereffect:hover h2:after {
+-webkit-transform: translate3d(0, 0, 0);
+transform: translate3d(0, 0, 0);
+}
+
+.hovereffect a,
+.hovereffect p {
+color: #FFF;
+opacity: 0;
+filter: alpha(opacity=0);
+-webkit-transition: opacity 0.35s, -webkit-transform 0.35s;
+transition: opacity 0.35s, transform 0.35s;
+-webkit-transform: translate3d(100%, 0, 0);
+transform: translate3d(100%, 0, 0);
+}
+
+.hovereffect:hover a,
+.hovereffect:hover p {
+opacity: 1;
+filter: alpha(opacity=100);
+-webkit-transform: translate3d(0, 0, 0);
+transform: translate3d(0, 0, 0);
+}
+//image galary end

@@ -1,0 +1,408 @@
+<div class="modal-header">
+    <h4 class="modal-title">{{ title }}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="dismiss()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">    
+    <div class="row job-common-info">        
+        <div class="col-xl-6 text-xs-center" style="height: 35px;">
+            <fieldset class="form-group">
+                <label><b>Ship Name: </b>{{shipname}}</label>                                        
+            </fieldset>
+        </div>
+        <div class="col-xl-6 text-xs-center" style="height: 35px;">
+            <fieldset class="form-group">
+                <label><b>Make: </b>{{jobModel.make}}</label>                                        
+            </fieldset>
+        </div>
+        <div class="col-xl-6 text-xs-center" style="height: 35px;">
+            <fieldset class="form-group">
+                <label><b>Job Number: </b>{{jobModel.jobno}}</label>                                        
+            </fieldset>
+        </div>
+        <div class="col-xl-6 text-xs-center" style="height: 35px;">
+            <fieldset class="form-group">
+                <label><b>Model: </b>{{jobModel.model}}</label>                                        
+            </fieldset>
+        </div>
+        <div class="col-xl-6 text-xs-center" style="height: 35px;">
+            <fieldset class="form-group">
+                <label><b>Location: </b>{{jobModel.location}}</label>
+            </fieldset>
+        </div>
+        <div class="col-xl-6 text-xs-center" style="height: 35px;">
+            <fieldset class="form-group">
+                <label><b>Component: </b>{{selectedComponent.code}}-{{selectedComponent.description}}</label>                                        
+            </fieldset>
+        </div>        
+        <div class="col-xl-12 text-xs-center">
+            <fieldset class="form-group">
+                <label><b>Equipment Description: </b>{{jobModel.equipment}}</label>                                        
+            </fieldset>
+        </div>
+    </div>    
+    <div class="col-xl-12">
+        <ngb-tabset>
+            <!-- GEN INFO -->
+            <ngb-tab>
+                <ng-template ngbTabTitle><b>General Info</b></ng-template>
+                <ng-template ngbTabContent>
+                    <!-- <form role="form"  novalidat [formGroup]="jobForm" novalidat (ngSubmit)="saveJob()"> -->
+                        <div class="row tab-border">                            
+                            <div class="col-xl-6 text-xs-center">
+                                <fieldset class="form-group">
+                                    <label>Job Description:</label>
+                                    <textarea disabled class="form-control" rows="4" [(ngModel)]="jobModel.description"></textarea>                                                                      
+                                </fieldset>
+                            </div>
+                            <div class="col-xl-6 text-xs-center">
+                                <fieldset class="form-group">
+                                    <label>Make:</label>
+                                    <input disabled class="form-control" rows="4" [(ngModel)]="jobModel.make">                                 
+                                </fieldset>
+                            </div>
+                            <div class="col-xl-6 text-xs-center">
+                                <fieldset class="form-group">
+                                    <label>Model:</label>
+                                    <input disabled class="form-control" rows="4" [(ngModel)]="jobModel.model">                               
+                                </fieldset>
+                            </div>
+                            <div class="col-xl-6 text-xs-center">
+                                <fieldset class="form-group">
+                                    <label>Description:</label>
+                                    <input disabled class="form-control" rows="4" [(ngModel)]="jobModel.makeModelDescription">                                   
+                                </fieldset>
+                            </div>
+                            <div class="col-xl-6 text-xs-center">
+                                <fieldset class="form-group">
+                                    <label>Equipment :</label>
+                                    <textarea disabled class="form-control" [(ngModel)]="jobModel.equipment"> </textarea>                               
+                                </fieldset>
+                            </div>
+                            <div class="col-xl-6 text-xs-center">
+                                <fieldset class="form-group">
+                                    <label>Location:</label>
+                                    <input disabled class="form-control"  [(ngModel)]="jobModel.location"/>                               
+                                </fieldset>
+                            </div>
+                            <div class="col-xl-6 text-xs-center">
+                                <fieldset class="form-group">
+                                    <label>Date:</label>
+                                    <div class="input-group datepicker-input">
+                                        <input disabled ngbDatepicker class="form-control" [(ngModel)]="jobModel.jobdate">                                        
+                                    </div>                                  
+                                </fieldset>
+                            </div>
+                            <div class="col-xl-6 text-xs-center">
+                                <fieldset class="form-group input-group">
+                                    <label>External Reference:</label>
+                                    <span>
+                                        <a [href]="jobModel.externalReference" target="_blank">{{jobModel.externalReference}}</a>
+                                    </span>
+                                </fieldset>
+                            </div>
+                            <div class="col-xl-12 text-xs-center">
+                                <div class="card mb-3">
+                                    <div class="card-header" (click)="checkbocCollapse.isCollapsedToBeInclude = !checkbocCollapse.isCollapsedToBeInclude" [attr.aria-expanded]="!checkbocCollapse.isCollapsedToBeInclude" aria-controls="toBeInclude" style="cursor: pointer;">
+                                        Services To Include
+                                        <span *ngIf="checkbocCollapse.isCollapsedToBeInclude">
+                                            (<ng-container *ngFor="let com of checkboxList['Services to include']; let index=index; let last = last">
+                                                <span *ngIf="com.isSelected">{{com.description}}, &nbsp;</span>
+                                            </ng-container>)
+                                        </span>
+                                    </div>
+                                    <div class="card-body" id="toBeInclude" [ngbCollapse]="checkbocCollapse.isCollapsedToBeInclude">  
+                                        <div class="row">
+                                            <div *ngFor="let com of checkboxList['Services to include']; let index=index" class="col-xl-2">
+                                                <label class="container">{{com.description}}
+                                                    <input disabled type="checkbox" [(ngModel)]="com.isSelected">
+                                                    <span class="checkmark"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                            <div class="col-xl-12 text-xs-center">
+                                <div class="card mb-3">
+                                    <div class="card-header" (click)="checkbocCollapse.isCollapsedMeterials = !checkbocCollapse.isCollapsedMeterials" [attr.aria-expanded]="!checkbocCollapse.isCollapsedMeterials" aria-controls="meterials" style="cursor: pointer;">
+                                        Meterials
+                                        <span *ngIf="checkbocCollapse.isCollapsedMeterials">
+                                            (<ng-container *ngFor="let com of checkboxList['Materials']; let index=index; let last = last">
+                                                <span *ngIf="com.isSelected">{{com.description}}, &nbsp;</span>
+                                            </ng-container>)
+                                        </span>
+                                    </div>
+                                    <div class="card-body" id="meterials" [ngbCollapse]="checkbocCollapse.isCollapsedMeterials">
+                                        <div class="row">
+                                            <div *ngFor="let com of checkboxList['Materials']; let index=index" class="col-xl-2">
+                                                <label class="container">{{com.description}}
+                                                    <input disabled type="checkbox" [(ngModel)]="com.isSelected">
+                                                    <span class="checkmark"></span>
+                                                </label>
+                                            </div>
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-12 text-xs-center">
+                                <div class="card mb-3">
+                                    <div class="card-header" (click)="checkbocCollapse.isCollapsedTheWorkToBeSurvedAlsoBy = !checkbocCollapse.isCollapsedTheWorkToBeSurvedAlsoBy" [attr.aria-expanded]="!checkbocCollapse.isCollapsedTheWorkToBeSurvedAlsoBy" aria-controls="theWorkToBeSurvedAlsoBy" style="cursor: pointer;">
+                                        The Work To Be Surved Also By
+                                        <span *ngIf="checkbocCollapse.isCollapsedTheWorkToBeSurvedAlsoBy">
+                                            (<ng-container *ngFor="let com of checkboxList['The work to be surveyed also by']; let index=index; let last = last">
+                                                <span *ngIf="com.isSelected">{{com.description}}, &nbsp;</span>
+                                            </ng-container>)
+                                        </span>
+                                    </div>
+                                    <div class="card-body" id="theWorkToBeSurvedAlsoBy" [ngbCollapse]="checkbocCollapse.isCollapsedTheWorkToBeSurvedAlsoBy">  
+                                        <div class="row">
+                                            <div *ngFor="let com of checkboxList['The work to be surveyed also by']; let index=index" class="col-xl-2">
+                                                <label class="container">{{com.description}}
+                                                    <input disabled type="checkbox" [(ngModel)]="com.isSelected">
+                                                    <span class="checkmark"></span>
+                                                </label>
+                                            </div>
+                                        </div>                                       
+                                        <!-- <label *ngFor="let com of checkboxList['The work to be surveyed also by']; let index=index" class="container col-xl-2">{{com.description}}
+                                            <input disabled type="checkbox" [(ngModel)]="com.isSelected">
+                                            <span class="checkmark"></span>
+                                        </label> -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-12 text-xs-center" *ngIf="id !== 0">
+                                <fieldset class="form-group">
+                                    <label>Last updated info:</label>
+                                    <b>Last Updated By: </b> {{userDetail.firstname}} {{userDetail.lastname}}    <b>Last Update:</b> {{jobModel.updatedate | date: dateTimeFormat}}                              
+                                </fieldset>
+                            </div>
+                        </div>
+                    <!-- </form> -->
+                </ng-template>
+            </ngb-tab>
+            <!-- GEN INFO -->
+            <!-- JOB SPEC -->
+            <ngb-tab *ngIf="id !== 0">
+                <ng-template ngbTabTitle><b>Job Spec Detail</b></ng-template>
+                <ng-template ngbTabContent>
+                    <div class="row tab-border">
+                        <div class="col-xl-12 text-xs-center">
+                            <fieldset class="form-group">
+                                <label>Detailed Specification:</label>
+                                <span [innerHTML]="jobModel.detailedSpecification"></span>
+                            </fieldset>
+                        </div>
+                        <div class="col-xl-12 text-xs-center">
+                            <fieldset class="form-group">
+                                <label>Enclosed (Photo):</label>
+                                <div class="row">
+                                    <ng-container *ngFor="let attachment of jobModel.jobAttachmentList;let  index=index">
+                                        <div class="image-grid" *ngIf="attachment.attachmentType == 'SPEC'">
+                                            <div class="hovereffect">
+                                                <img class="img-responsive" [src]="attachment.src" *ngIf="attachment.ext == 'image'" style="height: 100%;">
+                                                <img class="img-responsive" [src]="imagePath.pdf" *ngIf="attachment.ext == 'pdf'" style="height: 100%;">
+                                                <img class="img-responsive" [src]="imagePath.excel" *ngIf="attachment.ext == 'excel'" style="height: 100%;">
+                                                <div class="overlay">
+                                                    <h2 style="font-size: 12px !important;">{{attachment.attachmentName}}</h2>
+                                                    <p>
+                                                        <a href="javascript:void(0)" (click)="downloadFile(attachment)" style="padding: 10px;"><i class="fa fa-download" aria-hidden="true"></i></a>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div> 
+                                    </ng-container>
+                                    </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </ng-template>
+            </ngb-tab>
+            <!-- JOB SPEC -->
+            <!-- Materials Required -->
+            <ngb-tab *ngIf="id !== 0">
+                <ng-template ngbTabTitle><b>Materials Required</b></ng-template>
+                <ng-template ngbTabContent>
+                    <div class="row tab-border"> 
+                        <div class="col-xl-8 text-xs-center">
+                            <fieldset class="form-group">
+                                <!-- <label><b>External Reference: </b><a href="javascript: void(0)">Link</a></label>                                         -->
+                            </fieldset>
+                        </div>                                                                    
+                        <div class="row">
+                            <div class="col col-xl-12 col-lg-12">              
+                                <div class="card-body table-responsive table-pading">
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>                        
+                                                <th>Make</th>
+                                                <th>Model</th>
+                                                <th>Part Number</th>
+                                                <th>Part Name</th>
+                                                <th>Quantity</th>
+                                                <th>UOM</th>
+                                                <th>Drawing No</th>
+                                                <th>Remark</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <ng-container *ngFor="let meterial of jobModel.jobMaterialDetailsList;let  index=index">
+                                                <tr *ngIf="meterial.isactive == 1">
+                                                    <th>{{meterial.index}}</th>                        
+                                                    <td><input disabled type="text" [(ngModel)]="meterial.make" class="form-control"></td>
+                                                    <td><input disabled type="text" [(ngModel)]="meterial.model" class="form-control"></td>
+                                                    <td><input disabled type="text" [(ngModel)]="meterial.partNo" class="form-control"></td>
+                                                    <td><input disabled type="text" [(ngModel)]="meterial.partName" class="form-control"></td>
+                                                    <td><input disabled type="text" [(ngModel)]="meterial.quantity" class="form-control"></td>
+                                                    <td><input disabled type="text" [(ngModel)]="meterial.uom" class="form-control"></td>
+                                                    <td><input disabled type="text" [(ngModel)]="meterial.drawingNo" class="form-control"></td>
+                                                    <td><textarea disabled type="text" rows="1" [(ngModel)]="meterial.remark" class="form-control"></textarea></td>                          
+                                                </tr>  
+                                            </ng-container>                                
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>                            
+                        </div>                        
+                    </div>
+                </ng-template>
+            </ngb-tab>
+            <!-- Materials Required -->
+            <!-- Progress Report -->
+            <ngb-tab *ngIf="id !== 0">
+                <ng-template ngbTabTitle><b>Progress Report</b></ng-template>
+                <ng-template ngbTabContent>
+                    <div class="row tab-border">
+                        <div class="col-xl-12 text-xs-center">
+                            <div class="card mb-3">
+                                <div class="card-header">Report History</div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-xl-12 text-xs-center">                                            
+                                            <div class="row" *ngFor="let report of jobModel.jobProgressReportList;let  index=index, let odd = odd; let even = even; let last = last; let first = first">
+                                                <div class="col-xl-6 text-xs-center">
+                                                    <fieldset class="form-group">
+                                                        <label>Reporting Date: </label>
+                                                        <div class="div-textbox">
+                                                            {{report.reportingDate | date: dateTimeFormat}}
+                                                        </div>                                  
+                                                    </fieldset>
+                                                </div>
+                                                <div class="col-xl-6 text-xs-center">
+                                                    <fieldset class="form-group">
+                                                        <label>Execution Date: </label>
+                                                        <div class="div-textbox">
+                                                            {{report.executionDate | date: dateFormat}}
+                                                        </div>                                  
+                                                    </fieldset>
+                                                </div>
+                                                <div class="col-xl-12 text-xs-center">
+                                                    <fieldset class="form-group">
+                                                        <label>Work Done For The Day On This Job: </label>
+                                                        <div class="input-group datepicker-input">
+                                                            <textarea disabled class="form-control" [(ngModel)]="report.workDone" disabled></textarea>
+                                                        </div>                                  
+                                                    </fieldset>
+                                                </div>
+                                                <div class="col-xl-12 text-xs-center">
+                                                    <fieldset class="form-group">
+                                                        <div class="attachment-col" (click)="report.isOpen = !report.isOpen"
+                                                        [attr.aria-expanded]="!report.isOpen" aria-controls="index">
+                                                            <label>Attachments:</label>
+                                                            <i class="fa fa-angle-right custom-arrow pull-right" aria-hidden="true" *ngIf="!report.isOpen"></i>
+                                                            <i class="fa fa-angle-down custom-arrow pull-right" aria-hidden="true" *ngIf="report.isOpen"></i>
+                                                        </div>                                                        
+                                                        <div class="row" id="index" [ngbCollapse]="!report.isOpen" style="padding-left: 15px;padding-right: 15px;">
+                                                            <ng-container *ngFor="let attachment of report.jobAttachmentList;let  index=index">
+                                                                    <div class="image-grid">
+                                                                        <div class="hovereffect">
+                                                                            <img class="img-responsive" [src]="attachment.src" *ngIf="attachment.ext == 'image'" style="height: 100%;">
+                                                                            <img class="img-responsive" [src]="imagePath.pdf" *ngIf="attachment.ext == 'pdf'" style="height: 100%;">
+                                                                            <img class="img-responsive" [src]="imagePath.excel" *ngIf="attachment.ext == 'excel'" style="height: 100%;">
+                                                                            <div class="overlay">
+                                                                                <h2 style="font-size: 12px !important;">{{attachment.attachmentName}}</h2>
+                                                                                <p>
+                                                                                    <a href="javascript:void(0)" (click)="downloadFile(attachment)" style="padding: 10px;"><i class="fa fa-download" aria-hidden="true"></i></a>
+                                                                                </p>
+                                                                            </div>
+                                                                        </div>
+                                                                        <textarea disabled class="form-control" [(ngModel)]="attachment.attachmentDescription" style="resize: none;"></textarea>
+                                                                    </div> 
+                                                            </ng-container>                                                                                                  
+                                                        </div>
+                                                    </fieldset>
+                                                </div>
+                                                <div *ngIf="!last" [ngClass]="{ 'odd-border': odd, 'even-border': even }"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </ngb-tab>
+            <!-- Progress Report -->
+            <!-- Phatos and report -->
+            <ngb-tab *ngIf="id !== 0">
+                <ng-template ngbTabTitle><b>Exec Photos & Reports</b></ng-template>
+                <ng-template ngbTabContent>
+                        <div class="row tab-border" style="padding-left: 15px;padding-right: 15px;">
+                            <ng-container *ngFor="let attachment of jobModel.jobAttachmentList;let  index=index">
+                                <div class="image-grid" *ngIf="attachment.attachmentType == 'JER'">
+                                    <div class="hovereffect">
+                                        <img class="img-responsive" [src]="attachment.src" *ngIf="attachment.ext == 'image'" style="height: 100%;">
+                                        <img class="img-responsive" [src]="imagePath.pdf" *ngIf="attachment.ext == 'pdf'" style="height: 100%;">
+                                        <img class="img-responsive" [src]="imagePath.excel" *ngIf="attachment.ext == 'excel'" style="height: 100%;">
+                                        <div class="overlay">
+                                            <h2 style="font-size: 12px !important;">{{attachment.attachmentName}}</h2>
+                                            <p>
+                                                <a href="javascript:void(0)" (click)="downloadFile(attachment)" style="padding: 10px;"><i class="fa fa-download" aria-hidden="true"></i></a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <textarea disabled class="form-control" style="resize: none;" [(ngModel)]="attachment.description"></textarea>
+                                </div> 
+                            </ng-container>
+                        </div>
+                </ng-template>
+            </ngb-tab>
+            <!-- Phatos and report -->
+           
+        </ngb-tabset>
+        
+        <div class="card mb-3" *ngIf="id !== 0">
+            <div class="card-header">Comment</div>
+            <div class="card-body">  
+                <div class="col-xl-12 text-xs-center">
+                    <fieldset class="form-group">
+                        <label>Previous Comments:</label>                                                                             
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</th>  
+                                    <th style="width: 60%">Comment</th> 
+                                    <th>User Name</th> 
+                                    <th>Time</th> 
+                                </tr>
+                            </thead>
+                            <tbody>                                                
+                                <tr *ngFor="let comment of jobModel.jobCommentList;let  index=index">
+                                    <td>{{index + 1}}</td>
+                                    <td>{{comment.jobComment}}</td>  
+                                    <td>{{comment.updatedBy}}</td>   
+                                    <td>{{comment.updatedate | date: dateTimeFormat}}</td>                                                   
+                                </tr>
+                            </tbody>
+                        </table>                                        
+                    </fieldset>
+                </div>
+            </div>
+        </div>           
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="decline()">{{ btnCancelText }}</button>
+</div>

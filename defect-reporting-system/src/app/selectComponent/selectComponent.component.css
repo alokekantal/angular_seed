@@ -1,0 +1,21 @@
+
+.stylish-input-group .input-group-addon{
+    background: rgb(212, 210, 210) !important; 
+}
+.stylish-input-group .form-control{
+	border-right:0; 
+	box-shadow:0 0 0; 
+	border-color:#ccc;
+}
+.stylish-input-group button{
+    border:0;
+    background:transparent;
+    margin-top: 5px;
+}
+
+.search-component{
+    border-top: 1px solid #cccccc;
+    border-radius-: 4px;
+    border-bottom: 1px solid #cccccc;
+    border-right: 1px solid #cccccc
+}

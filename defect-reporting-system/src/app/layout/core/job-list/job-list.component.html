@@ -1,0 +1,77 @@
+<div [@routerTransition]>
+    <app-page-header [breadcrumb]="BREADCRUMB" [icon]="'fa-table'"></app-page-header>
+    <div class="row">
+        <div class="col-xl-4">
+            <div class="input-group pull-left">
+                <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="Job Description" name="search">
+            </div>
+        </div>    
+        <div class="col-xl-8">
+            <a href="javascript:void(0)" placement="top" style="margin-left: 18px;"
+                ngbTooltip="Job Copy" routerLink="/core/copy-from-old-job" [queryParams]="{name: shipname, shipId: id, projectId: project.id}"
+                class="btn btn-primary pull-right">
+                Job Copy
+            </a>
+            <a href="javascript:void(0)" placement="top"  
+                ngbTooltip="Create Ship" routerLink="/core/job-creation/0" [queryParams]="{name: shipname, shipId: id, projectId: project.id}"
+                class="btn btn-primary pull-right">
+                Create Job
+            </a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col col-xl-12 col-lg-12">
+            <div class="card-body table-responsive table-pading">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>                        
+                            <th>Ship Name</th>
+                            <th>Job Description</th>
+                            <th>Status</th>
+                            <th class="text-align">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let job of (jobList | searchByName: searchText: 'description');let  index=index">
+                            <th>{{index+1}}</th>                        
+                            <td>{{shipname}}</td>
+                            <td width="50%">
+                                <a href="javascript:void(0)" (click)="previewJob(job)" >{{job.description}}</a>
+                            </td>
+                            <td>{{job.status == 'A' ? 'Active' : 'Closed'}}</td>
+                            <td class="text-align">
+                                <a href="javascript:void(0)" *ngIf="job.status == 'A'" (click)="gotoJobCreate(job)" placement="top" ngbTooltip="Edit Job" class="btn btn-primary btn-sm">
+                                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                                </a>
+                                <a *ngIf="applicationType == 'OFFSHORE'" (click)="selectedJob = job; selectedJobIndex = index; markJobComplete(content)" href="javascript:void(0)" placement="top" ngbTooltip="Mark Job As Cpmplete" class="btn btn-warning btn-sm action-buton-margin">
+                                    <i class="fa fa-check" aria-hidden="true"></i>
+                                </a>
+                            </td>                            
+                        </tr>                                         
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- job closer modal -->
+    <ng-template #content let-modal>
+        <div class="modal-header">
+          <h4 class="modal-title" id="modal-basic-title">Job Close</h4>
+          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+              <label for="dateOfBirth">Remark</label>
+              <div class="input-group">
+                <textarea class="form-control" [(ngModel)]="jobCloserRemark"> </textarea>                
+              </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Close Job</button>
+        </div>
+      </ng-template>
+</div>

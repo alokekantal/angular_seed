@@ -1,0 +1,27 @@
+<div [@routerTransition]>
+    <app-page-header [breadcrumb]="BREADCRUMB" [icon]="'fa-table'"></app-page-header>
+    <form role="form" [formGroup]="dockyardForm" novalidat (ngSubmit)="saveDepartment()">
+        <div class="row">
+            <div class="col-xl-12 text-xs-center">
+                <fieldset class="form-group">
+                    <label><b>Organization Name: </b>{{orgName}}</label>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Dockyard<span class="has-error">*</span></label>
+                    <input class="form-control" formControlName="dockyard">
+                    <div class="has-error" *ngIf="dockyardForm.controls.dockyard.errors && (dockyardForm.controls.dockyard.dirty 	|| dockyardForm.controls.dockyard.touched)"> 
+                        <p *ngIf="dockyardForm.controls.dockyard.errors.required || dockyardForm.get('dockyard').hasError('invalidvalue')">Department name is required</p>
+                        <p *ngIf="dockyardForm.controls.dockyard.errors.maxlength">Max length exceeded</p>
+                    </div>
+                </fieldset>
+            </div>                     
+            <div class="col-xl-12 text-xs-center">
+                <fieldset class="form-group">
+                    <button type="submit" [disabled]="dockyardForm.invalid" class="btn btn-primary pull-right">Save</button>
+                </fieldset>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,98 @@
+<div [@routerTransition]>
+        <app-page-header [breadcrumb]="BREADCRUMB" [icon]="'fa-table'"></app-page-header>
+        <!-- <form role="form" [formGroup]="shipUserMapping" novalidate> -->
+        <div class="row">
+           <div class="col-xl-6 text-xs-center">
+              <fieldset class="form-group">
+                 <label><b>Organization Name: </b>{{orgName}}</label>
+              </fieldset>
+           </div>
+           <div class="col-xl-6 text-xs-center">
+              <fieldset class="form-group">
+                 <label><b>Ship Name: </b>{{shipname}}</label>
+              </fieldset>
+           </div>
+           <div class="col-xl-6 text-xs-center">
+              <fieldset class="form-group">
+                 <label for="chkVisible">Copy From existing ship: &nbsp; &nbsp;</label> 
+                 <input id="chkVisible" type="checkbox" [(ngModel)]="isCopy" style="height: 15px;width: 15px;"/>                
+              </fieldset>
+           </div>
+           <div class="col-xl-6 text-xs-center">
+              <fieldset class="form-group">
+                 <label for="chkVisible">Ship List: &nbsp; &nbsp;</label> 
+                 <select class="form-control" [disabled]="!isCopy" [(ngModel)]="selectedShipId" (change)="getShipUserMapByShipId(); open(content)">
+                    <option value="">-Select-</option>
+                    <option *ngFor="let ship of shipList" value={{ship.ship_id}}>
+                       {{ship.name}}
+                    </option>
+                 </select>
+              </fieldset>
+           </div>
+        </div>
+        <form role="form" [formGroup]="shipUserMapping" novalidate>
+           <div class="row">
+              <div class="col-xl-5 text-xs-center">
+                 <fieldset class="form-group">
+                    <label>User List</label>
+                    <select class="form-control" formControlName="userList" multiple style="height: 300px;">
+                       <option *ngFor="let user of userUnderLoggedInUser" value={{user.user_id}}>
+                          {{user.name}}
+                       </option>
+                    </select>
+                 </fieldset>
+              </div>
+              <div class="col-xl-1" style="padding-top: 3%;">
+                 <div class="col-xl-12">
+                    <button type="submit" (click)="assignUserToShip()" class="btn btn-primary pull-right" style="margin: 10px;">
+                    <i class="fa fa-angle-double-right"></i>
+                    </button>                  
+                 </div>
+                 <div class="col-xl-12">
+                    <button type="submit" (click)="unassignUserToShip()" class="btn btn-primary pull-right" style="margin: 10px;">
+                    <i class="fa fa-angle-double-left"></i>
+                    </button>
+                 </div>
+              </div>
+              <div class="col-xl-5 text-xs-center">
+                 <fieldset class="form-group">
+                    <label>Alloted User List<span class="has-error">*</span></label>
+                    <select class="form-control" formControlName="assignedUserList" multiple style="height: 300px;">
+                       <option *ngFor="let user of userAssignedToShip" value={{user.user_id}} [disabled]="user.isDisabled">
+                          {{user.name}}
+                       </option>
+                    </select>
+                 </fieldset>
+              </div>
+
+              <div class="col-xl-12 text-xs-center">
+                        <fieldset class="form-group">
+                        <button [disabled]="userAssignedToShip.length == 0" (click)="saveShipUserMapping()" class="btn btn-primary pull-right">Save</button>
+                        </fieldset>
+                </div>
+           </div>
+        </form>
+        <div style="height: 250px;width: 100%;"></div>
+
+        <ng-template #content let-modal>
+                <div class="modal-header">
+                        <h4 class="modal-title" id="modal-basic-title">Assigned User</h4>
+                        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross')">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                </div>
+                <div class="modal-body">
+                        <div *ngIf="existingShipUserList.length == 0">No record found</div>
+                        <div class="form-group" *ngIf="existingShipUserList.length > 0">
+                        <div class="checkbox" *ngFor="let user of existingShipUserList; let index = index">
+                        <label><input type="checkbox" [(ngModel)]="user.isSelected">{{user.firstname}} {{user.lastname}}</label>
+                        </div>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-dark" [disabled]="existingShipUserList.length == 0" (click)="modal.close('Save')">Assign</button>
+                </div>
+        </ng-template>
+        </div>
+
+        

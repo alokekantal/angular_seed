@@ -1,0 +1,37 @@
+<div [@routerTransition]>
+    <app-page-header [breadcrumb]="BREADCRUMB" [icon]="'fa-table'"></app-page-header>
+    <form role="form" [formGroup]="departmentForm" novalidat (ngSubmit)="saveDepartment()">
+        <div class="row">
+            <div class="col-xl-12 text-xs-center">
+                <fieldset class="form-group">
+                    <label><b>Organization Name: </b>{{orgName}}</label>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Department Name <span class="has-error">*</span></label>
+                    <input class="form-control" formControlName="deptName">
+                    <div class="has-error" *ngIf="departmentForm.controls.deptName.errors && (departmentForm.controls.deptName.dirty 	|| departmentForm.controls.deptName.touched)"> 
+                        <p *ngIf="departmentForm.controls.deptName.errors.required || departmentForm.get('deptName').hasError('invalidvalue')">Department name is required</p>
+                        <p *ngIf="departmentForm.controls.deptName.errors.maxlength">Max length exceeded</p>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <fieldset class="form-group">
+                    <label>Department email<span class="has-error">*</span></label>
+                    <input class="form-control" formControlName="deptMail">
+                    <div class="has-error" *ngIf="departmentForm.controls.deptMail.errors && (departmentForm.controls.deptMail.dirty 	|| departmentForm.controls.deptMail.touched)"> 
+                        <p *ngIf="departmentForm.controls.deptMail.errors.required">Department email is required</p>
+                        <p *ngIf="departmentForm.get('deptMail').hasError('invalidEmail')">Please give email in currect format</p>
+                    </div>
+                </fieldset>
+            </div>          
+            <div class="col-xl-12 text-xs-center">
+                <fieldset class="form-group">
+                    <button type="submit" [disabled]="departmentForm.invalid" class="btn btn-primary pull-right">Save</button>
+                </fieldset>
+            </div>
+        </div>
+    </form>
+</div>

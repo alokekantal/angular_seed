@@ -1,0 +1,72 @@
+<div [@routerTransition]>
+  <app-page-header [breadcrumb]="BREADCRUMB" [icon]="'fa-table'"></app-page-header>
+  <div class="row">
+    <div class="col-xl-4">
+      <div class="input-group pull-left">
+        <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="Job Description">
+      </div>
+    </div>
+    <div class="col-xl-8">
+      <a href="javascript:void(0)" placement="top" style="margin-left: 18px;"
+          ngbTooltip="Back/Cancel" (click)="gotoJobList()"
+          class="btn btn-primary pull-right">
+          Back/Cancel
+      </a>
+      <a href="javascript:void(0)" placement="top" ngbTooltip="Copy from Selected job(s)"  style="margin-left: 10px;"
+        class="btn btn-primary pull-right" (click)="copyJob()">
+        Copy from Selected job(s)
+      </a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col col-xl-12 col-lg-12">
+      <div class="card-body table-responsive table-pading">
+        <table class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th style="width: 5%;">#</th>
+              <th>Source</th>
+              <th>Reference</th>
+              <th>Ship Type</th>
+              <th>DD Number</th>
+              <th>Component</th>
+              <th>Job Number</th>
+              <th style="width: 90%;">Job Short Description</th>
+              <th class="text-align" style="width: 5%;">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let job of (previousJobList | searchByName: searchText: 'description');let  index=index">
+              <th>
+                <label class="container">&nbsp;
+                  <input type="checkbox" [(ngModel)]="job.isSelected">
+                  <span class="checkmark"></span>
+                </label>
+              </th>
+              <td>
+                <span *ngIf="job.isOrgJob">Comp Lib</span>
+                <span *ngIf="!job.isOrgJob">My Prev</span>
+              </td>
+              <td>
+                <span *ngIf="job.isOrgJob">{{orgName}}</span>
+                <span *ngIf="!job.isOrgJob">{{job.shipid | singleShipNamefilter: shipList}}</span>
+              </td>
+              <td>
+                <span *ngIf="job.shipid === undefined">N/A</span>
+                <span *ngIf="job.shipid !== undefined">{{job.shipid | singleShipType: shipList: vesselTypeList}}</span></td>
+              <td>N/A</td>
+              <td>{{job.shipcomponentid | singleComponent: componentList}}</td>
+              <td>{{job.jobno}}</td>
+              <td>{{job.description}}</td>
+              <td class="text-align">
+                <a href="javascript:void(0)" class="btn btn-primary btn-sm" (click)="previewJob(job)" placement="top"
+                  ngbTooltip="Job Preview"><i class="fa fa-eye fa-fw"></i>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

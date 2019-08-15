@@ -1,0 +1,41 @@
+<div [@routerTransition]>
+    <app-page-header [breadcrumb]="BREADCRUMB" [icon]="'fa-table'"></app-page-header>
+    <div class="row">        
+        <div class="col-xl-10"></div>        
+        <div class="col-xl-2">
+            <button placement="top" (click)="addVesselDocType()" style="margin-left: 20px;"
+                ngbTooltip="Add Doc Type" class="btn btn-primary pull-right">Add Doc Type
+            </button>
+            <a href="javascript:void(0)" placement="top" (click)="saveVesselDocType()"
+                ngbTooltip="Save Doc types" class="btn btn-primary pull-right">Save
+            </a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col col-xl-12 col-lg-12">              
+              <div class="card-body table-responsive table-pading">
+                  <table class="table table-bordered table-striped">
+                      <thead>
+                        <tr>
+                            <th>Vessel Doc Type</th>
+                            <th class="text-align" style="width: 10%">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                            <ng-container *ngFor="let docType of vesselDocTypeList; let  index=index">
+                                <tr *ngIf="docType.isactive == 1">
+                                    <td>
+                                        <input class="form-control" [(ngModel)]="docType.vesselDocDescription">
+                                    </td>
+                                    <td class="text-align">
+                                        <a href="javascript:void(0)" (click)="deleteDocType(index)" placement="top" ngbTooltip="Delete Doc Type" class="btn btn-danger btn-sm action-buton-margin"><i class="fa fa-trash-o fa-fw"></i></a>
+                                    </td>
+                                </tr>  
+                            </ng-container>                                           
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+    </div>
+  </div>
+  

@@ -1,0 +1,79 @@
+<div [@routerTransition]>
+    <app-page-header [breadcrumb]="BREADCRUMB" [icon]="'fa-table'"></app-page-header>    
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <div class="col-xl-6"> 
+                        <div class="input-group stylish-input-group">
+                            <input type="text" class="form-control" (keyup)="searchOnEnter($event)"  placeholder="Search" [(ngModel)]="searchKeyword">
+                            <span class="input-group-addon search-component">
+                                <button type="btn" (click)="searchComponent()">
+                                    <i class="fa fa-search" aria-hidden="true"></i>
+                                </button>  
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body" style="height: 500px; overflow:auto;">
+                    <div class='title'>
+                            <!--  ================================== -->
+                        <lib-ngx-tree-component 
+                            [treeData]="myTree"                            
+                            (onselectitem)="onSelectItem($event)"
+                            [config]='config'>
+                        </lib-ngx-tree-component>
+                        <!-- =================================== -->
+                    </div> 
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6" [ngClass]='{"pointer-event-none": selectedComponent == null, "pointer-event-auto": selectedComponent != null}'>
+            <div class="card mb-3">
+                <div class="card-header">Component Detail</div>
+                <div class="card-body">
+                    <form role="form" [formGroup]="shipComponemtDetailForm" novalidat (ngSubmit)="saveComponemtDetail()" class="form-horizontal">
+                        <div class="row">                    
+                            <div class="col-xl-12 text-xs-center">
+                                <fieldset class="form-group">
+                                    <label>Make :</label>
+                                    <input class="form-control" formControlName="make" style="border: 1px solid #ffffff;" placeholder="Type make">
+                                    <div class="has-error" *ngIf="shipComponemtDetailForm.controls.make.errors && (shipComponemtDetailForm.controls.make.dirty 	|| shipComponemtDetailForm.controls.make.touched)"> 
+                                        <p *ngIf="shipComponemtDetailForm.controls.make.errors.required || shipComponemtDetailForm.get('make').hasError('invalidvalue')">Make is required</p>
+                                        <p *ngIf="shipComponemtDetailForm.controls.make.errors.maxlength">Max length exceeded</p>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="col-xl-12 text-xs-center">
+                                    <fieldset class="form-group">
+                                        <label>Model:</label>
+                                        <input class="form-control" formControlName="model" style="border: 1px solid #ffffff;" placeholder="Type model">
+                                        <div class="has-error" *ngIf="shipComponemtDetailForm.controls.model.errors && (shipComponemtDetailForm.controls.model.dirty 	|| shipComponemtDetailForm.controls.model.touched)"> 
+                                            <p *ngIf="shipComponemtDetailForm.controls.model.errors.required || shipComponemtDetailForm.get('model').hasError('invalidvalue')">Model is required</p>
+                                            <p *ngIf="shipComponemtDetailForm.controls.model.errors.maxlength">Max length exceeded</p>
+                                        </div>
+                                    </fieldset>
+                                </div> 
+                            <div class="col-xl-12 text-xs-center">
+                                <fieldset class="form-group">
+                                    <label>Description:</label>
+                                    <input class="form-control" formControlName="description" style="border: 1px solid #ffffff;" placeholder="Type description">
+                                    <div class="has-error" *ngIf="shipComponemtDetailForm.controls.description.errors && (shipComponemtDetailForm.controls.description.dirty 	|| shipComponemtDetailForm.controls.description.touched)"> 
+                                        <p *ngIf="shipComponemtDetailForm.controls.description.errors.required || shipComponemtDetailForm.get('description').hasError('invalidvalue')">Description is required</p>
+                                        <p *ngIf="shipComponemtDetailForm.controls.description.errors.maxlength">Max length exceeded</p>
+                                    </div>
+                                </fieldset>
+                            </div>          
+                            <div class="col-xl-12 text-xs-center">
+                                <fieldset class="form-group" style="padding-top: 30px;">
+                                    <button type="submit" [disabled]="shipComponemtDetailForm.invalid" class="btn btn-primary pull-right">Add</button>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </form> 
+                </div>
+            </div>
+        </div>        
+    </div>  
+</div>

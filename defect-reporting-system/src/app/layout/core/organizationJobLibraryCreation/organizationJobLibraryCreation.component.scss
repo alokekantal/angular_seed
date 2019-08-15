@@ -1,0 +1,204 @@
+.has-error{
+    color: red;
+}
+
+.has-error p{
+    font-size: 13px;
+}
+
+.action-buton-margin{
+    margin: 3px;
+}
+
+.container {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 13px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: #eee;
+}
+
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.container input:checked ~ .checkmark {
+    background-color: #2196F3;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+.container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+.container .checkmark:after {
+    left: 8px;
+    top: 4px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.list-group-item-height{
+    height: 45px!important;
+}
+
+.input--file {
+    position: relative;
+    color: #7f7f7f;
+    padding-top: 25px;
+  }
+  
+  .input--file input[type="file"] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+  }
+
+  div.browse-wrap {
+    top:0;
+    left:0;
+    margin:20px;
+    cursor:pointer;
+    overflow:hidden;
+    padding:20px 60px;
+    text-align:center;
+    position:relative;
+    background-color:#f6f7f8;
+    border:solid 1px #d2d2d7;}
+div.title {
+    color:#3b5998;
+    font-size:14px;
+    font-weight:bold;
+    font-family:tahoma, arial, sans-serif;}
+input.upload {
+    right:0;
+    margin:0;
+    bottom:0;
+    padding:0;
+    opacity:0;
+    height:300px;
+    outline:none;
+    cursor:inherit;
+    position:absolute;
+    font-size:1000px !important;}
+span.upload-path {
+    text-align: center;
+    margin:20px;
+    display:block;
+    font-size: 80%;
+    color:#3b5998;
+    font-weight:bold;
+    font-family:tahoma, arial, sans-serif;
+}
+
+.img-thumbnail  {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    width: 150px;
+}
+
+.img-thumbnail:hover {
+    box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+}
+
+.image-container {
+    position: relative;
+    width: 100%;
+    max-width: 200px;
+    padding: 10px 0px !important;
+  }
+
+.overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    transition: .3s ease;
+    background-color: #171616;
+    padding: 10px 0px !important;
+  }
+  
+  .image-container:hover .overlay {
+    opacity: 0.5;
+  }
+  
+  .del-icon {
+    color: white;
+    font-size: 50px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  
+  .fa-trash:hover {
+    color: #eee;
+  }
+  
+
+
+  .pointer-event-none{
+    pointer-events: none;
+}
+
+.pointer-event-auto{
+  pointer-events: auto;
+}
+
+//tab border
+.tab-border {
+	padding-top: 10px;
+	border-bottom: 1px solid #ced4da;
+	border-left: 1px solid #ced4da;
+    border-right: 1px solid #ced4da;	
+    margin: 0px !important;
+    border-radius: 4px;
+    padding-bottom: 15px;
+}

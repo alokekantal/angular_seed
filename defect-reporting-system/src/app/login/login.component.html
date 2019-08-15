@@ -1,0 +1,152 @@
+<div class="login-page">
+    <div class="content">
+        <form class="login-form" fxFlex role="form" [formGroup]="loginForm" (ngSubmit)="login()">
+            <div class="text-center">
+                <h2 class="app-name">Ship's Defect Reporting System</h2>
+            </div>
+
+            <div class="form-group">
+                <input type="text" formControlName="userCode" class="form-control input-underline input-lg" id=""
+                    placeholder="User Code">
+                <div class="has-error" *ngIf="loginForm.controls.userCode.errors && (loginForm.controls.userCode.dirty
+                                             || loginForm.controls.userCode.touched)">
+                    <p *ngIf="loginForm.controls.userCode.errors.required">User Id is required</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input type="password" formControlName="passcode" class="form-control input-underline input-lg"
+                    placeholder="Password">
+                <div class="has-error" *ngIf="loginForm.controls.passcode.errors && (loginForm.controls.passcode.dirty
+                                             || loginForm.controls.passcode.touched)">
+                    <p *ngIf="loginForm.controls.passcode.errors.required">Password is required</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <a href="javascript:void(0)" (click)="open(content)" class="pull-right" style="text-decoration: none;">Forgot
+                    password</a>
+            </div>
+            <button class="btn btn-block btn-primary" type="submit" [disabled]="loginForm.invalid"> Log in </button>
+        </form>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- <div class="row justify-content-md-center">
+        <div class="col-md-4">
+            <img src="assets/images/logo1.png" width="150px" class="user-avatar" />
+            <h1>Drydock</h1>
+            <form role="form" [formGroup]="loginForm" (ngSubmit)="login()">                
+                <div class="form-content">
+                    <ngb-alert [type]="'danger'" [dismissible]="false" *ngIf="showToster">User ID or password is incorrect!</ngb-alert>
+                    <div class="form-group">
+                        <input type="text" formControlName="userCode" class="form-control input-underline input-lg" id="" placeholder="User Code">
+                        <div class="has-error" *ngIf="loginForm.controls.userCode.errors && (loginForm.controls.userCode.dirty
+                                             	|| loginForm.controls.userCode.touched)"> 
+                        <p *ngIf="loginForm.controls.userCode.errors.required">User Id is required</p>
+                    </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" formControlName="passcode" class="form-control input-underline input-lg" placeholder="Password">
+                        <div class="has-error" *ngIf="loginForm.controls.passcode.errors && (loginForm.controls.passcode.dirty
+                                             	|| loginForm.controls.passcode.touched)"> 
+                        <p *ngIf="loginForm.controls.passcode.errors.required">Password is required</p>
+                    </div>
+                    </div>                    
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <a href="javascript:void(0)" (click)="open(content)" class="pull-right" style="text-decoration: none; color: white">Forgot password</a>
+                        </div>
+                        
+                    </div>
+                </div>
+                <button class="btn rounded-btn" type="submit" [disabled]="loginForm.invalid"> Log in </button>
+                
+            </form>
+        </div>
+    </div> -->
+
+
+    <ng-template #content let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Forgot Password</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form role="form" [formGroup]="forgotPasswordsForm" novalidat>
+                <div class="row">
+                    <div class="has-error col-xl-12 text-xs-center" *ngIf="userNotExistValiadtion">
+                        <p>User not exist</p>
+                    </div>
+                    <div class="col-xl-12 text-xs-center">
+                        <fieldset class="form-group">
+                            <label>User Name</label>
+                            <input class="form-control" formControlName="userCode" [ngClass]="{'disabled': userExist}">
+                            <div class="has-error" *ngIf="forgotPasswordsForm.controls.userCode.errors && (forgotPasswordsForm.controls.userCode.dirty 	|| forgotPasswordsForm.controls.userCode.touched)">
+                                <p *ngIf="forgotPasswordsForm.controls.userCode.errors.required">User name is required</p>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-xl-12 text-xs-center">
+                        <fieldset class="form-group">
+                            <label>Email</label>
+                            <input class="form-control" formControlName="email" [ngClass]="{'disabled': userExist}">
+                            <div class="has-error" *ngIf="forgotPasswordsForm.controls.email.errors && (forgotPasswordsForm.controls.email.dirty 	|| forgotPasswordsForm.controls.email.touched)">
+                                <p *ngIf="forgotPasswordsForm.controls.email.errors.required">User name is required</p>
+                                <p *ngIf="forgotPasswordsForm.get('email').hasError('invalidEmail')">Please give email
+                                    in
+                                    currect format</p>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-xl-12 text-xs-center" *ngIf="userExist">
+                        <fieldset class="form-group">
+                            <label>Password</label>
+                            <input type="password" class="form-control" formControlName="password">
+                            <div class="has-error" *ngIf="forgotPasswordsForm.controls.password.errors && (forgotPasswordsForm.controls.password.dirty 	|| forgotPasswordsForm.controls.password.touched)">
+                                <p *ngIf="forgotPasswordsForm.controls.password.errors.required">Password is required</p>
+                                <p *ngIf="forgotPasswordsForm.controls.password.errors.minlength">Minimum length 8</p>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-xl-12 text-xs-center" *ngIf="userExist">
+                        <fieldset class="form-group">
+                            <label>Confirm Password</label>
+                            <input type="password" class="form-control" formControlName="cPassword" (keyup)="onBlurCPassword()"
+                                (blur)="forgotPasswordsForm.value.password != forgotPasswordsForm.value.cPassword ? isPasswordMatchOnBlur = false : isPasswordMatchOnBlur = true">
+                            <div class="has-error" *ngIf="forgotPasswordsForm.controls.cPassword.errors && (forgotPasswordsForm.controls.cPassword.dirty 	|| forgotPasswordsForm.controls.cPassword.touched)">
+                                <p *ngIf="forgotPasswordsForm.controls.cPassword.errors.required">Confirm Password is
+                                    required</p>
+                                <p *ngIf="forgotPasswordsForm.controls.cPassword.errors.minlength">Minimum length 8</p>
+                            </div>
+                            <div class="has-error" *ngIf="!isPasswordMatchOnBlur">
+                                <p>Password Mismatch</p>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-dark" [disabled]="forgotPasswordsForm.invalid" *ngIf="!userExist"
+                (click)="forgotPasswordCheck()">Validate</button>
+            <button type="button" class="btn btn-outline-dark" [disabled]="forgotPasswordsForm.invalid || !isPasswordMatch"
+                *ngIf="userExist" (click)="modal.close('reset')">Reset Password</button>
+        </div>
+    </ng-template>
+</div>

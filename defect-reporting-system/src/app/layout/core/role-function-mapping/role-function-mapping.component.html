@@ -1,0 +1,89 @@
+<div [@routerTransition]>
+        <app-page-header [breadcrumb]="BREADCRUMB" [icon]="'fa-table'"></app-page-header>
+        <form [formGroup]="roleMaqppinfFormForm" novalidat>
+           <div class="row">
+                <div class="col-xl-6 text-xs-center">
+                    <fieldset class="form-group">
+                        <label><b>Organization Name: </b>{{orgName}}</label>
+                    </fieldset>
+                </div>  
+                <div class="col-xl-6 text-xs-center">
+                        <fieldset class="form-group">
+                            <label><b>Department Name: </b>{{roleFunctionModel.deptIdList | multipleDeptFilter: departmentList}}</label>
+                        </fieldset>
+                    </div>              
+                <div class="col-xl-12 text-xs-center">
+                    <fieldset class="form-group">
+                        <label><b>Role: </b>{{roleFunctionModel.description}}</label>
+                    </fieldset>
+                </div>  
+                <!-- <div class="col-xl-6 text-xs-center">
+                    <fieldset class="form-group">
+                    <label>Functions<span class="has-error">*</span></label>
+                    <angular2-multiselect [data]="functionList" 
+                                        [(ngModel)]="selectedItems" 
+                                        [settings]="dropdownSettings" 
+                                        (onSelect)="onItemSelect($event)"
+                                        (onDeSelect)="OnItemDeSelect($event)" 
+                                        (onSelectAll)="onSelectAll($event)" 
+                                        (onDeSelectAll)="onDeSelectAll($event)"
+                                        formControlName="funcIdList">
+                    </angular2-multiselect>
+                    <div class="has-error" *ngIf="roleMaqppinfFormForm.controls.funcIdList.errors && (roleMaqppinfFormForm.controls.funcIdList.dirty 	|| roleMaqppinfFormForm.controls.funcIdList.touched)"> 
+                        <p *ngIf="roleMaqppinfFormForm.controls.funcIdList.errors.required">Functions is required</p>
+                    </div>
+                    </fieldset>
+                </div>  -->
+
+
+
+
+
+                <div class="col-xl-5 text-xs-center">
+                    <fieldset class="form-group">
+                       <label>Function List</label>
+                       <select class="form-control" formControlName="functionListMaster" multiple style="height: 300px;">
+                          <option *ngFor="let function of functionList" value={{function.function_id}}>
+                             {{function.functionKey}}
+                          </option>
+                       </select>
+                    </fieldset>
+                 </div>
+                 <div class="col-xl-1" style="padding-top: 3%;">
+                    <div class="col-xl-12">
+                       <button (click)="assignFunction()" class="btn btn-primary pull-right" style="margin-bottom: 10px;">
+                       <i class="fa fa-angle-double-right"></i>
+                       </button>                  
+                    </div>
+                    <div class="col-xl-12">
+                       <button (click)="unassignFunction()" class="btn btn-primary pull-right">
+                       <i class="fa fa-angle-double-left"></i>
+                       </button>
+                    </div>
+                 </div>
+                 <div class="col-xl-5 text-xs-center">
+                    <fieldset class="form-group">
+                       <label>Assigned Function List<span class="has-error">*</span></label>
+                       <select class="form-control" formControlName="funcIdList" multiple style="height: 300px;">
+                          <option *ngFor="let function of assignedFunctionList" value={{function.function_id}}>
+                            {{function.functionKey}}
+                          </option>
+                       </select>
+                    </fieldset>
+                 </div>
+
+
+
+
+
+
+
+                <div class="col-xl-12 text-xs-center">
+                    <fieldset class="form-group">
+                        <button [disabled]="assignedFunctionList.length == 0" (click)="saveRoleMapping()" class="btn btn-primary pull-right">Save</button>
+                    </fieldset>
+                </div>
+           </div>
+        </form>
+        <div style="height: 250px;width: 100%;"></div>
+    </div>

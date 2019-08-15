@@ -1,0 +1,78 @@
+<div [@routerTransition]>
+    <app-page-header [breadcrumb]="BREADCRUMB" [icon]="'fa-table'"></app-page-header>
+    <div class="row">
+        <div class="col-xl-4">
+            <div class="input-group pull-left">
+                <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="Project description" name="search">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col col-xl-12 col-lg-12">
+            <div class="card-body table-responsive table-pading">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>IMO No</th>
+                            <th>Ship Name</th>
+                            <th>Project Description</th>
+                            <th>Start Date</th>
+                            <th>Status</th>
+                            <th class="text-align">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let project of (projectList | searchByNameMultiple: searchText: ['description','shipName']);let index=index">
+                            <th>{{index+1}}</th>
+                            <td>{{project.shipid | singleShipImofilter: shipList}}</td>
+                            <td>{{project.shipid | singleShipNamefilter: shipList}}</td>
+                            <td width="40%">{{project.description}}</td>
+                            <th>{{project.startdate | date: 'dd-MM-yyyy'}}</th>
+                            <th>{{project.status == 'A' ? 'Active' : 'Close'}}</th>
+                            <td class="text-align">
+                                <a *ngIf="applicationType == 'OFFSHORE' && project.status == 'A'" (click)="markProjectComplete(content, project, index)"
+                                    href="javascript:void(0)" placement="top" ngbTooltip="Close Project" class="btn btn-danger btn-sm action-buton-margin">
+                                    <i class="fa fa-close" aria-hidden="true"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- job closer modal -->
+    <ng-template #content let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Project Close</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="dateOfBirth">Remark</label>
+                <div class="input-group">
+                    <textarea class="form-control" [(ngModel)]="selectedProject.closerComment"> </textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Attachment</label>
+                <div class="input-group mb-3">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="inputGroupFile01" (change)="handleFileInput($event.target.files, 'closer');">
+                        <label class="custom-file-label" for="inputGroupFile01" *ngIf="selectedProject.projectAttachmentList === null">Choose
+                            file</label>
+                        <label class="custom-file-label" for="inputGroupFile01" *ngIf="selectedProject.projectAttachmentList !== null">{{selectedProject.projectAttachmentList[0].attachmentName}}</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')" [disabled]="selectedProject.closerComment == null || selectedProject.closerComment.trim().length == 0">Close
+                Project</button>
+        </div>
+    </ng-template>
+</div>

@@ -1,0 +1,73 @@
+<div [@routerTransition]>
+    <app-page-header [breadcrumb]="BREADCRUMB" [icon]="'fa-table'"></app-page-header>
+    <div class="row">
+        <div class="col-xl-4">
+            <div class="input-group pull-left">
+                <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="Ship name" name="search">
+            </div>
+        </div>
+		<div class="col-xl-6">
+            <div ngbDropdown class="d-inline-block dropdown pull-right">
+                <button class="btn btn-outline-primary" ngbDropdownToggle>Ship Upload/Download</button>
+                <div ngbDropdownMenu>
+                    <button class="dropdown-item">
+                    <input type="file" #shipUpload class="file-class" name="file" (change)="handleFileInput($event.target.files);" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
+                    Upload Ship
+                    </button>
+                    <button class="dropdown-item" (click)="downloadShipTemplate()">Download Ship Template</button>                    
+                </div>
+            </div>
+        </div>       
+        <div class="col-xl-2">
+            <a href="javascript:void(0)" placement="top" 
+                ngbTooltip="Create Ship" routerLink="/core/ship-creation/0" 
+                class="btn btn-primary pull-right">
+                Create Ship
+            </a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col col-xl-12 col-lg-12">              
+                <div class="card-body table-responsive table-pading">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th *ngIf="orgId == 0">Org Name</th>
+                            <th>IMO No</th>
+                            <th>Ship Name</th>
+                            <th class="text-align">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let ship of (shipList | searchByName: searchText: 'name');let  index=index">
+                            <th>{{index+1}}</th>
+                            <th *ngIf="orgId == 0">{{ship.orgId | orgFilter: orgList}}</th>
+                            <td>{{ship.v_imo_no}}</td>
+                            <td>{{ship.name}}</td>
+                            <td class="text-align">
+                                <a href="javascript:void(0)" routerLink="/core/ship-creation/{{ship.ship_id}}" placement="top" ngbTooltip="Edit Ship" class="btn btn-primary btn-sm"><i class="fa fa-pencil fa-fw"></i></a>
+                                <!-- <a href="javascript:void(0)" placement="top" ngbTooltip="Delete Ship" class="btn btn-danger btn-sm action-buton-margin"><i class="fa fa-trash-o fa-fw"></i></a> -->
+                            </td>
+                        </tr>                                        
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+    </div>
+
+    <ng-template #errorModal let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Alert</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <ul [innerHtml]="errMsg"></ul>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-primary" (click)="modal.close('reset')">Ok</button>
+        </div>
+    </ng-template>
+</div>

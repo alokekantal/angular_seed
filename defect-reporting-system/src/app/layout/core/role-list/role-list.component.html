@@ -1,0 +1,51 @@
+<div [@routerTransition]>
+    <app-page-header [breadcrumb]="BREADCRUMB" [icon]="'fa-table'"></app-page-header>
+    <div class="row">
+        <div class="col-xl-4">
+            <div class="input-group pull-left">
+                <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="Role description" name="Role description">
+            </div>
+        </div>
+        <div class="col-xl-6"></div>        
+        <div class="col-xl-2">
+            <a href="javascript:void(0)" placement="top" 
+                ngbTooltip="Add Role" routerLink="/core/create-role/0" 
+                class="btn btn-primary pull-right">
+                Create Role
+            </a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col col-xl-12 col-lg-12">              
+              <div class="card-body table-responsive table-pading">
+                  <table class="table table-bordered table-striped">
+                      <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Role Code</th>
+                            <th>Role Description</th>
+                            <th>Department</th>
+                            <th>Assigned Functions</th>
+                            <th class="text-align">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let role of (roleList | searchByName: searchText: 'description');let  index=index">
+                            <td>{{index + 1}}</td>
+                            <td>{{role.code}}</td>
+                            <td>{{role.description}}</td>
+                            <td>{{role.deptIdList | multipleDeptFilter: departmentList}}</td> 
+                            <td>{{role.funcIdList | multipleFunctionFilter: functionList}}</td>                            
+                            <td class="text-align" style="width: 15%;">
+                                <a href="javascript:void(0)" routerLink="/core/create-role/{{role.role_id}}" placement="top" ngbTooltip="Edit Role" class="btn btn-primary btn-sm"><i class="fa fa-pencil fa-fw"></i></a>
+                                <a href="javascript:void(0)" (click)="roleFunctionMapping(role.role_id)" placement="top" ngbTooltip="Role Function Mapping" class="btn btn-primary btn-sm action-buton-margin"><i class="fa fa-link" aria-hidden="true"></i></a>
+                                <!-- <a href="javascript:void(0)" placement="top" ngbTooltip="Delete Role" class="btn btn-danger btn-sm action-buton-margin"><i class="fa fa-trash-o fa-fw"></i></a> -->
+                            </td>
+                        </tr>                                           
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+    </div>
+  </div>
+  

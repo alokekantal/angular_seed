@@ -43,7 +43,7 @@
         "ngx-select-dropdown": "^1.0.1",
         "ngx-toastr": "^9.1.1",
         "rxjs": "^6.1.0",
-        "yarn": "^1.6.0",
+        "yarn": "^1.17.3",
         "zone.js": "^0.8.26"
     },
     "devDependencies": {
